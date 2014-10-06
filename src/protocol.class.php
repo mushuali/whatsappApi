@@ -318,7 +318,7 @@ class BinTreeNodeReader
         if ($token == -1) {
             throw new Exception("BinTreeNodeReader->readString: Invalid token $token");
         }
-        if (($token >= 4) && ($token < 0xf5)) {
+        if (($token > 2) && ($token < 0xf5)) {
             $ret = $this->getToken($token);
         } elseif ($token == 0) {
             $ret = "";
@@ -328,9 +328,6 @@ class BinTreeNodeReader
         } elseif ($token == 0xfd) {
             $size = $this->readInt24();
             $ret = $this->fillArray($size);
-        } elseif ($token == 0xfe) {
-            $token = $this->readInt8();
-            $ret = $this->getToken($token + 0xf5);
         } elseif ($token == 0xfa) {
             $user = $this->readString($this->readInt8());
             $server = $this->readString($this->readInt8());
