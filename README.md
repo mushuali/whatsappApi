@@ -4,6 +4,17 @@ Interface to WhatsApp Messenger
 
 ----------
 
+### Update October 7th, 2014
+
+This is going to be the official repository of WhatsAPI. We don't support spam and we won't answer issues like "Blocking" or "sending massive messages".
+
+**Latest updates**
+- *Auto token updater: It uses a private server to generate token. When executing API it will check always for newest token, user agent and version.*
+- *Identity generation has changed: Now is random_pseudo_bytes, in the WhatsApp object, the value you set in identity is the name of the file where the identity is going to be saved. I recommend to set as identity your phone number.*
+
+
+
+
 ### Update March 15th, 2014
 
 Sources are back after brief downtime due to [DCMA takedown](https://github.com/github/dmca/blob/master/2014-02-12-WhatsApp.md).
