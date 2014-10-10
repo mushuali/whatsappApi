@@ -1557,7 +1557,11 @@ class WhatsProt
      */
     protected function createFeaturesNode()
     {
-        $parent = new ProtocolNode("stream:features", null, null, null);
+        $readreceipts = new ProtocolNode("readreceipts", null, null, null);
+    	$groupsv2 = new ProtocolNode("groups_v2", null, null, null);
+    	$privacy = new ProtocolNode("privacy", null, null, null);
+
+        $parent = new ProtocolNode("stream:features", null, array($readreceipts, $groupsv2, $privacy), null);
 
         return $parent;
     }
