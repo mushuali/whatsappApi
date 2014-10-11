@@ -912,6 +912,11 @@ class WhatsProt
         if (count($participants) > 0) {
             $this->sendGroupsParticipantsAdd($groupId, $participants);
         }
+        
+            $this->eventManager()->fireGroupCreate(
+            $this->phoneNumber,
+            $groupId
+        );
 
         return $groupId;
     }
