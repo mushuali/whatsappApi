@@ -298,6 +298,16 @@ class WhatsAppEvent
         };
         $this->fireCallback($callbackEvent);          
     }
+    
+   function fireGroupCreate(
+        $phone,
+        $groupList
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $groupList) {
+            $listener->onGroupsChatCreate($phone, $groupList);
+        };
+        $this->fireCallback($callbackEvent);
+    }
 
     function fireGetGroupsInfo(
         $phone, 
