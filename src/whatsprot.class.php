@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.407';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.407 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.414';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.414 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'http://www.whatsapp.com/android/current/WhatsApp.version';
 
     /**
@@ -694,9 +694,10 @@ class WhatsProt
     public function sendGetClientConfig()
     {
         $msgId = $this->createMsgId("sendconfig");
-        $child = new ProtocolNode("config", array("xmlns" => "urn:xmpp:whatsapp:push", "sound" => 'sound'), null, null);
+        $child = new ProtocolNode("config", null, null, null);
         $node = new ProtocolNode("iq", array(
             "id" => $msgId,
+            "xmlns" => "urn:xmpp:whatsapp:push",
             "type" => "set",
             "to" => static::WHATSAPP_SERVER
                 ), array($child), null);
