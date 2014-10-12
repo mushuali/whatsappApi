@@ -3,127 +3,127 @@ require_once 'WhatsAppEventListener.php';
 
 /**
  * Empty implementation of WhatsAppEventListener. See that class for documentation.
- * 
- * This class provides no functionality, but allows developers to 
- *  use it as a base class so that their classes don't need to 
+ *
+ * This class provides no functionality, but allows developers to
+ *  use it as a base class so that their classes don't need to
  *  define every method in the WhatsAppEventListener interface.
  *  By extending this class, it will also allow new methods to be
  *  created in the interface without the developer needing to update
  *  their base classes.
- * 
+ *
  * @file
  * Event class to received WhatsApp related events.
  */
 
 
-class WhatsAppEventListenerBase implements WhatsAppEventListener {   
-    function onClose( 
-        $phone, 
-        $error  
+class WhatsAppEventListenerBase implements WhatsAppEventListener {
+    function onClose(
+        $phone,
+        $error
     ) {}
 
     function onCodeRegister(
-        $phone,  
-        $login,  
-        $pw,     
-        $type,   
-        $expiration,  
-        $kind,   
-        $price,  
-        $cost,   
-        $currency,  
-        $price_expiration  
+        $phone,
+        $login,
+        $pw,
+        $type,
+        $expiration,
+        $kind,
+        $price,
+        $cost,
+        $currency,
+        $price_expiration
     ) {}
-    
+
     function onCodeRegisterFailed(
-        $phone,  
-        $status,  
-        $reason,  
-        $retry_after 
+        $phone,
+        $status,
+        $reason,
+        $retry_after
     ) {}
-    
+
     function onCodeRequest(
-        $phone, 
+        $phone,
         $method,
         $length
     ) {}
-    
+
     function onCodeRequestFailed(
-        $phone, 
-        $method, 
-        $reason, 
+        $phone,
+        $method,
+        $reason,
         $value
     ) {}
-    
+
    function onCodeRequestFailedTooRecent(
-        $phone, 
-        $method, 
-        $reason, 
-        $retry_after 
+        $phone,
+        $method,
+        $reason,
+        $retry_after
     ) {}
-    
+
    function onConnect(
-        $phone, 
-        $socket 
+        $phone,
+        $socket
     ) {}
 
     function onCredentialsBad(
-        $phone, 
-        $status, 
-        $reason 
+        $phone,
+        $status,
+        $reason
     ) {}
 
     function onCredentialsGood(
-        $phone, 
-        $login, 
-        $pw, 
-        $type, 
-        $expiration, 
-        $kind, 
-        $price, 
-        $cost, 
-        $currency, 
-        $price_expiration 
+        $phone,
+        $login,
+        $pw,
+        $type,
+        $expiration,
+        $kind,
+        $price,
+        $cost,
+        $currency,
+        $price_expiration
     ) {}
 
     function onDisconnect(
-        $phone, 
-        $socket 
+        $phone,
+        $socket
     ) {}
 
     function onDissectPhone(
-        $phone, 
-        $country, 
-        $cc, 
-        $mcc, 
-        $lc, 
-        $lg 
+        $phone,
+        $country,
+        $cc,
+        $mcc,
+        $lc,
+        $lg
     ) {}
 
     function onDissectPhoneFailed(
-        $phone 
+        $phone
     ) {}
 
     function onGetAudio(
-        $phone, 
-        $from, 
-        $msgid, 
-        $type, 
-        $time, 
-        $name, 
-        $size, 
-        $url, 
-        $file, 
+        $phone,
+        $from,
+        $msgid,
+        $type,
+        $time,
+        $name,
+        $size,
+        $url,
+        $file,
         $mimetype,
         $filehash,
         $duration,
-        $acodec 
+        $acodec
     ) {}
 
     function onGetError(
         $phone,
         $id,
-        $error 
+        $error
     ) {}
 
     function onGetGroups(
@@ -132,13 +132,13 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
     ) {}
 
     function onGetGroupsInfo(
-        $phone, 
+        $phone,
         $groupList
     ) {}
 
     function onGetGroupsSubject(
-        $phone, 
-        $gId, 
+        $phone,
+        $gId,
         $time,
         $author,
         $participant,
@@ -203,7 +203,7 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $children
             /*
         $data,
-        $onGetProfilePicture, 
+        $onGetProfilePicture,
         $phone,
         $from,
         $type,
@@ -217,7 +217,7 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $type,
         $thumbnail
     ) {}
-    
+
     function onGetRequestLastSeen(
         $phone,
         $from,
@@ -263,6 +263,13 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
     function onGroupsChatCreate(
         $phone,
         $gId
+    ) {}
+
+    function onGroupsChatisCreated(
+        $phone,
+        $creator,
+        $gId,
+        $subject
     ) {}
 
     function onGroupsChatEnd(
@@ -351,7 +358,7 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $phone,
         $msg
     ) {}
-    
+
     function onUploadFile(
         $phone,
         $name,
@@ -364,70 +371,70 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
     ) {}
 
     public function onConnectError(
-        $phone, 
+        $phone,
         $socket
     ) {}
 
     public function onGetGroupParticipants(
-        $phone, 
-        $groupId, 
+        $phone,
+        $groupId,
         $groupList
     ) {}
 
     public function onGetStatus(
-        $phone, 
-        $from, 
-        $type, 
-        $id, 
-        $t, 
+        $phone,
+        $from,
+        $type,
+        $id,
+        $t,
         $status
     ) {}
 
 
     public function onLoginFailed(
-        $phone, 
+        $phone,
         $tag
     ) {}
 
     public function onMediaMessageSent(
-        $phone, 
-        $to, 
-        $id, 
-        $filetype, 
-        $url, 
-        $filename, 
-        $filesize, 
+        $phone,
+        $to,
+        $id,
+        $filetype,
+        $url,
+        $filename,
+        $filesize,
         $icon
     ) {}
 
     public function onMediaUploadFailed(
-        $phone, 
-        $id, 
-        $node, 
-        $messageNode, 
+        $phone,
+        $id,
+        $node,
+        $messageNode,
         $reason
     ) {}
 
 
     public function onProfilePictureChanged(
-        $phone, 
-        $from, 
-        $id, 
+        $phone,
+        $from,
+        $id,
         $t
     ) {}
 
 
     public function onProfilePictureDeleted(
-        $phone, 
-        $from, 
-        $id, 
+        $phone,
+        $from,
+        $id,
         $t
     ) {}
 
 
     public function onSendMessage(
-        $phone, 
-        $targets, 
+        $phone,
+        $targets,
         $id,
         $node
     ) {}

@@ -912,7 +912,7 @@ class WhatsProt
         if (count($participants) > 0) {
             $this->sendGroupsParticipantsAdd($groupId, $participants);
         }
-        
+
             $this->eventManager()->fireGroupCreate(
             $this->phoneNumber,
             $groupId
@@ -2434,6 +2434,14 @@ class WhatsProt
                         $node->getChild(0)->getData()
                     );
                     //TODO
+                    break;
+                  case "w:gp2":
+                    $this->eventManager()->fireGroupisCreated(
+                      $this->phoneNumber,
+                      $node->getChild(1)->getAttribute('creator'),
+                      $node->getChild(1)->getAttribute('creation'),
+                      $node->getChild(1)->getAttribute('subject')
+                    );
                     break;
                 default:
                     throw new Exception("Method $type not implemented");
