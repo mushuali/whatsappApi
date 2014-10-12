@@ -2436,12 +2436,27 @@ class WhatsProt
                     //TODO
                     break;
                   case "w:gp2":
-                    $this->eventManager()->fireGroupisCreated(
-                      $this->phoneNumber,
-                      $node->getChild(1)->getAttribute('creator'),
-                      $node->getChild(1)->getAttribute('creation'),
-                      $node->getChild(1)->getAttribute('subject')
+                    if ($node->hasChild('remove')) {
+                        $this->eventManager()->fireGroupsParticipantsRemove(
+                            $this->phoneNumber,
+                            $node->getAttribute('from'),
+                            $node->getChild(1)->getAttribute('jid'),
+                                                  );
+                    } else if ($node->hasChild('add')) {
+                        $this->eventManager()->fireGroupsParticipantsAdd(
+                            $this->phoneNumber,
+                            $node->getAttribute('from'),
+                            $node->getChild(1)->getAttribute('jid')
+                        );
+                    }
+                      else if ($node->hasChild('create')) {
+                        $this->eventManager()->fireGroupisCreated(
+                          $this->phoneNumber,
+                          $node->getChild(1)->getAttribute('creator'),
+                          $node->getChild(1)->getAttribute('creation'),
+                          $node->getChild(1)->getAttribute('subject')
                     );
+                  }
                     break;
                 default:
                     throw new Exception("Method $type not implemented");
