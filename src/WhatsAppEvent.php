@@ -822,4 +822,18 @@ class WhatsAppEvent
         $this->fireCallback($callbackEvent);
     }
 
+    function firePaidAccount(
+        $phone,
+        $author,
+        $kind,
+        $status,
+        $creation,
+        $expiration
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $author, $kind, $status, $creation, $expiration) {
+            $listener->onPaidAccount($phone, $author, $kind, $status, $creation, $expiration);
+        };
+        $this->fireCallback($callbackEvent);
+    }
+
 }

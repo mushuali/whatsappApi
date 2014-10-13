@@ -358,6 +358,15 @@ interface WhatsAppEventListener {
         $type // The message type.
     );
 
+    function onPaidAccount(
+        $phone,
+        $author,
+        $kind,
+        $status,
+        $creation,
+        $expiration
+    );
+
     function onPing(
         $phone, // The user phone number including the country code.
         $msgid // The message id.

@@ -2458,6 +2458,20 @@ class WhatsProt
                     );
                   }
                     break;
+                  case "account":
+                    if (($node->getChild(0)->getAttribute('author')) == "")
+                      $author = "Paypal";
+                    else
+                      $author = $node->getChild(0)->getAttribute('author');
+                    $this->eventManager()->firePaidAccount(
+                        $this->phoneNumber,
+                        $author,
+                        $node->getChild(0)->getChild(0)->getAttribute('kind'),
+                        $node->getChild(0)->getChild(0)->getAttribute('status'),
+                        $node->getChild(0)->getChild(0)->getAttribute('creation'),
+                        $node->getChild(0)->getChild(0)->getAttribute('expiration')
+                      );
+                    break;
                 default:
                     throw new Exception("Method $type not implemented");
             }

@@ -324,6 +324,15 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $type
     ) {}
 
+    function onPaidAccount(
+        $phone,
+        $author,
+        $kind,
+        $status,
+        $creation,
+        $expiration
+    ) {}
+
     function onPing(
         $phone,
         $msgid
