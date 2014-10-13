@@ -189,3 +189,15 @@ function updateData($nameFile, $WAver, $classesMD5 = "")
 	fwrite($open,$content);
 	fclose($open);
 }
+
+function generatePaymentLink($number, $sku)
+{
+	if ( $sku != 1 or $sku != 3 or $sku != 5 )
+     $sku = 1;
+	$base = "https://www.whatsapp.com/payments/cksum_pay.php?phone=";
+	$middle = "&cksum=";
+  $end = "&sku=".$sku;
+  $checksum = md5($number."abc");
+  $link = $base.$number.$middle.$checksum.$end;
+  return $link;
+}
