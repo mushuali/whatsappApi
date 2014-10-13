@@ -347,8 +347,7 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
     function onGroupsParticipantsRemove(
         $phone,
         $groupId,
-        $participant,
-        $author
+        $participant
     ) {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }

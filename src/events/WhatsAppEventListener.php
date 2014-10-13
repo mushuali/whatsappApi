@@ -295,8 +295,7 @@ interface WhatsAppEventListener {
     function onGroupsParticipantsRemove(
         $phone, // The user phone number including the country code.
         $groupId, // The group JID.
-        $participant, // The participant JID.
-        $author // The author JID.
+        $participant // The participant JID.
     );
 
     function onLogin(

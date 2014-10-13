@@ -2440,21 +2440,21 @@ class WhatsProt
                         $this->eventManager()->fireGroupsParticipantsRemove(
                             $this->phoneNumber,
                             $node->getAttribute('from'),
-                            $node->getChild(1)->getAttribute('jid'),
-                                                  );
+                            $node->getChild(0)->getAttribute('jid')
+                        );
                     } else if ($node->hasChild('add')) {
                         $this->eventManager()->fireGroupsParticipantsAdd(
                             $this->phoneNumber,
                             $node->getAttribute('from'),
-                            $node->getChild(1)->getAttribute('jid')
+                            $node->getChild(0)->getAttribute('jid')
                         );
                     }
                       else if ($node->hasChild('create')) {
                         $this->eventManager()->fireGroupisCreated(
                           $this->phoneNumber,
-                          $node->getChild(1)->getAttribute('creator'),
-                          $node->getChild(1)->getAttribute('creation'),
-                          $node->getChild(1)->getAttribute('subject')
+                          $node->getChild(0)->getChild(0)->getAttribute('creator'),
+                          $node->getChild(0)->getChild(0)->getAttribute('id'),
+                          $node->getChild(0)->getChild(0)->getAttribute('subject')
                     );
                   }
                     break;

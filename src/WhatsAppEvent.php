@@ -569,11 +569,10 @@ class WhatsAppEvent
     function fireGroupsParticipantsRemove(
         $phone,
         $groupId,
-        $participant,
-        $author
+        $participant
     ) {
-        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $groupId, $participant, $author) {
-            $listener->onGroupsParticipantsRemove($phone, $groupId, $participant, $author);
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $groupId, $participant) {
+            $listener->onGroupsParticipantsRemove($phone, $groupId, $participant);
         };
         $this->fireCallback($callbackEvent);
     }

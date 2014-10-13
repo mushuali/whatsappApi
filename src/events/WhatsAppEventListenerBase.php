@@ -286,8 +286,7 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
     function onGroupsParticipantsRemove(
         $phone,
         $groupId,
-        $participant,
-        $author
+        $participant
     ) {}
 
     function onLogin(
