@@ -154,7 +154,8 @@ interface WhatsAppEventListener {
         $filehash, // The image file hash.
         $width, // The image width.
         $height, // The image height.
-        $thumbnail // The base64_encode image thumbnail.
+        $thumbnail, // The base64_encode image thumbnail.
+	$caption // The image caption.
     );
 
     function onGetLocation(
@@ -266,7 +267,8 @@ interface WhatsAppEventListener {
         $duration, // The video duration.
         $vcodec, // The video codec.
         $acodec, // The audio codec.
-        $thumbnail // The base64_encode video thumbnail.
+        $thumbnail, // The base64_encode video thumbnail.
+	$caption // The video caption.
     );
 
     function onGroupsChatCreate(
@@ -316,6 +318,7 @@ interface WhatsAppEventListener {
         $filename,
         $filesize,
         $filehash,
+	$caption,
         $icon
     );
 

@@ -580,12 +580,12 @@ class WhatsProt
      * @param  string  $path          URL or local path to the image file to send
      * @param  bool $storeURLmedia Keep a copy of the audio file on your server
      */
-    public function sendBroadcastImage($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "")
+    public function sendBroadcastImage($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
         if (!is_array($targets)) {
             $targets = array($targets);
         }
-        $this->sendMessageImage($targets, $path, $storeURLmedia, $fsize, $fhash);
+        $this->sendMessageImage($targets, $path, $storeURLmedia, $fsize, $fhash, $caption);
     }
 
     /**
@@ -647,12 +647,12 @@ class WhatsProt
      * @param  string  $path          URL or local path to the video file to send
      * @param  bool $storeURLmedia Keep a copy of the audio file on your server
      */
-    public function sendBroadcastVideo($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "")
+    public function sendBroadcastVideo($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
         if (!is_array($targets)) {
             $targets = array($targets);
         }
-        $this->sendMessageVideo($targets, $path, $storeURLmedia, $fsize, $fhash);
+        $this->sendMessageVideo($targets, $path, $storeURLmedia, $fsize, $fhash, $caption);
     }
 
     /**
@@ -1087,16 +1087,16 @@ class WhatsProt
      *
      * @return bool
      */
-    public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "")
+    public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
     	if ($fsize==0 || $fhash == "")
     	{
         	$allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
         	$size = 5 * 1024 * 1024; // Easy way to set maximum file size for this media type.
-        	return $this->sendCheckAndSendMedia($filepath, $size, $to, 'image', $allowedExtensions, $storeURLmedia);
+        	return $this->sendCheckAndSendMedia($filepath, $size, $to, 'image', $allowedExtensions, $storeURLmedia, $caption);
         }
         else{
-        $this->sendRequestFileUpload($fhash, 'image', $fsize, $filepath, $to);
+        $this->sendRequestFileUpload($fhash, 'image', $fsize, $filepath, $to, $caption);
     	return true;
     	}
     }
@@ -1165,13 +1165,13 @@ class WhatsProt
      *
      * @return bool
      */
-    public function sendMessageVideo($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "")
+    public function sendMessageVideo($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
     	if ($fsize==0 || $fhash == "")
     	{
         	$allowedExtensions = array('3gp', 'mp4', 'mov', 'avi');
         	$size = 20 * 1024 * 1024; // Easy way to set maximum file size for this media type.
-        	return $this->sendCheckAndSendMedia($filepath, $size, $to, 'video', $allowedExtensions, $storeURLmedia);
+        	return $this->sendCheckAndSendMedia($filepath, $size, $to, 'video', $allowedExtensions, $storeURLmedia, $caption);
         }
         else{
     		$this->sendRequestFileUpload($fhash, 'video', $fsize, $filepath, $to);
@@ -2052,6 +2052,7 @@ class WhatsProt
                         $node->getChild("media")->getAttribute('filehash'),
                         $node->getChild("media")->getAttribute('width'),
                         $node->getChild("media")->getAttribute('height'),
+			$node->getChild("media")->getAttribute('caption'),
                         $node->getChild("media")->getData()
                     );
                 } elseif ($node->getChild("media")->getAttribute('type') == 'video') {
@@ -2070,6 +2071,7 @@ class WhatsProt
                         $node->getChild("media")->getAttribute('duration'),
                         $node->getChild("media")->getAttribute('vcodec'),
                         $node->getChild("media")->getAttribute('acodec'),
+			$node->getChild("media")->getAttribute('caption'),
                         $node->getChild("media")->getData()
                     );
                 } elseif ($node->getChild("media")->getAttribute('type') == 'audio') {
@@ -2671,18 +2673,22 @@ class WhatsProt
         $mediaAttribs["file"] = $filename;
         $mediaAttribs["size"] = $filesize;
         $mediaAttribs["hash"] = $filehash;
+	$mediaAttribs["caption"] = $this->mediaQueue[$id]['caption'];
 
         $filepath = $this->mediaQueue[$id]['filePath'];
         $to = $this->mediaQueue[$id]['to'];
 
         switch ($filetype) {
             case "image":
+		$caption = $this->mediaQueue[$id]['caption'];
                 $icon = createIcon($filepath);
                 break;
             case "video":
+		$caption = $this->mediaQueue[$id]['caption'];
                 $icon = createVideoIcon($filepath);
                 break;
             default:
+		$caption = '';
                 $icon = '';
                 break;
         }
@@ -2702,6 +2708,7 @@ class WhatsProt
             $filename,
             $filesize,
             $filehash,
+			$caption,
             $icon
         );
         return true;
@@ -2779,13 +2786,13 @@ class WhatsProt
      * @param bool $storeURLmedia Keep a copy of the media file
      * @return bool
      */
-    protected function sendCheckAndSendMedia($filepath, $maxSize, $to, $type, $allowedExtensions, $storeURLmedia)
+    protected function sendCheckAndSendMedia($filepath, $maxSize, $to, $type, $allowedExtensions, $storeURLmedia, $caption = "")
     {
         if ($this->getMediaFile($filepath, $maxSize) == true) {
             if (in_array($this->mediaFileInfo['fileextension'], $allowedExtensions)) {
                 $b64hash = base64_encode(hash_file("sha256", $this->mediaFileInfo['filepath'], true));
                 //request upload
-                $this->sendRequestFileUpload($b64hash, $type, $this->mediaFileInfo['filesize'], $this->mediaFileInfo['filepath'], $to);
+                $this->sendRequestFileUpload($b64hash, $type, $this->mediaFileInfo['filesize'], $this->mediaFileInfo['filepath'], $to, $caption);
                 $this->processTempMediaFile($storeURLmedia);
                 return true;
             } else {
@@ -3002,7 +3009,7 @@ class WhatsProt
      * @param string $to
      *  Recipient
      */
-    protected function sendRequestFileUpload($b64hash, $type, $size, $filepath, $to)
+    protected function sendRequestFileUpload($b64hash, $type, $size, $filepath, $to, $caption = "")
     {
         $hash = array();
         $hash["hash"] = $b64hash;
@@ -3023,7 +3030,7 @@ class WhatsProt
         }
         //add to queue
         $messageId = $this->createMsgId("message");
-        $this->mediaQueue[$id] = array("messageNode" => $node, "filePath" => $filepath, "to" => $to, "message_id" => $messageId);
+        $this->mediaQueue[$id] = array("messageNode" => $node, "filePath" => $filepath, "to" => $to, "message_id" => $messageId, "caption" => $caption);
 
         $this->sendNode($node);
         $this->waitForServer($hash["id"]);
