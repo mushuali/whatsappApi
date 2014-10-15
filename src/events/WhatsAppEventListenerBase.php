@@ -161,7 +161,7 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $width,
         $height,
         $thumbnail,
-	$caption
+        $caption
     ) {}
 
     function onGetLocation(
@@ -259,7 +259,7 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $vcodec,
         $acodec,
         $thumbnail,
-	$caption
+        $caption
     ) {}
 
     function onGroupsChatCreate(
