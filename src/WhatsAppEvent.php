@@ -360,11 +360,11 @@ class WhatsAppEvent
         $filehash,
         $width,
         $height,
-        $caption,
-        $thumbnail
+        $thumbnail,
+        $caption
     ) {
-        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $msgid, $type, $time, $name, $size, $url, $file, $mimetype, $filehash, $width, $height, $caption, $thumbnail) {
-            $listener->onGetImage($phone, $from, $msgid, $type, $time, $name, $size, $url, $file, $mimetype, $filehash, $width, $height, $caption, $thumbnail);
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $msgid, $type, $time, $name, $size, $url, $file, $mimetype, $filehash, $width, $height, $thumbnail, $caption) {
+            $listener->onGetImage($phone, $from, $msgid, $type, $time, $name, $size, $url, $file, $mimetype, $filehash, $width, $height, $thumbnail, $caption);
         };
         $this->fireCallback($callbackEvent);
     }
@@ -528,11 +528,11 @@ class WhatsAppEvent
         $duration,
         $vcodec,
         $acodec,
-        $caption,
-        $thumbnail
+        $thumbnail,
+        $caption
     ) {
-        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $msgid, $type, $time, $name, $url, $file, $size, $mimetype, $filehash, $duration, $vcodec, $acodec, $caption, $thumbnail){
-            $listener->onGetVideo($phone, $from, $msgid, $type, $time, $name, $url, $file, $size, $mimetype, $filehash, $duration, $vcodec, $acodec, $caption, $thumbnail);
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $msgid, $type, $time, $name, $url, $file, $size, $mimetype, $filehash, $duration, $vcodec, $acodec, $thumbnail, $caption){
+            $listener->onGetVideo($phone, $from, $msgid, $type, $time, $name, $url, $file, $size, $mimetype, $filehash, $duration, $vcodec, $acodec, $thumbnail, $caption);
         };
         $this->fireCallback($callbackEvent);
     }
