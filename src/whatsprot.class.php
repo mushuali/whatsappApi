@@ -46,9 +46,9 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.414';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.414 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
-    const WHATSAPP_VER_CHECKER = 'http://www.whatsapp.com/android/current/WhatsApp.version';
+    const WHATSAPP_VER = '2.11.416';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.416 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
      * Property declarations.
@@ -415,7 +415,7 @@ class WhatsProt
           echo "\nUp to date :)\n\n";
         }
         else{
-          $classesMD5 = file_get_contents('https://mgp25.com/WAToken/WhatsApp.token');
+          $classesMD5 = file_get_contents('https://coderus.openrepos.net/whitesoft/whatsapp_classes');
 
           updateData('token.php', $WAver, $classesMD5);
           updateData('whatsprot.class.php', $WAver);
