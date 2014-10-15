@@ -191,7 +191,8 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $filehash,
         $width,
         $height,
-        $thumbnail
+        $thumbnail,
+		$caption
     ) {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }
@@ -308,7 +309,8 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $duration,
         $vcodec,
         $acodec,
-        $thumbnail
+        $thumbnail,
+		$caption
     ) {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }
@@ -511,6 +513,7 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $filename,
         $filesize,
         $filehash,
+		$caption,
         $icon
     ) {
         $this->handleEvent(__FUNCTION__, func_get_args());
