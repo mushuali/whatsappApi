@@ -190,6 +190,18 @@ function updateData($nameFile, $WAver, $classesMD5 = "")
 	fclose($open);
 }
 
+/**
+ * This function generates a paymentLink where you can extend the account-expiration.
+ *
+ * @param string $number
+ * Your number with international code, e.g. 49123456789
+ * @param int $sku
+ * The Time in years (1, 3 or 5) you want to extend the account-expiration.
+ *
+ * @return string
+ * Returns the link.
+ *
+**/
 function generatePaymentLink($number, $sku)
 {
 	if ( $sku != 1 or $sku != 3 or $sku != 5 )
