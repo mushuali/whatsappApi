@@ -2052,7 +2052,7 @@ class WhatsProt
                         $node->getChild("media")->getAttribute('filehash'),
                         $node->getChild("media")->getAttribute('width'),
                         $node->getChild("media")->getAttribute('height'),
-			$node->getChild("media")->getAttribute('caption'),
+                        $node->getChild("media")->getAttribute('caption'),
                         $node->getChild("media")->getData()
                     );
                 } elseif ($node->getChild("media")->getAttribute('type') == 'video') {
@@ -2071,7 +2071,7 @@ class WhatsProt
                         $node->getChild("media")->getAttribute('duration'),
                         $node->getChild("media")->getAttribute('vcodec'),
                         $node->getChild("media")->getAttribute('acodec'),
-			$node->getChild("media")->getAttribute('caption'),
+                        $node->getChild("media")->getAttribute('caption'),
                         $node->getChild("media")->getData()
                     );
                 } elseif ($node->getChild("media")->getAttribute('type') == 'audio') {
