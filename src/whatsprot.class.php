@@ -2052,7 +2052,7 @@ class WhatsProt
                         $node->getChild("media")->getAttribute('filehash'),
                         $node->getChild("media")->getAttribute('width'),
                         $node->getChild("media")->getAttribute('height'),
-						$node->getChild("media")->getAttribute('caption'),
+			$node->getChild("media")->getAttribute('caption'),
                         $node->getChild("media")->getData()
                     );
                 } elseif ($node->getChild("media")->getAttribute('type') == 'video') {
@@ -2071,7 +2071,7 @@ class WhatsProt
                         $node->getChild("media")->getAttribute('duration'),
                         $node->getChild("media")->getAttribute('vcodec'),
                         $node->getChild("media")->getAttribute('acodec'),
-						$node->getChild("media")->getAttribute('caption'),
+			$node->getChild("media")->getAttribute('caption'),
                         $node->getChild("media")->getData()
                     );
                 } elseif ($node->getChild("media")->getAttribute('type') == 'audio') {
@@ -2673,22 +2673,22 @@ class WhatsProt
         $mediaAttribs["file"] = $filename;
         $mediaAttribs["size"] = $filesize;
         $mediaAttribs["hash"] = $filehash;
-		$mediaAttribs["caption"] = $this->mediaQueue[$id]['caption'];
+	$mediaAttribs["caption"] = $this->mediaQueue[$id]['caption'];
 
         $filepath = $this->mediaQueue[$id]['filePath'];
         $to = $this->mediaQueue[$id]['to'];
 
         switch ($filetype) {
             case "image":
-				$caption = $this->mediaQueue[$id]['caption'];
+		$caption = $this->mediaQueue[$id]['caption'];
                 $icon = createIcon($filepath);
                 break;
             case "video":
-				$caption = $this->mediaQueue[$id]['caption'];
+		$caption = $this->mediaQueue[$id]['caption'];
                 $icon = createVideoIcon($filepath);
                 break;
             default:
-				$caption = '';
+		$caption = '';
                 $icon = '';
                 break;
         }
