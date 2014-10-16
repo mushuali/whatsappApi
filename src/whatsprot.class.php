@@ -154,8 +154,8 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
-     	$countryCode = null;
-        $langCode = null;
+		$countryCode = null;
+		$langCode = null;
         
         if ($countryCode == null && $phone['ISO3166'] != '') {
             $countryCode = $phone['ISO3166'];
