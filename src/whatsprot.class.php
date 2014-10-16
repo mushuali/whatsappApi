@@ -154,17 +154,15 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
+        $countryCode = 'US'; //setting to US default;
+        $langCode = 'en'; //setting to en default;
+        
         if ($countryCode == null && $phone['ISO3166'] != '') {
             $countryCode = $phone['ISO3166'];
         }
-        if ($countryCode == null) {
-            $countryCode = 'US';
-        }
+        
         if ($langCode == null && $phone['ISO639'] != '') {
             $langCode = $phone['ISO639'];
-        }
-        if ($langCode == null) {
-            $langCode = 'en';
         }
 
         // Build the url.
