@@ -37,7 +37,8 @@ $code = fgets(STDIN);
 
 try
 {
-  $w->codeRegister($code);
+  $result = $w->codeRegister(trim($code));
+  echo "\nYour password is: ".$result->pw;
 }
 catch(Exception $e)
 {
