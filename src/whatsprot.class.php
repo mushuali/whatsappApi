@@ -156,7 +156,7 @@ class WhatsProt
 
         $countryCode = null;
         $langCode = null;
-        
+
         if ($countryCode == null && $phone['ISO3166'] != '') {
             $countryCode = $phone['ISO3166'];
         }
@@ -236,7 +236,7 @@ class WhatsProt
 
         $countryCode = null;
         $langCode = null;
-        
+
         if ($countryCode == null && $phone['ISO3166'] != '') {
             $countryCode = $phone['ISO3166'];
         }
@@ -1979,13 +1979,14 @@ class WhatsProt
                 $node->getChild(0)->getTag()
             );
         }
-        elseif($node->getTag() == '' && $node->getAttribute("class") == "message")
+        elseif($node->getTag() == 'ack' && $node->getAttribute("class") == "message")
         {
             $this->eventManager()->fireMessageReceivedServer(
                 $this->phoneNumber,
                 $node->getAttribute('from'),
                 $node->getAttribute('id'),
-                $node->getAttribute('class')
+                $node->getAttribute('class'),
+                $node->getAttribute('t')
             );
         }
         elseif($node->getTag() == 'receipt')
@@ -2414,57 +2415,48 @@ class WhatsProt
                 case "contacts":
                     //TODO
                     break;
-                case "participant":
-                    if ($node->hasChild('remove')) {
-                        $this->eventManager()->fireGroupsParticipantsRemove(
-                            $this->phoneNumber,
-                            $node->getAttribute('from'),
-                            $node->getChild(0)->getAttribute('jid'),
-                            $node->getChild(0)->getAttribute('author')
-                        );
-                    } else if ($node->hasChild('add')) {
-                        $this->eventManager()->fireGroupsParticipantsAdd(
-                            $this->phoneNumber,
-                            $node->getAttribute('from'),
-                            $node->getChild(0)->getAttribute('jid')
-                        );
+                case "encrypt":
+                    $value = $node->getChild(0)->getAttribute('value');
+                    if (is_numeric($value)){
+
+
                     }
-                    //TODO
-                    break;
-               	case "subject":
-                    $this->eventManager()->fireGetGroupsSubject(
-                        $this->phoneNumber,
-                        $node->getAttribute('from'),
-                        $node->getAttribute('t'),
-                        $node->getAttribute('participant'),
-                        $node->getAttribute('participant'),
-                        $node->getAttribute('notify'),
-                        $node->getChild(0)->getData()
-                    );
-                    //TODO
-                    break;
-                  case "w:gp2":
+                    else{
+                      echo "Corrupt Stream: value " . $value . "is not numeric";
+                    }
+                case "w:gp2":
                     if ($node->hasChild('remove')) {
                         $this->eventManager()->fireGroupsParticipantsRemove(
                             $this->phoneNumber,
                             $node->getAttribute('from'),
                             $node->getChild(0)->getAttribute('jid')
                         );
-                    } else if ($node->hasChild('add')) {
+                  } else if ($node->hasChild('add')) {
                         $this->eventManager()->fireGroupsParticipantsAdd(
                             $this->phoneNumber,
                             $node->getAttribute('from'),
                             $node->getChild(0)->getAttribute('jid')
                         );
-                    }
-                      else if ($node->hasChild('create')) {
-                        $this->eventManager()->fireGroupisCreated(
-                          $this->phoneNumber,
-                          $node->getChild(0)->getChild(0)->getAttribute('creator'),
-                          $node->getChild(0)->getChild(0)->getAttribute('id'),
-                          $node->getChild(0)->getChild(0)->getAttribute('subject')
-                    );
                   }
+                    else if ($node->hasChild('create')) {
+                        $this->eventManager()->fireGroupisCreated(
+                            $this->phoneNumber,
+                            $node->getChild(0)->getChild(0)->getAttribute('creator'),
+                            $node->getChild(0)->getChild(0)->getAttribute('id'),
+                            $node->getChild(0)->getChild(0)->getAttribute('subject')
+                        );
+                  }
+                    else if ($node->hasChild('subject')) {
+                        $this->eventManager()->fireGetGroupsSubject(
+                            $this->phoneNumber,
+                            $node->getAttribute('from'),
+                            $node->getAttribute('t'),
+                            $node->getAttribute('participant'),
+                            $node->getAttribute('participant'),
+                            $node->getAttribute('notify'),
+                            $node->getChild(0)->getAttribute('subject')
+                        );
+                    }
                     break;
                   case "account":
                     if (($node->getChild(0)->getAttribute('author')) == "")
