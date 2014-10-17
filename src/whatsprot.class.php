@@ -2418,12 +2418,12 @@ class WhatsProt
                 case "encrypt":
                     $value = $node->getChild(0)->getAttribute('value');
                     if (is_numeric($value)){
-
-
+                    //TODO
                     }
                     else{
                       echo "Corrupt Stream: value " . $value . "is not numeric";
                     }
+                    break;
                 case "w:gp2":
                     if ($node->hasChild('remove')) {
                         $this->eventManager()->fireGroupsParticipantsRemove(
