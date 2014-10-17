@@ -672,10 +672,11 @@ class WhatsAppEvent
         $phone,
         $from,
         $msgid,
-        $type
+        $type,
+        $time
     ) {
-        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $msgid, $type) {
-            $listener->onMessageReceivedServer($phone, $from, $msgid, $type);
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $msgid, $type, $time) {
+            $listener->onMessageReceivedServer($phone, $from, $msgid, $type, $time);
         };
         $this->fireCallback($callbackEvent);
     }
