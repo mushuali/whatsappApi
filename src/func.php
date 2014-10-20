@@ -169,18 +169,18 @@ function ArrayEmojis(){
 
 function updateData($nameFile, $WAver, $classesMD5 = "")
 {
-	$file = $nameFile;
+	$file = __DIR__."/".$nameFile;
 	$open = fopen($file, 'r+');
 	$content = fread($open,filesize($file));
 	fclose($open);
 
 	$content = explode("\n",$content);
 
-	if ($file == 'token.php')
-		$content[5] = '  $classesMd5 = '."\"".$classesMD5."\"; // $WAver";
-	else if ($file == 'whatsprot.class.php'){
-		$content[48] = '    const WHATSAPP_VER = \''.$WAver. '\';                // The WhatsApp version.';
-		$content[49] = '    const WHATSAPP_USER_AGENT = \'WhatsApp/'.$WAver.' Android/4.3 Device/GalaxyS3\'; // User agent used in request/registration code.';
+	if ($file == __DIR__.'/token.php')
+		$content[5] = '  $classesMd5 = '."\"".trim($classesMD5)."\"; // $WAver";
+	else if ($file == __DIR__.'/whatsprot.class.php'){
+		$content[48] = '    const WHATSAPP_VER = \''.trim($WAver). '\';                // The WhatsApp version.';
+		$content[49] = '    const WHATSAPP_USER_AGENT = \'WhatsApp/'.trim($WAver).' Android/4.3 Device/GalaxyS3\'; // User agent used in request/registration code.';
 	}
 
 	$content = implode("\n",$content);
