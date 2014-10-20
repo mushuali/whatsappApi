@@ -2,7 +2,22 @@
 
 Interface to WhatsApp Messenger
 
+**Read the [wiki](https://github.com/mgp25/WhatsAPI-Official/wiki)** and previous issues before opeining a new one! Maybe your issue is already answered.
+
 ----------
+
+### Special thanks
+
+I would like to thank all those who have made this project goes forward. First I have to thank [@shirioko](https://github.com/shirioko/) aka hero, when I came to the project, i knew nothing and introduced me to the project. He has been responsible of the API for a long time and he always be a hero! Now it's my turn and i hope to do as good as i can to make this API better.
+
+And I also want to thank all the users that are collaborating with me and are making such good work:
+
+- [pastoso](https://github.com/pastoso)
+- [CODeRUS](https://github.com/CODeRUS)
+- [GitsUp](https://github.com/GitsUp)
+- [SikiFn](https://github.com/SikiFn)
+- [Dennobaby](https://github.com/Dennobaby)
+
 
 ### Update October 7th, 2014
 
