@@ -2413,7 +2413,7 @@ class WhatsProt
                 }
             }
             if ($node->nodeIdContains("get_lists")) {
-                $broadcastLists = array();		
+                $broadcastLists = array();
                 if ($node->getChild(0) != null) {
                     $childArray = $node->getChildren();
                     foreach ($childArray as $list) {
