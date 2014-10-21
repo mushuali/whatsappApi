@@ -2372,6 +2372,16 @@ class WhatsProt
                     );
                 }
             }
+            if($node->getChild("pricing") != null)
+            {
+              $this->eventManager()->fireGetServicePricing(
+                $this->phoneNumber,
+                $node->getChild(0)->getAttribute("price"),
+                $node->getChild(0)->getAttribute("cost"),
+                $node->getChild(0)->getAttribute("currency"),
+                $node->getChild(0)->getAttribute("expiration")
+              );	
+            }
             if($node->getChild("status") != null)
             {
                 $child = $node->getChild("status");

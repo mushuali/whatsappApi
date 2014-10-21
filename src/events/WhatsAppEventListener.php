@@ -376,6 +376,14 @@ interface WhatsAppEventListener {
         $msgid // The message id.
     );
 
+    function onGetServicePricing(
+        $phone, //the user phone number including country code.
+        $price, //price string.
+        $cost, //cost int.
+        $currency, //currency-code.
+        $expiration //the unix time when account expires.
+    );
+
     function onPresence(
         $phone, // The user phone number including the country code.
         $from, // The sender JID.
