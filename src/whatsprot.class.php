@@ -2381,7 +2381,7 @@ class WhatsProt
                 $node->getChild(0)->getAttribute("currency"),
                 $node->getChild(0)->getAttribute("expiration")
               );	
-			}
+            }
             if($node->getChild("status") != null)
             {
                 $child = $node->getChild("status");
