@@ -336,6 +336,14 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $expiration
     ) {}
 
+    function onGetServicePricing(
+        $phone,
+        $price,
+        $cost,
+        $currency,
+        $expiration
+    ) {}
+
     function onPing(
         $phone,
         $msgid
