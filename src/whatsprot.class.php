@@ -859,6 +859,30 @@ class WhatsProt
                 ), array($child), null);
         $this->sendNode($node);
     }
+    
+	/**
+	* Send a request to get the current service pricing
+	*
+	*  @param string $lg
+	*   Language
+	*  @param string $lc
+	*   Country
+	*/
+	public function sendGetServicePricing($lg, $lc)
+	{
+		$msgId = $this->createMsgId("get_service_pricing_");
+		$pricingNode = new ProtocolNode("pricing", array(
+			"lg" => $lg,
+			"lc" => $lc
+		), null, null);
+		$node = new ProtocolNode("iq", array(
+			"id" => $msgId,
+			"xmlns" => "urn:xmpp:whatsapp:account",
+			"type" => "get",
+			"to" => "s.whatsapp.net"
+			), array($pricingNode), null);
+		$this->sendNode($node);
+	}
 
     /**
      * Get the current status message of a specific user.
