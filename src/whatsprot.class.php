@@ -2428,6 +2428,28 @@ class WhatsProt
                     );
                 }
             }
+            if ($node->nodeIdContains("get_lists")) {
+                $broadcastLists = array();
+                if ($node->getChild(0) != null) {
+                    $childArray = $node->getChildren();
+                    foreach ($childArray as $list) {
+                        foreach ( $list->getChildren() as $sublist) {
+                            $id = $sublist->getAttribute("id");
+                            $name = $sublist->getAttribute("name");
+                            $broadcastLists[$id]['name'] = $name;
+                            $recipients = array();
+                            foreach ($sublist->getChildren() as $recipient) {
+                                array_push($recipients, $recipient->getAttribute('jid'));
+                            }
+                            $broadcastLists[$id]['recipients'] = $recipients;
+                        }
+                    }
+                }
+                $this->eventManager()->fireGetBroadcastLists(
+                  $this->phoneNumber,
+                  $broadcastLists
+                );
+            }
             if($node->getChild("pricing") != null)
             {
               $this->eventManager()->fireGetServicePricing(
