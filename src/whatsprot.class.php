@@ -883,6 +883,29 @@ class WhatsProt
 			), array($pricingNode), null);
 		$this->sendNode($node);
 	}
+	
+	/**
+	* Send a request to get the normalized mobile number respresenting the JID
+	*
+	*  @param string $countryCode
+	*   Contry Code
+	*  @param string $number
+	*   Mobile Number
+	*/
+	public function sendGetNormalizedJid($countryCode, $number)
+	{
+		$msgId = $this->createMsgId("get_normalized_jid_");
+		$ccNode = new ProtocolNode("cc", null, null, $countryCode);
+		$inNode = new ProtocolNode("in", null, null, $number);
+		$normalizeNode = new ProtocolNode("normalize", null, array($ccNode, $inNode), null);
+		$node = new ProtocolNode("iq", array(
+			"id" => $msgId,
+			"xmlns" => "urn:xmpp:whatsapp:account",
+			"type" => "get",
+			"to" => "s.whatsapp.net"
+			), array($normalizeNode), null);
+		$this->sendNode($node);
+	}
 
     /**
      * Get the current status message of a specific user.
