@@ -2405,6 +2405,13 @@ class WhatsProt
                 $node->getChild(0)->getAttribute("expiration")
               );	
             }
+            if($node->getChild("normalize") != null)
+            {
+              $this->eventManager()->fireGetNormalizedJid(
+                $this->phoneNumber,
+                $node->getChild(0)->getAttribute("result")
+              );
+            }
             if($node->getChild("status") != null)
             {
                 $child = $node->getChild("status");
