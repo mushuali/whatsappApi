@@ -428,6 +428,13 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }
 
+    function onGetBroadcastLists(
+        $phone,
+        $broadcastLists
+    ) {
+        $this->handleEvent(__FUNCTION__, func_get_args());
+    }
+
     function onPing(
         $phone,
         $msgid

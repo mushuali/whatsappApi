@@ -863,4 +863,14 @@ class WhatsAppEvent
         $this->fireCallback($callbackEvent);
     }
 
+    function fireGetBroadcastLists(
+        $phone,
+        $broadcastLists
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $broadcastLists) {
+            $listener->onGetBroadcastLists($phone, $broadcastLists);
+        };
+        $this->fireCallback($callbackEvent);
+    }
+
 }

@@ -349,6 +349,11 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $result
     ) {}
 
+    function onGetBroadcastLists(
+        $phone,
+        $broadcastLists
+    ) {}
+
     function onPing(
         $phone,
         $msgid

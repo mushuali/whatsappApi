@@ -389,6 +389,11 @@ interface WhatsAppEventListener {
         $result //the normalized jid 
     );
 
+    function onGetBroadcastLists(
+        $phone, //the user phone number including country code.
+        $broadcastLists //a multidimensional array with the lists 
+    );
+
     function onPresence(
         $phone, // The user phone number including the country code.
         $from, // The sender JID.
