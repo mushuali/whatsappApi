@@ -883,6 +883,22 @@ class WhatsProt
 			), array($pricingNode), null);
 		$this->sendNode($node);
 	}
+
+  /**
+	* Gets all the broadcast lists for an account
+	*/
+	public function sendGetBroadcastLists()
+	{
+		$msgId = $this->createMsgId("get_lists_");
+		$listsNode = new ProtocolNode("lists", null, null, null);
+		$node = new ProtocolNode("iq", array(
+			"id" => $msgId,
+			"xmlns" => "w:b",
+			"type" => "get",
+			"to" => "s.whatsapp.net"
+			), array($listsNode), null);
+		$this->sendNode($node);
+	}
 	
 	/**
 	* Send a request to get the normalized mobile number respresenting the JID
