@@ -4,6 +4,8 @@ Interface to WhatsApp Messenger
 
 **Read the [wiki](https://github.com/mgp25/WhatsAPI-Official/wiki)** and previous issues before opeining a new one! Maybe your issue is already answered.
 
+**[WhatsApp incoming updates log](https://github.com/mgp25/WhatsAPI-Official/wiki/WhatsApp-incoming-updates)**
+
 ----------
 
 ### Special thanks
