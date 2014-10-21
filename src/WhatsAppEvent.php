@@ -853,4 +853,14 @@ class WhatsAppEvent
         $this->fireCallback($callbackEvent);
     }
 
+    function fireGetNormalizedJid(
+        $phone,
+        $result
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $result) {
+            $listener->onGetNormalizedJid($phone, $result);
+        };
+        $this->fireCallback($callbackEvent);
+    }
+
 }

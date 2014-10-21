@@ -344,6 +344,11 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $expiration
     ) {}
 
+    function onGetNormalizedJid(
+        $phone,
+        $result
+    ) {}
+
     function onPing(
         $phone,
         $msgid
