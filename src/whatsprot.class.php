@@ -1424,7 +1424,7 @@ class WhatsProt
     /*
     *	Removes the profile photo
     */
-	public function sendRemoveProfilePhoto() {
+	public function sendRemoveProfilePicture() {
 		$picture = new ProtocolNode("picture", null, null, null);
 		
 		$thumb = new ProtocolNode("picture", array("type" => "preview"), null, null);
