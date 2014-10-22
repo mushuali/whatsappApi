@@ -884,6 +884,22 @@ class WhatsProt
 		$this->sendNode($node);
 	}
 
+	/**
+	* Send a request to extend the account
+	*/
+	public function sendExtendAccount()
+	{
+		$msgId = $this->createMsgId("extend_account_");
+		$extendingNode = new ProtocolNode("extend", null, null, null);
+		$node = new ProtocolNode("iq", array(
+			"id" => $msgId,
+			"xmlns" => "urn:xmpp:whatsapp:account",
+			"type" => "set",
+			"to" => "s.whatsapp.net"
+			), array($extendingNode), null);
+		$this->sendNode($node);
+	}
+
   /**
 	* Gets all the broadcast lists for an account
 	*/
@@ -2458,6 +2474,16 @@ class WhatsProt
                 $node->getChild(0)->getAttribute("cost"),
                 $node->getChild(0)->getAttribute("currency"),
                 $node->getChild(0)->getAttribute("expiration")
+              );
+            }
+            if($node->getChild("extend") != null)
+            {
+              $this->eventManager()->fireGetExtendAccount(
+                $this->phoneNumber,
+                $node->getChild("account")->getAttribute("kind"),
+                $node->getChild("account")->getAttribute("status"),
+                $node->getChild("account")->getAttribute("creation"),
+                $node->getChild("account")->getAttribute("expiration")
               );
             }
             if($node->getChild("normalize") != null)
