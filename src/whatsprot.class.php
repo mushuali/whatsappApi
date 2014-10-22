@@ -2485,7 +2485,7 @@ class WhatsProt
                 $node->getChild("account")->getAttribute("creation"),
                 $node->getChild("account")->getAttribute("expiration")
               );
-			}
+            }
             if($node->getChild("normalize") != null)
             {
               $this->eventManager()->fireGetNormalizedJid(
