@@ -853,6 +853,19 @@ class WhatsAppEvent
         $this->fireCallback($callbackEvent);
     }
 
+    function fireGetExtendAccount(
+        $phone,
+        $kind,
+        $status,
+        $creation,
+        $expiration
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $kind, $status, $creation, $expiration) {
+            $listener->onGetExtendAccount($phone, $kind, $status, $creation, $expiration);
+        };
+        $this->fireCallback($callbackEvent);
+    }
+
     function fireGetNormalizedJid(
         $phone,
         $result

@@ -2476,6 +2476,16 @@ class WhatsProt
                 $node->getChild(0)->getAttribute("expiration")
               );
             }
+            if($node->getChild("extend") != null)
+            {
+              $this->eventManager()->fireGetExtendAccount(
+                $this->phoneNumber,
+                $node->getChild("account")->getAttribute("kind"),
+                $node->getChild("account")->getAttribute("status"),
+                $node->getChild("account")->getAttribute("creation"),
+                $node->getChild("account")->getAttribute("expiration")
+              );
+			}
             if($node->getChild("normalize") != null)
             {
               $this->eventManager()->fireGetNormalizedJid(

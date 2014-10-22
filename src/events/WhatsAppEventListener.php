@@ -384,6 +384,14 @@ interface WhatsAppEventListener {
         $expiration //the unix time when account expires.
     );
 
+    function onGetExtendAccount(
+        $phone, //the user phone number including country code.
+        $kind, //kind-string, e.g "free"
+        $status, //status string.
+        $creation, //unix timestamp of account creation.
+        $expiration //the unix time when account expires.
+    );
+
     function onGetNormalizedJid(
         $phone, //the user phone number including country code.
         $result //the normalized jid 
