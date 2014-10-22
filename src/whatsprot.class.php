@@ -1420,6 +1420,25 @@ class WhatsProt
     {
         $this->sendSetPicture($this->phoneNumber, $path);
     }
+    
+    /*
+    *	Removes the profile photo
+    */
+	public function sendRemoveProfilePhoto() {
+		$picture = new ProtocolNode("picture", null, null, null);
+		
+		$thumb = new ProtocolNode("picture", array("type" => "preview"), null, null);
+		
+		$hash = array();
+		$nodeID = $this->createMsgId("setphoto");
+		$hash["id"] = $nodeID;
+		$hash["to"] = $this->getJID($this->phoneNumber);
+		$hash["type"] = "set";
+		$hash["xmlns"] = "w:profile:picture";
+		$node = new ProtocolNode("iq", $hash, array($picture, $thumb), null);
+		
+		$this->sendNode($node);	
+	}
 
     /**
      * Set the recovery token for your account to allow you to
