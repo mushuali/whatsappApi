@@ -1197,7 +1197,8 @@ class WhatsProt
     }
 
     /**
-     * Promote participant(s) of a group.
+     * Promote participant(s) of a group
+     * Makes a participant admin of a group
      *
      * @param string $groupId
      *   The group ID.
@@ -1215,6 +1216,7 @@ class WhatsProt
 
     /**
      * Demote participant(s) of a group.
+     * Remove participant of being admin of a group.
      *
      * @param string $groupId
      *   The group ID.
@@ -1228,6 +1230,51 @@ class WhatsProt
           $participants = array($participants);
       }
       $this->sendGroupsChangeParticipants($gId, $participants, "demote", $msgId);
+    }
+
+   /**
+    * Lock group: Paritipants cant change group subject or
+    *             profile picture except admin
+    *
+    * @param string $groupId
+    *   The group ID.
+    */
+    public function sendLockGroup($gId)
+    {
+      $msgId = $this->createMsgId("lock_group_");
+      $lockedNode = new ProtocolNode("locked", null, null, null);
+      $node = new ProtocolNode("iq", array(
+        "id" => $msgId,
+        "xmlns" => "w:g2",
+        "type" => "set",
+        "to" => $this->getJID($gId);
+      ), array($lockedNode), null);
+
+      $this->sendNode($node);
+      $this->waitForServer($msgId);
+    }
+
+   /**
+    * Unlock group: Any participant can change
+    *               group subject or profile picture
+    *
+    *
+    * @param string $groupId
+    *   The group ID.
+    */
+    public function sendUnlockGroup($gId)
+    {
+      $msgId = $this->createMsgId("unlock_group_");
+      $unlockedNode = new ProtocolNode("unlocked", null, null, null);
+      $node = new ProtocolNode("iq", array(
+        "id" => $msgId,
+        "xmlns" => "w:g2",
+        "type" => "set",
+        "to" => $this->getJID($gId);
+      ), array($unlockedNode), null);
+
+      $this->sendNode($node);
+      $this->waitForServer($msgId);
     }
 
     /**
