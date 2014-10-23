@@ -915,7 +915,7 @@ class WhatsProt
 			), array($listsNode), null);
 		$this->sendNode($node);
 	}
-	
+
 	/**
 	* Send a request to get the normalized mobile number respresenting the JID
 	*
@@ -939,6 +939,48 @@ class WhatsProt
 		$this->sendNode($node);
 	}
 
+  /**
+  * Removes an account from WhatsApp
+  *
+  * @param string $lg
+  * Language
+  * @param string $lc
+  * Country
+  * @param string $feedback
+  * User Feedback
+  */
+  public function sendRemoveAccount($lg = null, $lc = null, $feedback = null)
+  {
+    $msgId = $this->createMsgId("removeaccount_");
+    if($feedback != null && strlen($feedback) > 0)
+    {
+        if($lg == null) {
+            $lg = "";
+        }
+
+        if($lc == null) {
+            $lc = "";
+        }
+
+        $child = new ProtocolNode("body", array(
+            "lg" => $lg,
+            "lc" => $lc
+        ), null, $feedback);
+        $childNode = array($child);
+    }else{
+        $childNode = null;
+    }
+
+    $removeNode = new ProtocolNode("remove", null, $childNode, null);
+    $node = new ProtocolNode("iq", array(
+        "to" => "s.whatsapp.net",
+        "xmlns" => "urn:xmpp:whatsapp:account",
+        "type" => "get",
+        "id" => $msgId
+    ), array($removeNode), null);
+
+    $this->sendNode($node);
+  }
 
   /**
   * Send a ping to the server
@@ -1420,15 +1462,15 @@ class WhatsProt
     {
         $this->sendSetPicture($this->phoneNumber, $path);
     }
-    
+
     /*
     *	Removes the profile photo
     */
 	public function sendRemoveProfilePicture() {
 		$picture = new ProtocolNode("picture", null, null, null);
-		
+
 		$thumb = new ProtocolNode("picture", array("type" => "preview"), null, null);
-		
+
 		$hash = array();
 		$nodeID = $this->createMsgId("setphoto");
 		$hash["id"] = $nodeID;
@@ -1436,8 +1478,8 @@ class WhatsProt
 		$hash["type"] = "set";
 		$hash["xmlns"] = "w:profile:picture";
 		$node = new ProtocolNode("iq", $hash, array($picture, $thumb), null);
-		
-		$this->sendNode($node);	
+
+		$this->sendNode($node);
 	}
 
     /**
