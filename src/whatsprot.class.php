@@ -663,6 +663,36 @@ class WhatsProt
     }
 
     /**
+     * Delete Broadcast lists
+     *
+     * @param  string array $lists
+     * Contains the broadcast-id list
+     */
+    public function sendDeleteBroadcastLists($lists)
+    {
+        $msgId = $this->createMsgId("delete_list_");
+        $listNode = array();
+        if($lists != null && count($lists) > 0)
+        {
+          for($i = 0; $i < count($lists); $i++)
+          {
+            $listNode[$i] = new ProtocolNode("list", array("id" => $lists[$i]), null, null);
+          }
+        }else{
+          $listNode = null;
+        }
+        $deleteNode = new ProtocolNode("delete", null, $listNode, null);
+        $node = new ProtocolNode("iq", array(
+          "id" => $msgId,
+          "xmlns" => "w:b",
+          "type" => "set",
+          "to" => "s.whatsapp.net"
+        ), array($deleteNode), null);
+
+        $this->sendNode($node);
+    }
+
+    /**
      * Clears the "dirty" status on your account
      *
      * @param  array $categories
