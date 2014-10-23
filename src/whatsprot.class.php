@@ -1172,10 +1172,11 @@ class WhatsProt
      */
     public function sendGroupsParticipantsAdd($groupId, $participants)
     {
+        $msgId = $this->createMsgId("add_group_participants_");
         if(!is_array($participants)) {
             $participants = array($participants);
         }
-        $this->sendGroupsChangeParticipants($groupId, $participants, 'add');
+        $this->sendGroupsChangeParticipants($groupId, $participants, 'add', $msgId);
     }
 
     /**
@@ -1188,10 +1189,45 @@ class WhatsProt
      */
     public function sendGroupsParticipantsRemove($groupId, $participants)
     {
+        $msgId = $this->createMsgId("remove_group_participants_");
         if(!is_array($participants)) {
             $participants = array($participants);
         }
-        $this->sendGroupsChangeParticipants($groupId, $participants, 'remove');
+        $this->sendGroupsChangeParticipants($groupId, $participants, 'remove', $msgId);
+    }
+
+    /**
+     * Promote participant(s) of a group.
+     *
+     * @param string $groupId
+     *   The group ID.
+     * @param array $participants
+     *   An array with the participants numbers to promote
+     */
+    public function sendPromoteParticipants($gId, $participants)
+    {
+      $msgId = $this->createMsgId("promote_group_participants_");
+      if(!is_array($participants)) {
+          $participants = array($participants);
+      }
+      $this->sendGroupsChangeParticipants($gId, $participants, "promote", $msgId);
+    }
+
+    /**
+     * Demote participant(s) of a group.
+     *
+     * @param string $groupId
+     *   The group ID.
+     * @param array $participants
+     *   An array with the participants numbers to demote
+     */
+    public function sendDemoteParticipants($gId, $participants)
+    {
+      $msgId = $this->createMsgId("demote_group_participants_");
+      if(!is_array($participants)) {
+          $participants = array($participants);
+      }
+      $this->sendGroupsChangeParticipants($gId, $participants, "demote", $msgId);
     }
 
     /**
@@ -3127,7 +3163,7 @@ class WhatsProt
      * @param string $tag
      *   The tag action. 'add' or 'remove'
      */
-    protected function sendGroupsChangeParticipants($groupId, $participants, $tag)
+    protected function sendGroupsChangeParticipants($groupId, $participants, $tag, $id)
     {
         $_participants = array();
         foreach ($participants as $participant) {
@@ -3138,9 +3174,9 @@ class WhatsProt
         $child = new ProtocolNode($tag, $childHash, $_participants, "");
 
         $setHash = array();
-        $setHash["id"] = $this->createMsgId("participants");
+        $setHash["id"] = $id;
         $setHash["type"] = "set";
-        $setHash["xmlns"] = "w:g";
+        $setHash["xmlns"] = "w:g2";
         $setHash["to"] = $this->getJID($groupId);
 
         $node = new ProtocolNode("iq", $setHash, array($child), "");
