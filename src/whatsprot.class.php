@@ -2134,13 +2134,7 @@ class WhatsProt
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
                 $this->mediaFileInfo['filepath'] = $filepath;
                 $this->mediaFileInfo['fileextension'] = pathinfo($filepath, PATHINFO_EXTENSION);
-                //TODO
-                //Get Mime type using finfo.
-//                $finfo = new finfo_open(FILEINFO_MIME_TYPE);
-//                $this->_mediafileinfo['filemimetype'] = finfo_file($finfo, $filepath);
-//                finfo_close($finfo);
-                //mime_content_type deprecated
-                $this->mediaFileInfo['filemimetype'] = mime_content_type($filepath);
+                $this->mediaFileInfo['filemimetype'] = get_mime($filepath);
                 return true;
             } else {
                 //File too big
