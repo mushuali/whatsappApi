@@ -416,17 +416,12 @@ class WhatsProt
         $WAverS = str_replace(".","",$WAver);
         $ver = str_replace(".","",static::WHATSAPP_VER);
 
-        if($ver>=$WAverS)
+        if($ver<$WAverS)
         {
-          echo "\nUp to date :)\n\n";
-        }
-        else{
           $classesMD5 = file_get_contents('https://coderus.openrepos.net/whitesoft/whatsapp_classes');
 
           updateData('token.php', $WAver, $classesMD5);
           updateData('whatsprot.class.php', $WAver);
-
-          echo "\n Token, User Agent and version were updated :)\n";
         }
 
         $Socket = fsockopen(static::WHATSAPP_HOST, static::PORT);
@@ -2698,7 +2693,7 @@ class WhatsProt
             throw new Exception('Error system-shutdown');
 
         }
-        
+
 
         if ($node->getTag() == "stream:error")
         {
