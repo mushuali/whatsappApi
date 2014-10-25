@@ -213,3 +213,21 @@ function generatePaymentLink($number, $sku)
   $link = $base.$number.$middle.$checksum.$end;
   return $link;
 }
+
+// Gets mime type of a file using various methods
+function get_mime($file) {
+	if (function_exists("finfo_file")) {
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$mime = finfo_file($finfo, $file);
+		finfo_close($finfo);
+		return $mime;
+	} else if (function_exists("mime_content_type")) {
+		return mime_content_type($file);
+	} else if (!strncasecmp(PHP_OS, 'WIN', 3) == 0 && !stristr(ini_get("disable_functions"), "shell_exec")) {
+		$file = escapeshellarg($file);
+		$mime = shell_exec("file -bi " . $file);
+		return $mime;
+	} else {
+		return false;
+	}
+}
