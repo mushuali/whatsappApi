@@ -1247,7 +1247,7 @@ class WhatsProt
         "id" => $msgId,
         "xmlns" => "w:g2",
         "type" => "set",
-        "to" => $this->getJID($gId);
+        "to" => $this->getJID($gId)
       ), array($lockedNode), null);
 
       $this->sendNode($node);
@@ -1270,7 +1270,7 @@ class WhatsProt
         "id" => $msgId,
         "xmlns" => "w:g2",
         "type" => "set",
-        "to" => $this->getJID($gId);
+        "to" => $this->getJID($gId)
       ), array($unlockedNode), null);
 
       $this->sendNode($node);
