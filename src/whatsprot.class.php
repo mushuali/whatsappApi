@@ -822,6 +822,52 @@ class WhatsProt
     }
 
     /**
+     * Send a request to get privacy settings
+     */
+    public function sendGetPrivacySettings()
+    {
+      $msgId = $this->createMsgId("get_privacy_settings_");
+      $privacyNode = new ProtocolNode("privacy", null, null, null);
+      $node = new ProtocolNode("iq", array(
+        "to" => static::WHATSAPP_SERVER,
+        "id" => $msgId,
+        "xmlns" => "privacy",
+        "type" => "get"
+      ), array($privacyNode), null);
+
+      $this->sendNode($node);
+      $this->waitForServer($msgId);
+    }
+
+   /**
+    * Set privacy of 'last seen', status or profile picture
+    * to All, contacts or none
+    *
+    * @param string $category
+    *   Options: 'last', 'status' or 'profile'
+    * @param string $value
+    *   Options: 'all', 'contacts' or 'none'
+    */
+    public sendSetPrivacySettings($category, $value)
+    {
+      $msgId = $this->createMsgId("send_privacy_settings_");
+      $categoryNode = new ProtocolNode("category", array(
+        "name" => $category,
+        "value" => $value
+      ), null, null);
+      $privacyNode = new ProtocolNode("privacy", null, array($categoryNode), null);
+      $node = new ProtocolNode("iq", array(
+        "to" => static::WHATSAPP_SERVER,
+        "type" => "set",
+        "id" => $msgId,
+        "xmlns" => "privacy"
+      ), array($privacyNode), null);
+
+      $this->sendNode($node);
+      $this->waitForServer($msgId);
+    }
+
+    /**
      * Get profile picture of specified user
      *
      * @param string $number
