@@ -120,6 +120,7 @@ class WhatsProt
 
     /**
      * Add message to the outgoing queue.
+     * @param $node
      */
     public function addMsgOutQueue($node)
     {
@@ -558,9 +559,11 @@ class WhatsProt
      *
      * Approx 20 (unverified) is the maximum number of targets
      *
-     * @param  array  $targets       An array of numbers to send to.
-     * @param  string  $path          URL or local path to the audio file to send
-     * @param  bool $storeURLmedia Keep a copy of the audio file on your server
+     * @param array  $targets       An array of numbers to send to.
+     * @param string $path          URL or local path to the audio file to send
+     * @param bool   $storeURLmedia Keep a copy of the audio file on your server
+     * @param int    $fsize
+     * @param string $fhash
      */
     public function sendBroadcastAudio($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "")
     {
@@ -578,9 +581,11 @@ class WhatsProt
      *
      * Approx 20 (unverified) is the maximum number of targets
      *
-     * @param  array  $targets       An array of numbers to send to.
-     * @param  string  $path          URL or local path to the image file to send
-     * @param  bool $storeURLmedia Keep a copy of the audio file on your server
+     * @param array  $targets       An array of numbers to send to.
+     * @param string $path          URL or local path to the image file to send
+     * @param bool   $storeURLmedia Keep a copy of the audio file on your server
+     * @param int    $fsize
+     * @param string $fhash
      */
     public function sendBroadcastImage($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
@@ -646,8 +651,10 @@ class WhatsProt
      * Approx 20 (unverified) is the maximum number of targets
      *
      * @param  array  $targets       An array of numbers to send to.
-     * @param  string  $path          URL or local path to the video file to send
-     * @param  bool $storeURLmedia Keep a copy of the audio file on your server
+     * @param  string $path          URL or local path to the video file to send
+     * @param  bool   $storeURLmedia Keep a copy of the audio file on your server
+     * @param int     $fsize
+     * @param string  $fhash
      */
     public function sendBroadcastVideo($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
@@ -1339,13 +1346,13 @@ class WhatsProt
     }
 
     /**
-     * Send audio to the user/group.     *
+     * Send audio to the user/group.
      *
-     * @param $to
-     *   The recipient.
-     * @param string $filepath
-     *   The url/uri to the audio file.
-     * @param  bool $storeURLmedia Keep copy of file
+     * @param string $to            The recipient.
+     * @param string $filepath      The url/uri to the audio file.
+     * @param bool   $storeURLmedia Keep copy of file
+     * @param int    $fsize
+     * @param string $fhash
      * @return bool
      */
     public function sendMessageAudio($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "")
@@ -1723,6 +1730,7 @@ class WhatsProt
 
     /**
      * Sets the bind of the new message.
+     * @param $bind
      */
     public function setNewMessageBind($bind)
     {
@@ -1795,6 +1803,7 @@ class WhatsProt
     /**
      * Wait for Whatsapp server to acknowledge *it* has received message.
      * @param  string $id The id of the node sent that we are awaiting acknowledgement of.
+     * @param int     $timeout
      */
     public function waitForServer($id, $timeout = 5)
     {
@@ -1874,10 +1883,8 @@ class WhatsProt
 
     /**
      * Add stream features.
-     * @param bool $profileSubscribe
      *
-     * @return ProtocolNode
-     *   Return itself.
+     * @return ProtocolNode Return itself.
      */
     protected function createFeaturesNode()
     {
@@ -1983,10 +1990,7 @@ class WhatsProt
     /**
      * Send the nodes to the Whatsapp server to log in.
      *
-     * @param  bool $profileSubscribe
-     * Set this to true if you would like Whatsapp to send a
-     * notification to your phone when one of your contacts
-     * changes/update their picture.
+     * @throws Exception
      */
     protected function doLogin()
     {
@@ -2243,8 +2247,9 @@ class WhatsProt
     /**
      * Process inbound data.
      *
-     * @param string $data
-     *   The data to process.
+     * @param      $data
+     * @param bool $autoReceipt
+     * @throws Exception
      */
     protected function processInboundData($data, $autoReceipt = true)
     {
@@ -2258,7 +2263,9 @@ class WhatsProt
      * Will process the data from the server after it's been decrypted and parsed.
      *
      * This also provides a convenient method to use to unit test the event framework.
-     *
+     * @param ProtocolNode $node
+     * @param bool         $autoReceipt
+     * @throws Exception
      */
     protected function processInboundDataNode(ProtocolNode $node, $autoReceipt = true) {
         $this->debugPrint($node->nodeString("rx  ") . "\n");
@@ -3167,8 +3174,10 @@ class WhatsProt
 
     /**
      * Send a broadcast
-     * @param  array $targets Array of numbers to send to
-     * @param  object $node
+     * @param array  $targets Array of numbers to send to
+     * @param object $node
+     * @param        $type
+     * @return string
      */
     protected function sendBroadcast($targets, $node, $type)
     {
@@ -3276,10 +3285,10 @@ class WhatsProt
     /**
      * Send node to the servers.
      *
-     * @param $to
-     *   The recipient to send.
-     * @param $node ProtocolNode
-     *   The node that contains the message.
+     * @param              $to
+     * @param ProtocolNode $node
+     * @param null         $id
+     * @return null|string
      */
     protected function sendMessageNode($to, $node, $id = null)
     {
@@ -3322,8 +3331,8 @@ class WhatsProt
     /**
      * Tell the server we received the message.
      *
-     * @param ProtocolNode $msg
-     *   The ProtocolTreeNode that contains the message.
+     * @param ProtocolNode $msg The ProtocolTreeNode that contains the message.
+     * @param null         $type
      */
     protected function sendMessageReceived($msg, $type = null)
     {
@@ -3347,6 +3356,7 @@ class WhatsProt
     /**
      * Send node to the WhatsApp server.
      * @param ProtocolNode $node
+     * @param bool         $encrypt
      */
     protected function sendNode($node, $encrypt = true)
     {
