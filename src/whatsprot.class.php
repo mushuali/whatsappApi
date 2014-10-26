@@ -586,6 +586,7 @@ class WhatsProt
      * @param bool   $storeURLmedia Keep a copy of the audio file on your server
      * @param int    $fsize
      * @param string $fhash
+     * @param string $caption
      */
     public function sendBroadcastImage($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
@@ -650,11 +651,12 @@ class WhatsProt
      *
      * Approx 20 (unverified) is the maximum number of targets
      *
-     * @param  array  $targets       An array of numbers to send to.
-     * @param  string $path          URL or local path to the video file to send
-     * @param  bool   $storeURLmedia Keep a copy of the audio file on your server
+     * @param array   $targets       An array of numbers to send to.
+     * @param string  $path          URL or local path to the video file to send
+     * @param bool    $storeURLmedia Keep a copy of the audio file on your server
      * @param int     $fsize
      * @param string  $fhash
+     * @param string  $caption
      */
     public function sendBroadcastVideo($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
@@ -1248,10 +1250,8 @@ class WhatsProt
      * Promote participant(s) of a group
      * Makes a participant admin of a group
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants numbers to promote
+     * @param string $gId          The group ID.
+     * @param array  $participants An array with the participants numbers to promote
      */
     public function sendPromoteParticipants($gId, $participants)
     {
@@ -1266,10 +1266,8 @@ class WhatsProt
      * Demote participant(s) of a group.
      * Remove participant of being admin of a group.
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants numbers to demote
+     * @param string $gId          The group ID.
+     * @param array  $participants An array with the participants numbers to demote
      */
     public function sendDemoteParticipants($gId, $participants)
     {
@@ -1284,8 +1282,7 @@ class WhatsProt
     * Lock group: Paritipants cant change group subject or
     *             profile picture except admin
     *
-    * @param string $groupId
-    *   The group ID.
+    * @param string $gId The group ID.
     */
     public function sendLockGroup($gId)
     {
@@ -1302,14 +1299,13 @@ class WhatsProt
       $this->waitForServer($msgId);
     }
 
-   /**
-    * Unlock group: Any participant can change
-    *               group subject or profile picture
-    *
-    *
-    * @param string $groupId
-    *   The group ID.
-    */
+    /**
+     * Unlock group: Any participant can change
+     *               group subject or profile picture
+     *
+     *
+     * @param string $gId The group ID.
+     */
     public function sendUnlockGroup($gId)
     {
       $msgId = $this->createMsgId("unlock_group_");
@@ -1383,14 +1379,12 @@ class WhatsProt
     /**
      * Send an image file to group/user
      *
-     * @param  string $to
-     *  Recipient number
-     * @param  string $filepath
-     *   The url/uri to the image file.
-     * @param  bool $storeURLmedia Keep copy of file
-     * @param  int $fsize size of the media file
-     * @param string $fhash base64 hash of the media file
-     *
+     * @param string $to            Recipient number
+     * @param string $filepath      The url/uri to the image file.
+     * @param bool   $storeURLmedia Keep copy of file
+     * @param int    $fsize         size of the media file
+     * @param string $fhash         base64 hash of the media file
+     * @param string $caption
      * @return bool
      */
     public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
@@ -1461,13 +1455,12 @@ class WhatsProt
     /**
      * Send a video to the user/group.
      *
-     * @param  string $to
-     *   The recipient to send.
-     * @param string $filepath
-     *   The url/uri to the MP4/MOV video.
-     * @param  bool $storeURLmedia Keep a copy of media file.
-	 * @param  int $fsize size of the media file
-     * @param string $fhash base64 hash of the media file
+     * @param string $to            The recipient to send.
+     * @param string $filepath      The url/uri to the MP4/MOV video.
+     * @param bool   $storeURLmedia Keep a copy of media file.
+     * @param int    $fsize         size of the media file
+     * @param string $fhash         base64 hash of the media file
+     * @param string $caption
      *
      * @return bool
      */
@@ -3144,12 +3137,14 @@ class WhatsProt
     /**
      * Checks that the media file to send is of allowable filetype and within size limits.
      *
-     * @param string $filepath The URL/URI to the media file
-     * @param int $maxSize Maximim filesize allowed for media type
-     * @param string $to Recipient ID/number
-     * @param string $type media filetype. 'audio', 'video', 'image'
-     * @param array $allowedExtensions An array of allowable file types for the media file
-     * @param bool $storeURLmedia Keep a copy of the media file
+     * @param string $filepath          The URL/URI to the media file
+     * @param int    $maxSize           Maximim filesize allowed for media type
+     * @param string $to                Recipient ID/number
+     * @param string $type              media filetype. 'audio', 'video', 'image'
+     * @param array  $allowedExtensions An array of allowable file types for the media file
+     * @param bool   $storeURLmedia     Keep a copy of the media file
+     * @param string $caption
+     *
      * @return bool
      */
     protected function sendCheckAndSendMedia($filepath, $maxSize, $to, $type, $allowedExtensions, $storeURLmedia, $caption = "")
@@ -3253,12 +3248,10 @@ class WhatsProt
     /**
      * Change participants of a group.
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants.
-     * @param string $tag
-     *   The tag action. 'add' or 'remove'
+     * @param string $groupId      The group ID.
+     * @param array  $participants An array with the participants.
+     * @param string $tag          The tag action. 'add' or 'remove'
+     * @param        $id
      */
     protected function sendGroupsChangeParticipants($groupId, $participants, $tag, $id)
     {
@@ -3367,16 +3360,12 @@ class WhatsProt
     /**
      * Send request to upload file
      *
-     * @param $b64hash
-     *  Base64 hash of file
-     * @param string $type
-     *  File type
-     * @param $size
-     *  File size
-     * @param string $filepath
-     *  Path to image file
-     * @param string $to
-     *  Recipient
+     * @param string $b64hash  A base64 hash of file
+     * @param string $type     File type
+     * @param string $size     File size
+     * @param string $filepath Path to image file
+     * @param string $to       Recipient
+     * @param string $caption
      */
     protected function sendRequestFileUpload($b64hash, $type, $size, $filepath, $to, $caption = "")
     {
