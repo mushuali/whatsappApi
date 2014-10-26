@@ -120,6 +120,7 @@ class WhatsProt
 
     /**
      * Add message to the outgoing queue.
+     * @param $node
      */
     public function addMsgOutQueue($node)
     {
@@ -558,9 +559,11 @@ class WhatsProt
      *
      * Approx 20 (unverified) is the maximum number of targets
      *
-     * @param  array  $targets       An array of numbers to send to.
-     * @param  string  $path          URL or local path to the audio file to send
-     * @param  bool $storeURLmedia Keep a copy of the audio file on your server
+     * @param array  $targets       An array of numbers to send to.
+     * @param string $path          URL or local path to the audio file to send
+     * @param bool   $storeURLmedia Keep a copy of the audio file on your server
+     * @param int    $fsize
+     * @param string $fhash
      */
     public function sendBroadcastAudio($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "")
     {
@@ -578,9 +581,12 @@ class WhatsProt
      *
      * Approx 20 (unverified) is the maximum number of targets
      *
-     * @param  array  $targets       An array of numbers to send to.
-     * @param  string  $path          URL or local path to the image file to send
-     * @param  bool $storeURLmedia Keep a copy of the audio file on your server
+     * @param array  $targets       An array of numbers to send to.
+     * @param string $path          URL or local path to the image file to send
+     * @param bool   $storeURLmedia Keep a copy of the audio file on your server
+     * @param int    $fsize
+     * @param string $fhash
+     * @param string $caption
      */
     public function sendBroadcastImage($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
@@ -645,9 +651,12 @@ class WhatsProt
      *
      * Approx 20 (unverified) is the maximum number of targets
      *
-     * @param  array  $targets       An array of numbers to send to.
-     * @param  string  $path          URL or local path to the video file to send
-     * @param  bool $storeURLmedia Keep a copy of the audio file on your server
+     * @param array   $targets       An array of numbers to send to.
+     * @param string  $path          URL or local path to the video file to send
+     * @param bool    $storeURLmedia Keep a copy of the audio file on your server
+     * @param int     $fsize
+     * @param string  $fhash
+     * @param string  $caption
      */
     public function sendBroadcastVideo($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
@@ -1137,7 +1146,7 @@ class WhatsProt
         return $groupId;
     }
 
-    public function SendSetGroupSubject($gjid, $subject)
+    public function sendSetGroupSubject($gjid, $subject)
     {
         $child = new ProtocolNode("subject", array("value" => $subject), null, null);
         $node = new ProtocolNode("iq", array(
@@ -1241,10 +1250,8 @@ class WhatsProt
      * Promote participant(s) of a group
      * Makes a participant admin of a group
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants numbers to promote
+     * @param string $gId          The group ID.
+     * @param array  $participants An array with the participants numbers to promote
      */
     public function sendPromoteParticipants($gId, $participants)
     {
@@ -1259,10 +1266,8 @@ class WhatsProt
      * Demote participant(s) of a group.
      * Remove participant of being admin of a group.
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants numbers to demote
+     * @param string $gId          The group ID.
+     * @param array  $participants An array with the participants numbers to demote
      */
     public function sendDemoteParticipants($gId, $participants)
     {
@@ -1277,8 +1282,7 @@ class WhatsProt
     * Lock group: Paritipants cant change group subject or
     *             profile picture except admin
     *
-    * @param string $groupId
-    *   The group ID.
+    * @param string $gId The group ID.
     */
     public function sendLockGroup($gId)
     {
@@ -1295,14 +1299,13 @@ class WhatsProt
       $this->waitForServer($msgId);
     }
 
-   /**
-    * Unlock group: Any participant can change
-    *               group subject or profile picture
-    *
-    *
-    * @param string $groupId
-    *   The group ID.
-    */
+    /**
+     * Unlock group: Any participant can change
+     *               group subject or profile picture
+     *
+     *
+     * @param string $gId The group ID.
+     */
     public function sendUnlockGroup($gId)
     {
       $msgId = $this->createMsgId("unlock_group_");
@@ -1339,13 +1342,13 @@ class WhatsProt
     }
 
     /**
-     * Send audio to the user/group.     *
+     * Send audio to the user/group.
      *
-     * @param $to
-     *   The recipient.
-     * @param string $filepath
-     *   The url/uri to the audio file.
-     * @param  bool $storeURLmedia Keep copy of file
+     * @param string $to            The recipient.
+     * @param string $filepath      The url/uri to the audio file.
+     * @param bool   $storeURLmedia Keep copy of file
+     * @param int    $fsize
+     * @param string $fhash
      * @return bool
      */
     public function sendMessageAudio($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "")
@@ -1376,14 +1379,12 @@ class WhatsProt
     /**
      * Send an image file to group/user
      *
-     * @param  string $to
-     *  Recipient number
-     * @param  string $filepath
-     *   The url/uri to the image file.
-     * @param  bool $storeURLmedia Keep copy of file
-     * @param  int $fsize size of the media file
-     * @param string $fhash base64 hash of the media file
-     *
+     * @param string $to            Recipient number
+     * @param string $filepath      The url/uri to the image file.
+     * @param bool   $storeURLmedia Keep copy of file
+     * @param int    $fsize         size of the media file
+     * @param string $fhash         base64 hash of the media file
+     * @param string $caption
      * @return bool
      */
     public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
@@ -1454,13 +1455,12 @@ class WhatsProt
     /**
      * Send a video to the user/group.
      *
-     * @param  string $to
-     *   The recipient to send.
-     * @param string $filepath
-     *   The url/uri to the MP4/MOV video.
-     * @param  bool $storeURLmedia Keep a copy of media file.
-	 * @param  int $fsize size of the media file
-     * @param string $fhash base64 hash of the media file
+     * @param string $to            The recipient to send.
+     * @param string $filepath      The url/uri to the MP4/MOV video.
+     * @param bool   $storeURLmedia Keep a copy of media file.
+     * @param int    $fsize         size of the media file
+     * @param string $fhash         base64 hash of the media file
+     * @param string $caption
      *
      * @return bool
      */
@@ -1723,6 +1723,7 @@ class WhatsProt
 
     /**
      * Sets the bind of the new message.
+     * @param $bind
      */
     public function setNewMessageBind($bind)
     {
@@ -1795,6 +1796,7 @@ class WhatsProt
     /**
      * Wait for Whatsapp server to acknowledge *it* has received message.
      * @param  string $id The id of the node sent that we are awaiting acknowledgement of.
+     * @param int     $timeout
      */
     public function waitForServer($id, $timeout = 5)
     {
@@ -1874,10 +1876,8 @@ class WhatsProt
 
     /**
      * Add stream features.
-     * @param bool $profileSubscribe
      *
-     * @return ProtocolNode
-     *   Return itself.
+     * @return ProtocolNode Return itself.
      */
     protected function createFeaturesNode()
     {
@@ -1983,10 +1983,7 @@ class WhatsProt
     /**
      * Send the nodes to the Whatsapp server to log in.
      *
-     * @param  bool $profileSubscribe
-     * Set this to true if you would like Whatsapp to send a
-     * notification to your phone when one of your contacts
-     * changes/update their picture.
+     * @throws Exception
      */
     protected function doLogin()
     {
@@ -2243,8 +2240,9 @@ class WhatsProt
     /**
      * Process inbound data.
      *
-     * @param string $data
-     *   The data to process.
+     * @param      $data
+     * @param bool $autoReceipt
+     * @throws Exception
      */
     protected function processInboundData($data, $autoReceipt = true)
     {
@@ -2258,7 +2256,9 @@ class WhatsProt
      * Will process the data from the server after it's been decrypted and parsed.
      *
      * This also provides a convenient method to use to unit test the event framework.
-     *
+     * @param ProtocolNode $node
+     * @param bool         $autoReceipt
+     * @throws Exception
      */
     protected function processInboundDataNode(ProtocolNode $node, $autoReceipt = true) {
         $this->debugPrint($node->nodeString("rx  ") . "\n");
@@ -3137,12 +3137,14 @@ class WhatsProt
     /**
      * Checks that the media file to send is of allowable filetype and within size limits.
      *
-     * @param string $filepath The URL/URI to the media file
-     * @param int $maxSize Maximim filesize allowed for media type
-     * @param string $to Recipient ID/number
-     * @param string $type media filetype. 'audio', 'video', 'image'
-     * @param array $allowedExtensions An array of allowable file types for the media file
-     * @param bool $storeURLmedia Keep a copy of the media file
+     * @param string $filepath          The URL/URI to the media file
+     * @param int    $maxSize           Maximim filesize allowed for media type
+     * @param string $to                Recipient ID/number
+     * @param string $type              media filetype. 'audio', 'video', 'image'
+     * @param array  $allowedExtensions An array of allowable file types for the media file
+     * @param bool   $storeURLmedia     Keep a copy of the media file
+     * @param string $caption
+     *
      * @return bool
      */
     protected function sendCheckAndSendMedia($filepath, $maxSize, $to, $type, $allowedExtensions, $storeURLmedia, $caption = "")
@@ -3167,8 +3169,10 @@ class WhatsProt
 
     /**
      * Send a broadcast
-     * @param  array $targets Array of numbers to send to
-     * @param  object $node
+     * @param array  $targets Array of numbers to send to
+     * @param object $node
+     * @param        $type
+     * @return string
      */
     protected function sendBroadcast($targets, $node, $type)
     {
@@ -3244,12 +3248,10 @@ class WhatsProt
     /**
      * Change participants of a group.
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants.
-     * @param string $tag
-     *   The tag action. 'add' or 'remove'
+     * @param string $groupId      The group ID.
+     * @param array  $participants An array with the participants.
+     * @param string $tag          The tag action. 'add' or 'remove'
+     * @param        $id
      */
     protected function sendGroupsChangeParticipants($groupId, $participants, $tag, $id)
     {
@@ -3276,10 +3278,10 @@ class WhatsProt
     /**
      * Send node to the servers.
      *
-     * @param $to
-     *   The recipient to send.
-     * @param $node ProtocolNode
-     *   The node that contains the message.
+     * @param              $to
+     * @param ProtocolNode $node
+     * @param null         $id
+     * @return null|string
      */
     protected function sendMessageNode($to, $node, $id = null)
     {
@@ -3322,8 +3324,8 @@ class WhatsProt
     /**
      * Tell the server we received the message.
      *
-     * @param ProtocolNode $msg
-     *   The ProtocolTreeNode that contains the message.
+     * @param ProtocolNode $msg The ProtocolTreeNode that contains the message.
+     * @param null         $type
      */
     protected function sendMessageReceived($msg, $type = null)
     {
@@ -3347,6 +3349,7 @@ class WhatsProt
     /**
      * Send node to the WhatsApp server.
      * @param ProtocolNode $node
+     * @param bool         $encrypt
      */
     protected function sendNode($node, $encrypt = true)
     {
@@ -3357,16 +3360,12 @@ class WhatsProt
     /**
      * Send request to upload file
      *
-     * @param $b64hash
-     *  Base64 hash of file
-     * @param string $type
-     *  File type
-     * @param $size
-     *  File size
-     * @param string $filepath
-     *  Path to image file
-     * @param string $to
-     *  Recipient
+     * @param string $b64hash  A base64 hash of file
+     * @param string $type     File type
+     * @param string $size     File size
+     * @param string $filepath Path to image file
+     * @param string $to       Recipient
+     * @param string $caption
      */
     protected function sendRequestFileUpload($b64hash, $type, $size, $filepath, $to, $caption = "")
     {
