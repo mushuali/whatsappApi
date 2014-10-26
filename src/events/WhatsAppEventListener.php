@@ -127,7 +127,7 @@ interface WhatsAppEventListener {
 
     function onGetGroupsInfo(
         $phone, // The user phone number including the country code.
-        $groupList // Array with the the groupinfo.
+        $groupList // Array with the groupinfo.
     );
 
     function onGetGroupsSubject(
@@ -277,10 +277,10 @@ interface WhatsAppEventListener {
     );
 
     function onGroupsChatisCreated(
-        $phone,
-        $creator,
-        $gId,
-        $subject
+        $phone, // The user phone number including the country code.
+        $creator, // The group chat creator.
+        $gId, // The group JID.
+        $subject // The group subject.
     );
 
     function onGroupsChatEnd(
