@@ -1137,7 +1137,7 @@ class WhatsProt
         return $groupId;
     }
 
-    public function SendSetGroupSubject($gjid, $subject)
+    public function sendSetGroupSubject($gjid, $subject)
     {
         $child = new ProtocolNode("subject", array("value" => $subject), null, null);
         $node = new ProtocolNode("iq", array(
