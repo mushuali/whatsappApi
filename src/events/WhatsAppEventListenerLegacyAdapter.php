@@ -20,8 +20,8 @@ class WhatsAppEventListenerLegacyAdapter extends WhatsAppEventListenerProxy {
     /**
      * Constructor.
      *
-     * @param string $event
-     *   To be removed.
+     * @param $eventName
+     * @param $callback
      */
     function __construct($eventName, $callback)
     {

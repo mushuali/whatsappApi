@@ -522,6 +522,7 @@ class BinTreeNodeWriter
 
     /**
      * @param ProtocolNode $node
+     * @param bool         $encrypt
      * @return string
      */
     public function write($node, $encrypt = true)
