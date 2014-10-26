@@ -848,7 +848,7 @@ class WhatsProt
     * @param string $value
     *   Options: 'all', 'contacts' or 'none'
     */
-    public sendSetPrivacySettings($category, $value)
+    public function sendSetPrivacySettings($category, $value)
     {
       $msgId = $this->createMsgId("send_privacy_settings_");
       $categoryNode = new ProtocolNode("category", array(
