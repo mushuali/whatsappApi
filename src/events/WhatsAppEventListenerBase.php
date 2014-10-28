@@ -396,6 +396,10 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $msg
     ) {}
 
+    function onStreamError(
+        $tag
+    ) {}
+
     function onUploadFile(
         $phone,
         $name,

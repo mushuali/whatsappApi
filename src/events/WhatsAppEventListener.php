@@ -394,12 +394,12 @@ interface WhatsAppEventListener {
 
     function onGetNormalizedJid(
         $phone, //the user phone number including country code.
-        $result //the normalized jid 
+        $result //the normalized jid
     );
 
     function onGetBroadcastLists(
         $phone, //the user phone number including country code.
-        $broadcastLists //a multidimensional array with the lists 
+        $broadcastLists //a multidimensional array with the lists
     );
 
     function onPresence(
@@ -450,6 +450,10 @@ interface WhatsAppEventListener {
     function onSendStatusUpdate(
         $phone, // The user phone number including the country code.
         $msg  // The status message.
+    );
+
+    function onStreamError(
+        $tag // The error causing the stream error
     );
 
     function onUploadFile(

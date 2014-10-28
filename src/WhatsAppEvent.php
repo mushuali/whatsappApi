@@ -780,6 +780,15 @@ class WhatsAppEvent
         $this->fireCallback($callbackEvent);
     }
 
+    function fireStreamError(
+        $tag
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($tag) {
+            $listener->onStreamError($tag);
+        };
+        $this->fireCallback($callbackEvent);
+    }
+
     function fireUploadFile(
         $phone,
         $name,
