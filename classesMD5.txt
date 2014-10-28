@@ -3,6 +3,12 @@
 =         B64 ENCODED         =
 ===============================
 
+WhatsApp/2.11.426 Android/4.3 Device/GalaxyS3
+gGha73KQT1l3G8AMQGgKxg==
+
+WhatsApp/2.11.424 Android/4.3 Device/GalaxyS3
+JT0gTRUvrWEBPlFv2ZvhGg==
+
 WhatsApp/2.11.422 Android/4.3 Device/GalaxyS3
 fjwVxyGxveeMtXfbBZX5+A==
 
