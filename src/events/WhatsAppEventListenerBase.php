@@ -445,6 +445,7 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $url,
         $filename,
         $filesize,
+        $filehash,
 	$caption,
         $icon
     ) {}
