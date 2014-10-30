@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @file
  * Event class to received WhatsApp related events.
  */
+interface WhatsAppEventListener
+{
 
-
-interface WhatsAppEventListener {
     function onClose(
         $phone, // The user phone number including the country code.
         $error  // The error message.
@@ -44,24 +45,24 @@ interface WhatsAppEventListener {
         $value// The missing_param/bad_param or waiting time before requesting a new code.
     );
 
-   function onCodeRequestFailedTooRecent(
+    function onCodeRequestFailedTooRecent(
         $phone, // The user phone number including the country code.
         $method, // Used method (SMS/voice).
         $reason, // Reason of the status (too_recent).
         $retry_after // Waiting time before requesting a new code in seconds.
     );
 
-   function onConnect(
+    function onConnect(
         $phone, // The user phone number including the country code.
         $socket // The resource socket id.
     );
 
-   function onConnectError(
+    function onConnectError(
         $phone, // The user phone number including the country code.
         $socket // The resource socket id.
     );
 
-   function onCredentialsBad(
+    function onCredentialsBad(
         $phone, // The user phone number including the country code.
         $status, // Account status.
         $reason // The reason.
@@ -269,7 +270,7 @@ interface WhatsAppEventListener {
         $vcodec, // The video codec.
         $acodec, // The audio codec.
         $thumbnail, // The base64_encode video thumbnail.
-		$caption // The video caption.
+        $caption // The video caption.
     );
 
     function onGroupsChatCreate(
@@ -319,7 +320,7 @@ interface WhatsAppEventListener {
         $filename,
         $filesize,
         $filehash,
-	$caption,
+        $caption,
         $icon
     );
 

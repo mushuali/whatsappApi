@@ -5,16 +5,13 @@ require_once("../src/whatsprot.class.php");
 
 $username = $_GET["phone"];
 $password = $_GET["pass"];
-$u = $_GET["u"];
-if(!is_array($u))
-{
+$u        = $_GET["u"];
+if ( ! is_array($u)) {
     $u = array($u);
 }
 $numbers = array();
-foreach($u as $number)
-{
-    if(substr($number, 0, 1) !=  "+")
-    {
+foreach ($u as $number) {
+    if (substr($number, 0, 1) != "+") {
         //add leading +
         $number = "+$number";
     }
@@ -27,12 +24,10 @@ foreach($u as $number)
  */
 function onSyncResult($result)
 {
-    foreach($result->existing as $number)
-    {
+    foreach ($result->existing as $number) {
         echo "$number exists<br />";
     }
-    foreach($result->nonExisting as $number)
-    {
+    foreach ($result->nonExisting as $number) {
         echo "$number does not exist<br />";
     }
     die();//to break out of the while(true) loop
@@ -51,7 +46,6 @@ $wa->loginWithPassword($password);
 $wa->sendSync($numbers);
 
 //wait for response
-while(true)
-{
+while (true) {
     $wa->pollMessage();
 }

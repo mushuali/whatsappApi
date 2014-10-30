@@ -14,13 +14,14 @@ require_once 'WhatsAppEventListener.php';
  * @file
  * Event class to received WhatsApp related events.
  */
+class WhatsAppEventListenerBase implements WhatsAppEventListener
+{
 
-
-class WhatsAppEventListenerBase implements WhatsAppEventListener {
     function onClose(
         $phone,
         $error
-    ) {}
+    ) {
+    }
 
     function onCodeRegister(
         $phone,
@@ -33,45 +34,52 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $cost,
         $currency,
         $price_expiration
-    ) {}
+    ) {
+    }
 
     function onCodeRegisterFailed(
         $phone,
         $status,
         $reason,
         $retry_after
-    ) {}
+    ) {
+    }
 
     function onCodeRequest(
         $phone,
         $method,
         $length
-    ) {}
+    ) {
+    }
 
     function onCodeRequestFailed(
         $phone,
         $method,
         $reason,
         $value
-    ) {}
+    ) {
+    }
 
-   function onCodeRequestFailedTooRecent(
+    function onCodeRequestFailedTooRecent(
         $phone,
         $method,
         $reason,
         $retry_after
-    ) {}
+    ) {
+    }
 
-   function onConnect(
+    function onConnect(
         $phone,
         $socket
-    ) {}
+    ) {
+    }
 
     function onCredentialsBad(
         $phone,
         $status,
         $reason
-    ) {}
+    ) {
+    }
 
     function onCredentialsGood(
         $phone,
@@ -84,12 +92,14 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $cost,
         $currency,
         $price_expiration
-    ) {}
+    ) {
+    }
 
     function onDisconnect(
         $phone,
         $socket
-    ) {}
+    ) {
+    }
 
     function onDissectPhone(
         $phone,
@@ -99,11 +109,13 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $lc,
         $lg,
         $mnc
-    ) {}
+    ) {
+    }
 
     function onDissectPhoneFailed(
         $phone
-    ) {}
+    ) {
+    }
 
     function onGetAudio(
         $phone,
@@ -119,23 +131,27 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $filehash,
         $duration,
         $acodec
-    ) {}
+    ) {
+    }
 
     function onGetError(
         $phone,
         $id,
         $error
-    ) {}
+    ) {
+    }
 
     function onGetGroups(
         $phone,
         $groupList
-    ) {}
+    ) {
+    }
 
     function onGetGroupsInfo(
         $phone,
         $groupList
-    ) {}
+    ) {
+    }
 
     function onGetGroupsSubject(
         $phone,
@@ -145,7 +161,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $participant,
         $name,
         $subject
-    ) {}
+    ) {
+    }
 
     function onGetImage(
         $phone,
@@ -163,7 +180,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $height,
         $thumbnail,
         $caption
-    ) {}
+    ) {
+    }
 
     function onGetLocation(
         $phone,
@@ -177,7 +195,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $latitude,
         $url,
         $thumbnail
-    ) {}
+    ) {
+    }
 
     function onGetMessage(
         $phone,
@@ -187,7 +206,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $time,
         $name,
         $message
-    ) {}
+    ) {
+    }
 
     function onGetGroupMessage(
         $phone,
@@ -198,40 +218,46 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $time,
         $name,
         $message
-    ) {}
+    ) {
+    }
 
     function onGetPrivacyBlockedList(
         $phone,
         $children
-            /*
-        $data,
-        $onGetProfilePicture,
-        $phone,
-        $from,
-        $type,
-        $thumbnail
-            */
-    ) {}
+        /*
+    $data,
+    $onGetProfilePicture,
+    $phone,
+    $from,
+    $type,
+    $thumbnail
+        */
+    )
+    {
+    }
 
     function onGetProfilePicture(
         $phone,
         $from,
         $type,
         $thumbnail
-    ) {}
+    ) {
+    }
 
     function onGetRequestLastSeen(
         $phone,
         $from,
         $msgid,
         $sec
-    ) {}
+    ) {
+    }
 
     function onGetServerProperties(
         $phone,
         $version,
         $properties
-    ) {}
+    ) {
+    }
 
     function onGetvCard(
         $phone,
@@ -242,7 +268,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $name,
         $contact,
         $vcard
-    ) {}
+    ) {
+    }
 
     function onGetVideo(
         $phone,
@@ -261,40 +288,47 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $acodec,
         $thumbnail,
         $caption
-    ) {}
+    ) {
+    }
 
     function onGroupsChatCreate(
         $phone,
         $gId
-    ) {}
+    ) {
+    }
 
     function onGroupsChatisCreated(
         $phone,
         $creator,
         $gId,
         $subject
-    ) {}
+    ) {
+    }
 
     function onGroupsChatEnd(
         $phone,
         $gId
-    ) {}
+    ) {
+    }
 
     function onGroupsParticipantsAdd(
         $phone,
         $groupId,
         $participant
-    ) {}
+    ) {
+    }
 
     function onGroupsParticipantsRemove(
         $phone,
         $groupId,
         $participant
-    ) {}
+    ) {
+    }
 
     function onLogin(
         $phone
-    ) {}
+    ) {
+    }
 
     function onMessageComposing(
         $phone,
@@ -302,7 +336,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $msgid,
         $type,
         $time
-    ) {}
+    ) {
+    }
 
     function onMessagePaused(
         $phone,
@@ -310,7 +345,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $msgid,
         $type,
         $time
-    ) {}
+    ) {
+    }
 
     function onMessageReceivedClient(
         $phone,
@@ -318,7 +354,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $msgid,
         $type,
         $time
-    ) {}
+    ) {
+    }
 
     function onMessageReceivedServer(
         $phone,
@@ -326,7 +363,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $msgid,
         $type,
         $time
-    ) {}
+    ) {
+    }
 
     function onPaidAccount(
         $phone,
@@ -335,7 +373,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $status,
         $creation,
         $expiration
-    ) {}
+    ) {
+    }
 
     function onGetServicePricing(
         $phone,
@@ -343,7 +382,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $cost,
         $currency,
         $expiration
-    ) {}
+    ) {
+    }
 
     function onGetExtendAccount(
         $phone,
@@ -351,77 +391,91 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $status,
         $creation,
         $expiration
-    ) {}
+    ) {
+    }
 
     function onGetNormalizedJid(
         $phone,
         $result
-    ) {}
+    ) {
+    }
 
     function onGetBroadcastLists(
         $phone,
         $broadcastLists
-    ) {}
+    ) {
+    }
 
     function onPing(
         $phone,
         $msgid
-    ) {}
+    ) {
+    }
 
     function onPresence(
         $phone,
         $from,
         $type
-    ) {}
+    ) {
+    }
 
     function onSendMessageReceived(
         $phone,
         $id,
         $from,
         $type
-    ) {}
+    ) {
+    }
 
     function onSendPong(
         $phone,
         $msgid
-    ) {}
+    ) {
+    }
 
     function onSendPresence(
         $phone,
         $type,
         $name
-    ) {}
+    ) {
+    }
 
     function onSendStatusUpdate(
         $phone,
         $msg
-    ) {}
+    ) {
+    }
 
     function onStreamError(
         $tag
-    ) {}
+    ) {
+    }
 
     function onUploadFile(
         $phone,
         $name,
         $url
-    ) {}
+    ) {
+    }
 
     function onUploadFileFailed(
         $phone,
         $name
-    ) {}
+    ) {
+    }
 
     public function onConnectError(
         $phone,
         $socket
-    ) {}
+    ) {
+    }
 
     public function onGetGroupParticipants(
         $phone,
         $groupId,
         $groupList
-    ) {}
+    ) {
+    }
 
     public function onGetStatus(
         $phone,
@@ -430,13 +484,15 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $id,
         $t,
         $status
-    ) {}
+    ) {
+    }
 
 
     public function onLoginFailed(
         $phone,
         $tag
-    ) {}
+    ) {
+    }
 
     public function onMediaMessageSent(
         $phone,
@@ -447,9 +503,10 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $filename,
         $filesize,
         $filehash,
-	$caption,
+        $caption,
         $icon
-    ) {}
+    ) {
+    }
 
     public function onMediaUploadFailed(
         $phone,
@@ -457,7 +514,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $node,
         $messageNode,
         $reason
-    ) {}
+    ) {
+    }
 
 
     public function onProfilePictureChanged(
@@ -465,7 +523,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $from,
         $id,
         $t
-    ) {}
+    ) {
+    }
 
 
     public function onProfilePictureDeleted(
@@ -473,7 +532,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $from,
         $id,
         $t
-    ) {}
+    ) {
+    }
 
 
     public function onSendMessage(
@@ -481,7 +541,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $targets,
         $id,
         $node
-    ) {}
+    ) {
+    }
 
     /**
      * @param SyncResult $result
@@ -489,12 +550,14 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
      */
     public function onGetSyncResult(
         $result
-    ) {}
+    ) {
+    }
 
     public function onGetReceipt(
         $from,
         $id,
         $offline,
         $retry
-    ) {}
+    ) {
+    }
 }

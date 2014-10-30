@@ -6,8 +6,9 @@
 
 /**
  * Funnels all events through the abstract handleEvent method.
-*/
-abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
+ */
+abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener
+{
 
     /**
      *  This method will get all event calls.
@@ -16,7 +17,7 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
      * @param array $arguments
      * @return
      */
-    abstract protected function handleEvent($eventName, array $arguments );
+    abstract protected function handleEvent($eventName, array $arguments);
 
     function onClose(
         $phone,
@@ -66,7 +67,7 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }
 
-   function onCodeRequestFailedTooRecent(
+    function onCodeRequestFailedTooRecent(
         $phone,
         $method,
         $reason,
@@ -75,7 +76,7 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }
 
-   function onConnect(
+    function onConnect(
         $phone,
         $socket
     ) {
@@ -248,15 +249,16 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
     function onGetPrivacyBlockedList(
         $phone,
         $children
-            /*
-        $data,
-        $onGetProfilePicture,
-        $phone,
-        $from,
-        $type,
-        $thumbnail
-            */
-    ) {
+        /*
+    $data,
+    $onGetProfilePicture,
+    $phone,
+    $from,
+    $type,
+    $thumbnail
+        */
+    )
+    {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }
 
@@ -333,7 +335,7 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $gId,
         $subject
     ) {
-    $this->handleEvent(__FUNCTION__, func_get_args());
+        $this->handleEvent(__FUNCTION__, func_get_args());
     }
 
     function onGroupsChatEnd(
@@ -553,7 +555,7 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $filename,
         $filesize,
         $filehash,
-	$caption,
+        $caption,
         $icon
     ) {
         $this->handleEvent(__FUNCTION__, func_get_args());
