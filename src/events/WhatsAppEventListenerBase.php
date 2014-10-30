@@ -97,7 +97,8 @@ class WhatsAppEventListenerBase implements WhatsAppEventListener {
         $cc,
         $mcc,
         $lc,
-        $lg
+        $lg,
+        $mnc
     ) {}
 
     function onDissectPhoneFailed(

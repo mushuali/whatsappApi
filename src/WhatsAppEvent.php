@@ -239,10 +239,11 @@ class WhatsAppEvent
         $cc,
         $mcc,
         $lc,
-        $lg
+        $lg,
+        $mnc
     ) {
-        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $country, $cc, $mcc, $lc, $lg) {
-            $listener->onDissectPhone($phone, $country, $cc, $mcc, $lc, $lg);
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $country, $cc, $mcc, $lc, $lg, $mnc) {
+            $listener->onDissectPhone($phone, $country, $cc, $mcc, $lc, $lg, $mnc);
         };
         $this->fireCallback($callbackEvent);
     }

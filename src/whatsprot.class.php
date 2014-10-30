@@ -348,8 +348,8 @@ class WhatsProt
             'lg' => $langCode,
             'lc' => $countryCode,
             'token' => urlencode($token),
-            'sim_mcc' => '000', //$phone['mcc']
-            'sim_mnc' => '000', // 001
+            'sim_mcc' => $phone['mcc'],
+            'sim_mnc' => $phone['mnc']
           //'reason' => 'jailbroken',
         );
 
@@ -1954,7 +1954,8 @@ class WhatsProt
                         'phone' => substr($this->phoneNumber, strlen($data[1]), strlen($this->phoneNumber)),
                         'mcc' => $mcc,
                         'ISO3166' => @$data[3],
-                        'ISO639' => @$data[4]
+                        'ISO639' => @$data[4],
+                        'mnc' => $data[5]
                     );
 
                     $this->eventManager()->fireDissectPhone(
@@ -1964,7 +1965,8 @@ class WhatsProt
                         $phone['phone'],
                         $phone['mcc'],
                         $phone['ISO3166'],
-                        $phone['ISO639']
+                        $phone['ISO639'],
+                        $phone['mnc']
                     );
 
                     return $phone;

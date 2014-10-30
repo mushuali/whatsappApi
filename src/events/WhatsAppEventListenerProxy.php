@@ -118,7 +118,8 @@ abstract class WhatsAppEventListenerProxy implements WhatsAppEventListener {
         $cc,
         $mcc,
         $lc,
-        $lg
+        $lg,
+        $mnc
     ) {
         $this->handleEvent(__FUNCTION__, func_get_args());
     }

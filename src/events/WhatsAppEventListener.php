@@ -91,7 +91,8 @@ interface WhatsAppEventListener {
         $cc, // The number's country code.
         $mcc, // International cell network code for the detected country.
         $lc, // Location code for the detected country
-        $lg // Language code for the detected country
+        $lg, // Language code for the detected country
+        $mnc // Mobile network provider code
     );
 
     function onDissectPhoneFailed(
