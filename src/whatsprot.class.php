@@ -3133,7 +3133,10 @@ class WhatsProt
         }
         else
         {
-            throw new Exception("Socket closed");
+            $this->eventManager()->fireDisconnect(
+                $this->phoneNumber,
+                $this->socket
+            );
         }
 
         return $buff;
