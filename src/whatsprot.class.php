@@ -2855,6 +2855,7 @@ class WhatsProt
                     break;
                 case "w:gp2":
                     if ($node->hasChild('remove')) {
+                    	if ($node->getChild(0)->hasChild('participant'))
                         $this->eventManager()->fire("onGroupsParticipantsRemove",
                             array(
                                 $this->phoneNumber,
