@@ -1,5 +1,6 @@
 <?php
 require_once("../src/whatsprot.class.php");
+
 /**
  * Created by JetBrains PhpStorm.
  * User: Max
@@ -9,11 +10,11 @@ require_once("../src/whatsprot.class.php");
  *
  * Usage:
  * $username = "";
- * 
+ *
  * $password = "";
  *
  * $contacts = array("", "", ""); // or read them from a file
- *  
+ *
  * $wbs = new WaBulkSender($username, $password);
  * $wbs->Login();
  * $wbs->SyncContacts($contacts);
@@ -21,9 +22,9 @@ require_once("../src/whatsprot.class.php");
  * or
  * $wbs->SendBroadcast($contacts, "Broadcast Message");
  */
-
 class WaBulkSender
 {
+
     protected $username;
     protected $password;
     protected $nickname;
@@ -35,13 +36,13 @@ class WaBulkSender
      * @param string $username
      * @param string $password
      * @param string $nickname
-     * @param bool $debug
+     * @param bool   $debug
      */
     public function __construct($username, $password, $nickname = "WhatsApp", $debug = false)
     {
         $this->username = $username;
         $this->password = $password;
-        $this->wa = new WhatsProt($username, null, $nickname, $debug);
+        $this->wa       = new WhatsProt($username, null, $nickname, $debug);
         $this->bindEvents();
     }
 
@@ -61,7 +62,9 @@ class WaBulkSender
         $this->wa->loginWithPassword($this->password);
         $this->wa->sendClientConfig();
         $this->wa->sendGetServerProperties();
-        while($this->wa->pollMessage());
+        while ($this->wa->pollMessage()) {
+            ;
+        }
         echo "Ready for work!<br />";
     }
 
@@ -84,7 +87,7 @@ class WaBulkSender
 
     /**
      * @param string $number
-     * @param $socket
+     * @param        $socket
      */
     public static function event_onConnect($number, $socket)
     {
@@ -93,8 +96,7 @@ class WaBulkSender
 
     public static function event_onMessageReceivedServer($mynumber, $from, $id, $type)
     {
-        if($from != "broadcast")
-        {
+        if ($from != "broadcast") {
             //unlock
             echo "$type with id $id from $mynumber to $from received by server<br />";
             static::$sendLock = false;
@@ -106,18 +108,17 @@ class WaBulkSender
      */
     public function SyncContacts($contacts)
     {
-		$this->wa->sendSync($contacts);
-		echo "Synced " . count($contacts) . " contacts<br />";
+        $this->wa->sendSync($contacts);
+        echo "Synced " . count($contacts) . " contacts<br />";
     }
 
     /**
      * @param string[] $targets
-     * @param string $message
+     * @param string   $message
      */
     public function SendBroadcast($targets, $message)
     {
-        if(count($targets) > 25)
-        {
+        if (count($targets) > 25) {
             echo "Error: too many broadcast targets (" . count($targets) . ")<br />";
             return;
         }
@@ -129,13 +130,12 @@ class WaBulkSender
 
     /**
      * @param string[] $targets
-     * @param $message
+     * @param          $message
      */
     public function SendBulk($targets, $message)
     {
         echo "Sending " . count($targets) . " bulk messages...<br />";
-        foreach($targets as $target)
-        {
+        foreach ($targets as $target) {
             $this->wa->sendPresenceSubscription($target);
             $this->wa->pollMessage();
             $this->wa->sendMessageComposing($target);
@@ -145,8 +145,7 @@ class WaBulkSender
             static::$sendLock = true;
             echo "Sending message from " . $this->username . " to $target... ";
             $this->wa->sendMessage($target, $message);
-            while(static::$sendLock)
-            {
+            while (static::$sendLock) {
                 //wait for server receipt
                 sleep(1);
             }

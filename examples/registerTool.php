@@ -22,26 +22,20 @@ $w = new WhatsProt($username, $identity, $nickname, $debug);
 echo "\n\nType sms or voice: ";
 $option = fgets(STDIN);
 
-try
-{
-  $w->codeRequest(trim($option));
-}
-catch(Exception $e)
-{
-  echo "\nError: $e";
-  exit(0);
+try {
+    $w->codeRequest(trim($option));
+} catch (Exception $e) {
+    echo "\nError: $e";
+    exit(0);
 }
 
 echo "\n\nEnter the received code: ";
 $code = fgets(STDIN);
 
-try
-{
-  $result = $w->codeRegister(trim($code));
-  echo "\nYour password is: ".$result->pw;
-}
-catch(Exception $e)
-{
-  echo "\Error: $e";
-  exit(0);
+try {
+    $result = $w->codeRegister(trim($code));
+    echo "\nYour password is: " . $result->pw;
+} catch (Exception $e) {
+    echo "\Error: $e";
+    exit(0);
 }
