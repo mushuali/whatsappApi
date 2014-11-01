@@ -443,7 +443,7 @@ class WhatsProt
         if ($Socket !== false) {
             stream_set_timeout($Socket, static::TIMEOUT_SEC, static::TIMEOUT_USEC);
             $this->socket = $Socket;
-            $this->eventManager()->fire('onConnect',
+            $this->eventManager()->fire("onConnect",
                 array(
                     $this->phoneNumber,
                     $this->socket
@@ -468,7 +468,7 @@ class WhatsProt
     {
         if (is_resource($this->socket)) {
             fclose($this->socket);
-            $this->eventManager()->fire('onDisconnect',
+            $this->eventManager()->fire("onDisconnect",
                 array(
                     $this->phoneNumber,
                     $this->socket
@@ -1977,7 +1977,7 @@ class WhatsProt
                         'mnc' => $data[5]
                     );
 
-                    $this->eventManager()->fire('onDissectPhone', array(
+                    $this->eventManager()->fire("onDissectPhone", array(
                             $this->phoneNumber,
                             $phone['country'],
                             $phone['cc'],
@@ -2532,8 +2532,7 @@ class WhatsProt
                     array(
                         $this->phoneNumber,
                         $groupId,
-                        self::parseJID($node->getAttribute('remove')),
-                        self::parseJID($node->getAttribute('author'))
+                        self::parseJID($node->getAttribute('remove'))
                     ));
             }
         }
@@ -2885,7 +2884,6 @@ class WhatsProt
                                 $this->phoneNumber,
                                 $node->getAttribute('from'),
                                 $node->getAttribute('t'),
-                                $node->getAttribute('participant'),
                                 $node->getAttribute('participant'),
                                 $node->getAttribute('notify'),
                                 $node->getChild(0)->getAttribute('subject')
