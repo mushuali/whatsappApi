@@ -34,7 +34,7 @@ class MyEvents extends AllEvents
 //        'onGetGroupsSubject',
 //        'onGetImage',
 //        'onGetLocation',
-        'onGetMessage',
+//        'onGetMessage',
 //        'onGetNormalizedJid',
 //        'onGetPrivacyBlockedList',
 //        'onGetProfilePicture',
@@ -52,7 +52,7 @@ class MyEvents extends AllEvents
 //        'onGroupsChatEnd',
 //        'onGroupsParticipantsAdd',
 //        'onGroupsParticipantsRemove',
-        'onLogin',
+//        'onLogin',
 //        'onLoginFailed',
 //        'onMediaMessageSent',
 //        'onMediaUploadFailed',
@@ -75,7 +75,6 @@ class MyEvents extends AllEvents
 //        'onUploadFileFailed',
     );
 
-
     public function onConnect($mynumber, $socket)
     {
         echo "<p>WooHoo!, Phone number $mynumber connected successfully!</p>";
@@ -85,16 +84,5 @@ class MyEvents extends AllEvents
     {
         echo "<p>Booo!, Phone number $mynumber is disconnected!</p>";
     }
-
-    public function onGetMessage($mynumber, $from, $id, $type, $time, $name, $body)
-    {
-        echo "<p>We got this message from $name ($from):</p><p><b>$body</b></p>";
-    }
-
-    public function onLogin($mynumber)
-    {
-        echo "<p>We have logged in successfully for $mynumber</p>";
-    }
-
 
 }
