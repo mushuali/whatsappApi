@@ -546,6 +546,11 @@ class WhatsProt
      */
     public function pollMessage($autoReceipt = true)
     {
+    	
+    	if(feof($this->socket)) {
+	    throw new Exception('Connection Closed!');
+	}
+    	
         $stanza = $this->readStanza();
         if($stanza)
         {
