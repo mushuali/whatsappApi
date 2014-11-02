@@ -2876,18 +2876,13 @@ class WhatsProt
                             ));
                   }
                     else if ($node->hasChild('create')) {
-                    	foreach ($node->getChild(0)->getChild(0)->getChildren() as $child)
-                    		if ($child->getAttribute('type')=='admin'){
-                    			$Admin = $child->getAttribute('jid');
-                    			break;
-                    		}
                         $this->eventManager()->fire("onGroupisCreated",
                             array(
                                 $this->phoneNumber,
                                 $node->getChild(0)->getChild(0)->getAttribute('creator'),
                                 $node->getChild(0)->getChild(0)->getAttribute('id'),
                                 $node->getChild(0)->getChild(0)->getAttribute('subject'),
-                                $Admin,
+                                $node->getAttribute('participant'),
                                 $node->getChild(0)->getChild(0)->getAttribute('creation')
                             ));
                   }
