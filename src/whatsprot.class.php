@@ -2437,7 +2437,7 @@ class WhatsProt
                             $node->getChild("media")->getAttribute('file'),
                             $node->getChild("media")->getAttribute('mimetype'),
                             $node->getChild("media")->getAttribute('filehash'),
-                            $node->getChild("media")->getAttribute('duration'),
+                            $node->getChild("media")->getAttribute('seconds'),
                             $node->getChild("media")->getAttribute('acodec')
                         ));
                 } elseif ($node->getChild("media")->getAttribute('type') == 'vcard') {
