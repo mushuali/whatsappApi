@@ -425,7 +425,7 @@ class WhatsProt
      */
     public function connect()
     {
-        //If we have already connected AND the socket has not be closed from the remote side - then
+        //If we have already connected AND the socket has not been closed from the remote side - then
         //no need to connect again.
         //WARNING: Lots of bugs in PHP's detection of socket timeout/remote disconnect. Be careful changing this code.
         //http://ie2.php.net/manual/en/function.socket-read.php#115903
