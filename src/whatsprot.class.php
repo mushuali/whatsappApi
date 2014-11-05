@@ -425,6 +425,16 @@ class WhatsProt
      */
     public function connect()
     {
+        //If we have already connected AND the socket has not been closed from the remote side - then
+        //no need to connect again.
+        //WARNING: Lots of bugs in PHP's detection of socket timeout/remote disconnect. Be careful changing this code.
+        //http://ie2.php.net/manual/en/function.socket-read.php#115903
+        //https://bugs.php.net/bug.php?id=47918
+        //http://stackoverflow.com/questions/20334366/php-fsockopen-how-to-know-if-connection-is-alive
+        if ($this->isConnected())
+        {
+            return true;
+        }
 
         $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
@@ -460,6 +470,22 @@ class WhatsProt
                 ));
         }
     }
+
+    /**
+     * Do we have an active socket connection to whatsapp?
+     * @return bool
+     */
+    protected function isConnected()
+    {
+        if ( ! empty($this->socket) && feof($this->socket) === false)
+        {
+            //Already connected.
+            return true;
+        }
+
+        return false;
+    }
+
 
     /**
      * Disconnect from the WhatsApp network.
@@ -546,11 +572,11 @@ class WhatsProt
      */
     public function pollMessage($autoReceipt = true)
     {
-    	
+
     	if(feof($this->socket)) {
 	    throw new Exception('Connection Closed!');
 	}
-    	
+
         $stanza = $this->readStanza();
         if($stanza)
         {
@@ -2015,6 +2041,11 @@ class WhatsProt
      */
     protected function doLogin()
     {
+        if ($this->isLoggedIn())
+        {
+            return true;
+        }
+
         $this->writer->resetKey();
         $this->reader->resetKey();
         $resource = static::WHATSAPP_DEVICE . '-' . static::WHATSAPP_VER . '-' . static::PORT;
@@ -2049,6 +2080,26 @@ class WhatsProt
                 ));
             $this->sendAvailableForChat();
 		}
+    }
+
+    /**
+     * Have we an active connection with WhatsAPP AND a valid login already?
+     * @return bool
+     */
+    protected function isLoggedIn(){
+        //If you aren't connected you can't be logged in!
+        if ( ! $this->isConnected())
+        {
+            return false;
+        }
+
+        //We are connected - but are we logged in?
+        if ( ! empty ($this->loginStatus) && $this->loginStatus === static::CONNECTED_STATUS)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**
