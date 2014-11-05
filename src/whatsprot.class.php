@@ -425,6 +425,17 @@ class WhatsProt
      */
     public function connect()
     {
+        //If we have already connected AND the socket has not be closed from the remote side - then
+        //no need to connect again.
+        //WARNING: Lots of bugs in PHP's detection of socket timeout/remote disconnect. Be careful changing this code.
+        //http://ie2.php.net/manual/en/function.socket-read.php#115903
+        //https://bugs.php.net/bug.php?id=47918
+        //http://stackoverflow.com/questions/20334366/php-fsockopen-how-to-know-if-connection-is-alive
+        if ( ! empty($this->socket) && feof($this->socket) === false)
+        {
+            //Already connected.
+            return true;
+        }
 
         $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
