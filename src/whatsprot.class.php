@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.426';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.426 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.431';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.431 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -570,7 +570,7 @@ class WhatsProt
      * @param bool $autoReceipt
      * @return bool
      */
-    public function pollMessage($autoReceipt = true)
+    public function pollMessage($autoReceipt = true, $type = "read")
     {
 
     	if(feof($this->socket)) {
@@ -580,7 +580,7 @@ class WhatsProt
         $stanza = $this->readStanza();
         if($stanza)
         {
-            $this->processInboundData($stanza, $autoReceipt);
+            $this->processInboundData($stanza, $autoReceipt, $type);
             return true;
         }
         return false;
@@ -2324,11 +2324,11 @@ class WhatsProt
      * @param bool $autoReceipt
      * @throws Exception
      */
-    protected function processInboundData($data, $autoReceipt = true)
+    protected function processInboundData($data, $autoReceipt = true, $type = "read")
     {
         $node = $this->reader->nextTree($data);
         if( $node != null ) {
-            $this->processInboundDataNode($node, $autoReceipt);
+            $this->processInboundDataNode($node, $autoReceipt, $type);
         }
     }
 
@@ -2340,7 +2340,7 @@ class WhatsProt
      * @param bool         $autoReceipt
      * @throws Exception
      */
-    protected function processInboundDataNode(ProtocolNode $node, $autoReceipt = true) {
+    protected function processInboundDataNode(ProtocolNode $node, $autoReceipt = true, $type = "read") {
         $this->debugPrint($node->nodeString("rx  ") . "\n");
         $this->serverReceivedId = $node->getAttribute('id');
 
@@ -2431,7 +2431,7 @@ class WhatsProt
 
                 if($autoReceipt)
                 {
-                    $this->sendMessageReceived($node);
+                    $this->sendMessageReceived($node, $type);
                 }
             }
             if ($node->getAttribute("type") == "media" && $node->getChild('media') != null) {
@@ -2525,7 +2525,7 @@ class WhatsProt
 
                 if($autoReceipt)
                 {
-                    $this->sendMessageReceived($node);
+                    $this->sendMessageReceived($node, $type);
                 }
             }
             if ($node->getChild('received') != null) {
@@ -3468,15 +3468,17 @@ class WhatsProt
      * @param ProtocolNode $msg The ProtocolTreeNode that contains the message.
      * @param null         $type
      */
-    protected function sendMessageReceived($msg, $type = null)
+    protected function sendMessageReceived($msg, $type = "read")
     {
-        if($type)
+
+        $messageHash = array();
+        if($type == "read")
         {
             $messageHash["type"] = $type;
         }
-        $messageHash = array();
         $messageHash["to"] = $msg->getAttribute("from");
         $messageHash["id"] = $msg->getAttribute("id");
+        $messageHash["t"] = time();
         $messageNode = new ProtocolNode("receipt", $messageHash, null, null);
         $this->sendNode($messageNode);
         $this->eventManager()->fire("onSendMessageReceived",
