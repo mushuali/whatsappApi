@@ -176,7 +176,7 @@ function updateData($nameFile, $WAver, $classesMD5 = "")
     $content = explode("\n", $content);
 
     if ($file == __DIR__ . '/token.php') {
-        $content[5] = '  $classesMd5 = ' . "\"" . trim($classesMD5) . "\"; // $WAver";
+        $content[6] = '    $classesMd5 = ' . "\"" . trim($classesMD5) . "\"; // $WAver";
     } else {
         if ($file == __DIR__ . '/whatsprot.class.php') {
             $content[48] = '    const WHATSAPP_VER = \'' . trim($WAver) . '\';                // The WhatsApp version.';

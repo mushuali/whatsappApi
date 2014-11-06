@@ -3,6 +3,9 @@
 =         B64 ENCODED         =
 ===============================
 
+WhatsApp/2.11.431 Android/4.3 Device/GalaxyS3   [Blue check feature enabled]
+6AFrxlvRhUKoSxdMjnYATg==
+
 WhatsApp/2.11.426 Android/4.3 Device/GalaxyS3
 gGha73KQT1l3G8AMQGgKxg==
 
