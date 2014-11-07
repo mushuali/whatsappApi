@@ -1387,6 +1387,24 @@ class WhatsProt
     }
 
     /**
+     * Send a read receipt to a message
+     *
+     * @param $to
+     *   The recipient.
+     * @param $id
+     */
+    public function sendMessageRead($to, $id)
+    {
+        $messageHash = array();
+        $messageHash["type"] = "read";
+        $messageHash["to"] = $to;
+        $messageHash["id"] = $id;
+        $messageHash["t"] = time();
+        $messageNode = new ProtocolNode("receipt", $messageHash, null, null);
+        $this->sendNode($messageNode);
+    }
+
+    /**
      * Send audio to the user/group.
      *
      * @param string $to            The recipient.
