@@ -2384,7 +2384,7 @@ class WhatsProt
                     $this->phoneNumber,
                     $node->getAttribute('from'),
                     $node->getAttribute('id'),
-                    $node->getAttribute('class'),
+                    $node->getAttribute('type'),
                     $node->getAttribute('t')
                 ));
         }
