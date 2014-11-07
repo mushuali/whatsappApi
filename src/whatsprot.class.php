@@ -1935,8 +1935,7 @@ class WhatsProt
     {
         $resp = $this->authenticate();
         $respHash = array();
-        $respHash["xmlns"] = "urn:ietf:params:xml:ns:xmpp-sasl";
-        $node = new ProtocolNode("response", $respHash, null, $resp);
+        $node = new ProtocolNode("response", null, null, $resp);
 
         return $node;
     }
