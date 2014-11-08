@@ -1122,6 +1122,27 @@ class WhatsProt
     $this->sendNode($node);
   }
 
+  /**
+  * Get voip info. of a number
+  *
+  * @param string $number
+  */
+  public function sendGetHasVoipEnabled($number)
+  {
+    $msgId = $this->createMsgId("voip_");
+    $userNode = new ProtocolNode("user", array(
+      "jid" => $number."@".static::WHATSAPP_SERVER
+    ), null, null);
+    $eligibleNode = new ProtocolNode("eligible", null, array($userNode), null);
+    $node = new ProtocolNode("iq", array(
+      "id" => $msgId,
+      "xmlns" => "voip",
+      "type" => "get",
+      "to" => static::WHATSAPP_SERVER
+    ), array($eligibleNode), null);
+  $this->sendNode($node);
+  }
+
     /**
      * Get the current status message of a specific user.
      *
@@ -1934,7 +1955,6 @@ class WhatsProt
     protected function createAuthResponseNode()
     {
         $resp = $this->authenticate();
-        $respHash = array();
         $node = new ProtocolNode("response", null, null, $resp);
 
         return $node;
