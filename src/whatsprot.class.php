@@ -1924,6 +1924,7 @@ class WhatsProt
         $authHash = array();
         $authHash["mechanism"] = "WAUTH-2";
         $authHash["user"] = $this->phoneNumber;
+        //$authHash["passive"] = "true";
         $data = $this->createAuthBlob();
         $node = new ProtocolNode("auth", $authHash, null, $data);
 
@@ -3461,18 +3462,6 @@ class WhatsProt
      */
     protected function sendMessageNode($to, $node, $id = null)
     {
-        $serverNode = new ProtocolNode("server", null, null, "");
-        $xHash = array();
-        $xHash["xmlns"] = "jabber:x:event";
-        $xNode = new ProtocolNode("x", $xHash, array($serverNode), "");
-        $notify = array();
-        $notify['xmlns'] = 'urn:xmpp:whatsapp';
-        $notify['name'] = $this->name;
-        $notnode = new ProtocolNode("notify", $notify, null, "");
-        $request = array();
-        $request['xmlns'] = "urn:xmpp:receipts";
-        $reqnode = new ProtocolNode("request", $request, null, "");
-
         $messageHash = array();
         $messageHash["to"] = $this->getJID($to);
         if($node->getTag() == "body")
@@ -3486,7 +3475,7 @@ class WhatsProt
         $messageHash["id"] = ($id == null?$this->createMsgId("message"):$id);
         $messageHash["t"] = time();
 
-        $messageNode = new ProtocolNode("message", $messageHash, array($xNode, $notnode, $reqnode, $node), "");
+        $messageNode = new ProtocolNode("message", $messageHash, array($node), "");
         $this->sendNode($messageNode);
         $this->eventManager()->fire("onSendMessage",
             array(
