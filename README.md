@@ -20,6 +20,8 @@ And I also want to thank all the users that are collaborating with me and are ma
 - [SikiFn](https://github.com/SikiFn)
 - [Dennobaby](https://github.com/Dennobaby)
 
+[![Gratipay](http://img.shields.io/badge/Donate-Gratipay-brightgreen.svg)](https://gratipay.com/mgp25/) [![Paypal](https://www.paypalobjects.com/es_XC/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=me%40mgp25%2ecom&lc=US&item_name=WhatsAPI&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+
 
 ### Update October 7th, 2014
 
