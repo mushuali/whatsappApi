@@ -294,7 +294,7 @@ class WhatsAppEvent
         $from,
         $encrypt
     ) {
-        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $phone, $encrypt) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $encrypt) {
             $listener->onGetFeature($phone, $from, $encrypt);
         };
         $this->fireCallback($callbackEvent);
