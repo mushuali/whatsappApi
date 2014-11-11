@@ -3001,6 +3001,17 @@ class WhatsProt
                               $node->getChild(0)->getChild(0)->getAttribute('expiration')
                           ));
                     break;
+                  case "features":
+                    if($node->getChild(0)->getChild(0) == "encrypt")
+                    {
+                      $this->eventManager()->fire("onGetFeature",
+                          array(
+                              $this->phoneNumber,
+                              $node->getAttribute('from'),
+                              $node->getChild(0)->getChild(0)->getAttribute('value'),
+                            ));
+                      }
+                    break;
                 default:
                     throw new Exception("Method $type not implemented");
             }

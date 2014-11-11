@@ -57,6 +57,7 @@ abstract class AllEvents
     public function onGetBroadcastLists( $mynumber, $broadcastLists ){}
     public function onGetError( $mynumber, $id, $data ){}
     public function onGetExtendAccount( $mynumber, $kind, $status, $creation, $expiration ){}
+    public function onGetFeature( $mynumber, $from, $encrypt ){}
     public function onGetGroupMessage( $mynumber, $from_group_jid, $from_user_jid, $id, $type, $time, $name, $body ){}
     public function onGetGroupParticipants( $mynumber, $groupId, $groupList ){}
     public function onGetGroups( $mynumber, $groupList ){}

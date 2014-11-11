@@ -289,6 +289,17 @@ class WhatsAppEvent
         $this->fireCallback($callbackEvent);
     }
 
+    function fireGetFeature(
+        $phone,
+        $from,
+        $encrypt
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $phone, $encrypt) {
+            $listener->onGetFeature($phone, $from, $encrypt);
+        };
+        $this->fireCallback($callbackEvent);
+    }
+
     function fireGetGroups(
         $phone,
         $groupList
