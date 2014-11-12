@@ -351,16 +351,19 @@ class WhatsProt
         // Build the url.
         $host = 'https://' . static::WHATSAPP_REQUEST_HOST;
         $query = array(
-            'method' => $method,
             'in' => $phone['phone'],
             'cc' => $phone['cc'],
             'id' => $this->identity,
             'lg' => $langCode,
             'lc' => $countryCode,
-            'token' => urlencode($token),
+            'mcc' => $phone['mcc'],
+            'mnc' => $phone['mnc'],
             'sim_mcc' => $phone['mcc'],
-            'sim_mnc' => $phone['mnc']
-          //'reason' => 'jailbroken',
+            'sim_mnc' => $phone['mnc'],
+            'method' => $method,
+            //'reason' => "self-send-jailbroken",
+            'token' => urlencode($token),
+            'network_radio_type' => "1"
         );
 
         if ($this->debug) {
