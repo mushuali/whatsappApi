@@ -171,6 +171,12 @@ class WhatsProt
         if ($langCode == null) {
             $langCode = 'en';
         }
+        if ($phone['cc'] == '77') {
+            $phone['cc'] = '7';
+        }
+        if ($phone['cc'] == '79') {
+            $phone['cc'] = '7';
+        }
 
         // Build the url.
         $host = 'https://' . static::WHATSAPP_CHECK_HOST;
