@@ -186,6 +186,7 @@ class WhatsProt
             'id' => $this->identity,
             'lg' => $langCode,
             'lc' => $countryCode,
+            'network_radio_type' => "1"
         );
 
         $response = $this->getResponse($host, $query);
@@ -273,6 +274,7 @@ class WhatsProt
             'code' => $code,
             'lg' => $langCode,
             'lc' => $countryCode,
+            'network_radio_type' => "1"
         );
 
         $response = $this->getResponse($host, $query);
@@ -602,6 +604,30 @@ class WhatsProt
     {
         $messageNode = new ProtocolNode("presence", array("type" => "active"), null, "");
         $this->sendNode($messageNode);
+    }
+
+    /**
+    * Send a request to get cipher keys from an user
+    *
+    * @param $number
+    *    Phone number of the user you want to get the cipher keys.
+    */
+    public function sendGetCipherKeysFromUser($number)
+    {
+        $msgId = $this->createMsgId("cipher_keys_");
+
+        $userNode = new ProtocolNode("user", array(
+          "jid" => $jid."@".static::WHATSAPP_SERVER
+        ), null, null);
+        $keyNode = new ProtocolNode("key", null, array($userNode), null);
+        $node = new ProtocolNode("iq", array(
+          "id" => $msgId,
+          "xmlns" => "encrypt",
+          "type" => "get",
+          "to" => static::WHATSAPP_SERVER
+        ), null, "");
+
+        $this->sendNode($node);
     }
 
     /**
