@@ -625,7 +625,7 @@ class WhatsProt
           "xmlns" => "encrypt",
           "type" => "get",
           "to" => static::WHATSAPP_SERVER
-        ), null, "");
+        ), array($keyNode), null);
 
         $this->sendNode($node);
     }
