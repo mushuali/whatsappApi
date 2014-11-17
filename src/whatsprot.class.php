@@ -2564,6 +2564,14 @@ class WhatsProt
                             $node->getChild("media")->getAttribute('acodec')
                         ));
                 } elseif ($node->getChild("media")->getAttribute('type') == 'vcard') {
+                    if($node->getChild("media")->hasChild('vcard')) {
+                        $name = $node->getChild("media")->getChild("vcard")->getAttribute('name');
+                        $data = $node->getChild("media")->getChild("vcard")->getData();
+                    } else {
+                        $name = "NO_NAME";
+                        $data = $node->getChild("media")->getData();
+                    }
+
                     $this->eventManager()->fire("onGetvCard",
                         array(
                             $this->phoneNumber,
@@ -2572,8 +2580,8 @@ class WhatsProt
                             $node->getAttribute('type'),
                             $node->getAttribute('t'),
                             $node->getAttribute('notify'),
-                            $node->getChild("media")->getChild("vcard")->getAttribute('name'),
-                            $node->getChild("media")->getChild("vcard")->getData()
+                            $name,
+                            $data
                         ));
                 } elseif ($node->getChild("media")->getAttribute('type') == 'location') {
                     $url = $node->getChild("media")->getAttribute('url');
