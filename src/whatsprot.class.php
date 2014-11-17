@@ -617,7 +617,7 @@ class WhatsProt
         $msgId = $this->createMsgId("cipher_keys_");
 
         $userNode = new ProtocolNode("user", array(
-          "jid" => $jid."@".static::WHATSAPP_SERVER
+          "jid" => $this->getJID($number)
         ), null, null);
         $keyNode = new ProtocolNode("key", null, array($userNode), null);
         $node = new ProtocolNode("iq", array(
