@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.431';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.431 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.448';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.448 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -1686,6 +1686,18 @@ class WhatsProt
     {
         $node = new ProtocolNode("presence", array("type" => "subscribe", "to" => $this->getJID($to)), null, "");
         $this->sendNode($node);
+    }
+
+    /**
+    * Unsubscribe, will stop subscription
+    *
+    * @param string $to
+    *   Phone number.
+    */
+    public function sendPresenceUnsubscription($to)
+    {
+      $node = new ProtocolNode("presence", array("type" => "unsubscribe", "to" => $this->getJID($to)), null, "");
+      $this->sendNode($node);
     }
 
     /**
