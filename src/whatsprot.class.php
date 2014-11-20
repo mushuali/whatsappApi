@@ -333,7 +333,7 @@ class WhatsProt
      *
      * @throws Exception
      */
-    public function codeRequest($method = 'sms', $countryCode = null, $langCode = null)
+    public function codeRequest($method = 'sms', $carrier = null, $countryCode = null, $langCode = null)
     {
         if (!$phone = $this->dissectPhone()) {
             throw new Exception('The provided phone number is not valid.');
@@ -353,6 +353,11 @@ class WhatsProt
             $langCode = 'en';
         }
 
+        if($carrier != null)
+          $mnc = $this->detectMnc($langCode, $carrier);
+        else
+          $mnc = $phone['mnc'];
+
         // Build the token.
         $token = generateRequestToken($phone['country'], $phone['phone']);
 
@@ -365,9 +370,9 @@ class WhatsProt
             'lg' => $langCode,
             'lc' => $countryCode,
             'mcc' => $phone['mcc'],
-            'mnc' => $phone['mnc'],
+            'mnc' => $mnc,
             'sim_mcc' => $phone['mcc'],
-            'sim_mnc' => $phone['mnc'],
+            'sim_mnc' => $mnc,
             'method' => $method,
             //'reason' => "self-send-jailbroken",
             'token' => urlencode($token),
@@ -2119,6 +2124,33 @@ class WhatsProt
     }
 
     /**
+     * Detects mnc from specified carrier
+     *
+     * @param $lc LangCode
+     * @param $carrierName Name of the carrier
+     *
+     * Returns mnc value
+     */
+    protected function detectMnc ($lc, $carrierName) {
+      $fp = fopen(__DIR__ . DIRECTORY_SEPARATOR . 'networkinfo.csv', 'r');
+      $mnc = null;
+
+      while ($data = fgetcsv($fp, 0, ',')) {
+        if (($data[4] === $lc) && ($data[7] === $carrierName)) {
+          $mnc = $data[2];
+          break;
+        }
+      }
+
+      if($mnc == null)
+        $mnc = '000';
+
+      fclose($fp);
+
+      return $mnc;
+    }
+
+    /**
      * Send the nodes to the Whatsapp server to log in.
      *
      * @throws Exception
@@ -2201,7 +2233,7 @@ class WhatsProt
 		else
 		{
 			$id = fopen($identity.".dat", "w");
-			$bytes = "%".implode("%", str_split(strtoupper(bin2hex(openssl_random_pseudo_bytes(16))), 2));
+			$bytes = "%".implode("%", str_split(strtolower(bin2hex(openssl_random_pseudo_bytes(16))), 2));
 			fwrite($id, $bytes);
 			fclose($id);
 
