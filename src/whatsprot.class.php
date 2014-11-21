@@ -350,11 +350,10 @@ class WhatsProt
         }
         if ($langCode == null) {
             $langCode = 'en';
-            $langCode = 'en';
         }
 
         if($carrier != null)
-          $mnc = $this->detectMnc($langCode, $carrier);
+          $mnc = $this->detectMnc(strtolower($countryCode), $carrier);
         else
           $mnc = $phone['mnc'];
 
