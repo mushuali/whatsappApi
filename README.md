@@ -1,3 +1,6 @@
+# Registration Issues?
+Stick to this topic: https://github.com/mgp25/WhatsAPI-Official/issues/133
+
 # WhatsAPI
 
 Interface to WhatsApp Messenger
