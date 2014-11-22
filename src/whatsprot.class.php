@@ -859,6 +859,27 @@ class WhatsProt
         $this->sendNode($node);
         $this->waitForServer($msgId);
     }
+    
+    /**
+    * Send a request to get new Groups V2 info
+    *
+    * @param $groupID
+    *    The group JID
+    */
+    public function sendGetGroupV2Info($groupID)
+    {
+        $msgId = $this->createMsgId("get_groupv2_info");
+
+        $queryNode = new ProtocolNode("query", array("request" => "interactive"), null, null);
+        $node = new ProtocolNode("iq", array(
+          "id" => $msgId,
+          "xmlns" => "w:g2",
+          "type" => "get",
+          "to" => $this->getJID($groupID)
+        ), array($queryNode), null);
+
+        $this->sendNode($node);
+    }
 
     /**
      * Send a request to return a list of groups user has started
@@ -2885,6 +2906,29 @@ class WhatsProt
                             $groupList
                         ));
                 }
+            }
+            if($node->nodeIdContains('get_groupv2_info')){
+		$groupId = self::parseJID($node->getAttribute('from'));
+				
+		$type = "";
+		$groupList = array();
+		$groupChild = $node->getChild(0);
+		if ($groupChild != null) {
+			$type = $groupChild->getAttribute('type');
+			
+			if ($groupChild->getChild(0) != null) {
+				foreach ($groupChild->getChildren() as $child) {
+					$groupList[] = $child->getAttributes();
+				}
+			}
+		}
+					
+		$this->eventManager()->fire("onGetGroupV2Info",
+			array(
+			$this->phoneNumber,
+			$type,
+			$groupList
+		));
             }
             if ($node->nodeIdContains("get_lists")) {
                 $broadcastLists = array();
