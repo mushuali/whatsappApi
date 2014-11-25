@@ -107,8 +107,19 @@ function createIconGD($file, $size = 100, $raw = false)
         $nwidth  = ($width / $height) * $size;
         $nheight = $size;
     }
+    
     $image_p = imagecreatetruecolor($nwidth, $nheight);
-    $image   = imagecreatefromjpeg($file);
+    
+    // get image extension
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    if ($ext == "jpg" || $ext == "jpeg") {
+      $image   = imagecreatefromjpeg($file);
+    } elseif ($ext == "png") {
+      $image = imagecreatefrompng($file);
+    } elseif ($ext == "gif") {
+      $image = imagecreatefromgif($file);
+    }
+    
     imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
     ob_start();
     imagejpeg($image_p);
