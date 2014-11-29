@@ -1033,14 +1033,16 @@ class WhatsProt
      */
     public function sendGetServerProperties()
     {
+        $id = $this->createMsgId("getproperties");
         $child = new ProtocolNode("props", null, null, null);
         $node = new ProtocolNode("iq", array(
-            "id" => $this->createMsgId("getproperties"),
+            "id" => $id,
             "type" => "get",
             "xmlns" => "w",
             "to" => "s.whatsapp.net"
                 ), array($child), null);
         $this->sendNode($node);
+        $this->waitForServer($id);
     }
 
 	/**
@@ -2297,6 +2299,7 @@ class WhatsProt
         ), null);
 
         $this->sendNode($node);
+        $this->waitForServer($id);
 
         return $id;
     }
@@ -2577,6 +2580,13 @@ class WhatsProt
                 {
                     $this->sendMessageReceived($node, $type);
                 }
+            }
+            if ($node->getAttribute("type") == "text" && $node->getChild(0)->getTag() == 'enc') {
+              // TODO
+              if($autoReceipt)
+              {
+                $this->sendMessageReceived($node, $type);
+              }
             }
             if ($node->getAttribute("type") == "media" && $node->getChild('media') != null) {
                 if ($node->getChild("media")->getAttribute('type') == 'image') {
@@ -3331,11 +3341,11 @@ class WhatsProt
             //file already on whatsapp servers
             $url = $duplicate->getAttribute("url");
             $filesize = $duplicate->getAttribute("size");
-//            $mimetype = $duplicate->getAttribute("mimetype");
+//          $mimetype = $duplicate->getAttribute("mimetype");
             $filehash = $duplicate->getAttribute("filehash");
             $filetype = $duplicate->getAttribute("type");
-//            $width = $duplicate->getAttribute("width");
-//            $height = $duplicate->getAttribute("height");
+//          $width = $duplicate->getAttribute("width");
+//          $height = $duplicate->getAttribute("height");
             $exploded = explode("/", $url);
             $filename = array_pop($exploded);
         } else {
@@ -3357,11 +3367,11 @@ class WhatsProt
 
             $url = $json->url;
             $filesize = $json->size;
-//            $mimetype = $json->mimetype;
+//          $mimetype = $json->mimetype;
             $filehash = $json->filehash;
             $filetype = $json->type;
-//            $width = $json->width;
-//            $height = $json->height;
+//          $width = $json->width;
+//          $height = $json->height;
             $filename = $json->name;
         }
 
@@ -3371,23 +3381,24 @@ class WhatsProt
         $mediaAttribs["encoding"] = "raw";
         $mediaAttribs["file"] = $filename;
         $mediaAttribs["size"] = $filesize;
-        if($this->mediaQueue[$id]['caption'] != null)
+        if($this->mediaQueue[$id]['caption'] != '')
           $mediaAttribs["caption"] = $this->mediaQueue[$id]['caption'];
 
         $filepath = $this->mediaQueue[$id]['filePath'];
         $to = $this->mediaQueue[$id]['to'];
 
+        $icon = "";
         switch ($filetype) {
             case "image":
-		$caption = $this->mediaQueue[$id]['caption'];
+		            $caption = $this->mediaQueue[$id]['caption'];
                 $icon = createIcon($filepath);
                 break;
             case "video":
-		$caption = $this->mediaQueue[$id]['caption'];
+		            $caption = $this->mediaQueue[$id]['caption'];
                 $icon = createVideoIcon($filepath);
                 break;
             default:
-		$caption = '';
+		            $caption = '';
                 $icon = '';
                 break;
         }
