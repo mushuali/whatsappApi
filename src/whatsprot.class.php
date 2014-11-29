@@ -490,12 +490,11 @@ class WhatsProt
      * Do we have an active socket connection to whatsapp?
      * @return bool
      */
-    protected function isConnected()
+    public function isConnected()
     {
-        if ( ! empty($this->socket) && feof($this->socket) === false)
+        if (!empty($this->socket) && feof($this->socket) === false)
         {
-            //Already connected.
-            return true;
+            return true; //Already connected.
         }
 
         return false;
@@ -509,6 +508,7 @@ class WhatsProt
     {
         if (is_resource($this->socket)) {
             fclose($this->socket);
+            $this->socket = null;
             $this->eventManager()->fire("onDisconnect",
                 array(
                     $this->phoneNumber,
@@ -587,10 +587,9 @@ class WhatsProt
      */
     public function pollMessage($autoReceipt = true, $type = "read")
     {
-
-    	if(feof($this->socket)) {
-	    throw new Exception('Connection Closed!');
-	}
+        if(!$this->isConnected()) {
+	       throw new Exception('Connection Closed!');
+        }
 
         $stanza = $this->readStanza();
         if($stanza)
@@ -2523,6 +2522,15 @@ class WhatsProt
                     $node->getAttribute('type'),
                     $node->getAttribute('t')
                 ));
+
+            $ackNode = new ProtocolNode("ack", array(
+              "to" => $node->getAttribute('from'),
+              "id" => $node->getAttribute('id'),
+              "type" => $type,
+              "t" => time()
+              ), null, null);
+
+            $this->sendNode($ackNode);
         }
         if ($node->getTag() == "message") {
             array_push($this->messageQueue, $node);
@@ -3009,6 +3017,23 @@ class WhatsProt
                 ));
         }
 
+        if ($node->getTag() == "message" && $node->getAttribute('type') == "media" && $node->getChild(0)->getAttribute('type') == "image" ) {
+
+          $msgId = $this->createMsgId("ack-media");
+
+          $ackNode = new ProtocolNode("ack", array(
+            "url" => $node->getChild(0)->getAttribute('url')
+          ), null, null);
+
+          $iqNode = new ProtocolNode("iq", array(
+            "id" => $msgId,
+            "xmlns" => "w:m",
+            "type" => "set",
+            "to" => static::WHATSAPP_SERVER
+          ), array($ackNode), null);
+          $this->sendNode($iqNode);
+        }
+
         $children = $node->getChild(0);
         if ($node->getTag() == "stream:error" && empty($children) == false && $node->getChild(0)->getTag() == "system-shutdown")
         {
@@ -3346,7 +3371,8 @@ class WhatsProt
         $mediaAttribs["encoding"] = "raw";
         $mediaAttribs["file"] = $filename;
         $mediaAttribs["size"] = $filesize;
-    	  $mediaAttribs["caption"] = $this->mediaQueue[$id]['caption'];
+        if($this->mediaQueue[$id]['caption'] != null)
+          $mediaAttribs["caption"] = $this->mediaQueue[$id]['caption'];
 
         $filepath = $this->mediaQueue[$id]['filePath'];
         $to = $this->mediaQueue[$id]['to'];
