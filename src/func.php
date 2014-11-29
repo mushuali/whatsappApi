@@ -92,11 +92,11 @@ function createIcon($file)
     if ((extension_loaded('gd')) && (file_exists($file))) {
         return createIconGD($file);
     } else {
-        return giftThumbnail();
+        return base64_decode(giftThumbnail());
     }
 }
 
-function createIconGD($file, $size = 100, $raw = false)
+function createIconGD($file, $size = 100, $raw = true)
 {
     list($width, $height) = getimagesize($file);
     if ($width > $height) {
@@ -107,37 +107,20 @@ function createIconGD($file, $size = 100, $raw = false)
         $nwidth  = ($width / $height) * $size;
         $nheight = $size;
     }
-    
+
     $image_p = imagecreatetruecolor($nwidth, $nheight);
-    
-    // get image extension
-    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-    if ($ext == "jpg" || $ext == "jpeg") {
-      $image   = imagecreatefromjpeg($file);
-    } elseif ($ext == "png") {
-      $image = imagecreatefrompng($file);
-    } elseif ($ext == "gif") {
-      $image = imagecreatefromgif($file);
-    }
-    
+    $image = imagecreatefromstring(file_get_contents($file));
+
     imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
     ob_start();
     imagejpeg($image_p);
     $i = ob_get_contents();
     ob_end_clean();
-    if ($raw) {
-        return $i;
-    } else {
-        return base64_encode($i);
-    }
+    return $i;
 }
 
 function createVideoIcon($file)
 {
-    // @todo: Add support for video thumbnail create.
-    // @see: http://stackoverflow.com/questions/14662027/generate-thumbnail-for-a-bunch-of-mp4-video-in-a-folder
-    //return giftThumbnail();
-
     /* should install ffmpeg for the method to work successfully  */
     if (checkFFMPEG()) {
         //generate thumbnail
@@ -145,15 +128,12 @@ function createVideoIcon($file)
         @unlink($preview);
 
         //capture video preview
-        $command = "ffmpeg -i \"" . $file . "\" -f image2 -vframes 1 \"" . $preview . "\"";
+        $command = "ffmpeg -i \"" . $file . "\" -f mjpeg -ss 00:00:01 -vframes 1 \"" . $preview . "\"";
         exec($command);
 
-        // Parsear la imagen
-        //TODO: Make it work using libGD (see createIcon())
         return createIconGD($preview);
     } else {
-        //fallback
-        return giftThumbnail();
+        return base64_decode(videoThumbnail());
     }
 }
 
@@ -3377,4 +3357,3 @@ function ArrayEmojis()
 		array('iOS2' => '', 'iOS5' => '‼', 'iOS7' => '‼️', 'Hex' => '203C')
 	);
 }
-
