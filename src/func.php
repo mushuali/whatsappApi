@@ -116,6 +116,10 @@ function createIconGD($file, $size = 100, $raw = true)
     imagejpeg($image_p);
     $i = ob_get_contents();
     ob_end_clean();
+
+    imagedestroy($image);
+    imagedestroy($image_p);
+
     return $i;
 }
 
