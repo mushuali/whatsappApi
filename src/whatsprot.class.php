@@ -840,26 +840,6 @@ class WhatsProt
     }
 
     /**
-     * Send a request to get information about a specific group
-     *
-     * @param  string $gjid The specific group id
-     */
-    public function sendGetGroupsInfo($gjid)
-    {
-        $msgId = $this->createMsgId("getgroupinfo");
-
-        $child = new ProtocolNode("query", null, null, null);
-        $node = new ProtocolNode("iq", array(
-            "id" => $msgId,
-            "type" => "get",
-            "xmlns" => "w:g2",
-            "to" => $this->getJID($gjid)
-                ), array($child), null);
-        $this->sendNode($node);
-        $this->waitForServer($msgId);
-    }
-
-    /**
     * Send a request to get new Groups V2 info
     *
     * @param $groupID
@@ -2895,7 +2875,7 @@ class WhatsProt
                 //Events fired depend on text in the ID field.
                 $groupList = array();
                 if ($node->getChild(0) != null) {
-                    foreach ($node->getChildren() as $child) {
+                    foreach ($node->getChild(0)->getChildren() as $child) {
                         $groupList[] = $child->getAttributes();
                     }
                 }
