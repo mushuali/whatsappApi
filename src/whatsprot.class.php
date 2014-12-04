@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.456';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.456 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.461';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.461 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -1249,36 +1249,43 @@ class WhatsProt
      * @return string
      *   The group ID.
      */
-    public function sendGroupsChatCreate($subject, $participants = array())
-    {
-        $groupHash = array();
-        $groupHash["action"] = "create";
-        $groupHash["subject"] = $subject;
-        $group = new ProtocolNode("group", $groupHash, null, "");
+     public function sendGroupsChatCreate($subject, $participants)
+     {
+       if (!is_array($participants)) {
+         $participants = array($participants);
+       }
+       foreach ($participants as $participant)
+       {
+         $participantNode[] = new ProtocolNode("participant", array(
+           "jid" => $this->getJID($participant)
+         ), null, null);
+       }
 
-        $setHash = array();
-        $setHash["id"] = $this->createMsgId("creategroup");
-        $setHash["type"] = "set";
-        $setHash["xmlns"] = "w:g2";
-        $setHash["to"] = static::WHATSAPP_GROUP_SERVER;
-        $groupNode = new ProtocolNode("iq", $setHash, array($group), "");
+       $id = $this->createMsgId("creategroup");
 
-        $this->sendNode($groupNode);
-        $this->waitForServer($setHash["id"]);
-        $groupId = $this->groupId;
+       $createNode = new ProtocolNode("create", array(
+         "subject" => $subject
+       ), $participantNode, null);
 
-        if (count($participants) > 0) {
-            $this->sendGroupsParticipantsAdd($groupId, $participants);
-        }
+       $iqNode = new ProtocolNode("iq", array(
+         "xmlns" => "w:g2",
+         "id" => $id,
+         "type" => "set",
+         "to" => "g.us"
+       ), array($createNode), null);
 
-            $this->eventManager()->fire("onGroupCreate",
-                array(
-                    $this->phoneNumber,
-                    $groupId
-                ));
+       $this->sendNode($iqNode);
+       $this->waitForServer($id);
+       $groupId = $this->groupId;
 
-        return $groupId;
-    }
+       $this->eventManager()->fire("onGroupCreate",
+       array(
+         $this->phoneNumber,
+         $groupId
+       ));
+
+       return $groupId;
+     }
 
     public function sendSetGroupSubject($gjid, $subject)
     {
