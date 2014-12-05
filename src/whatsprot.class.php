@@ -3439,8 +3439,8 @@ class WhatsProt
             {
                 throw new Exception("Failed to read stanza header");
             }
-            $treeLength = 0;
-            $treeLength = ord($header[1]) << 8;
+            $treeLength = (ord($header[0]) & 0x0F) << 16;
+            $treeLength |= ord($header[1]) << 8;
             $treeLength |= ord($header[2]) << 0;
 
             //read full length
