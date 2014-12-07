@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.461';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.461 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.464';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.464 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -464,16 +464,28 @@ class WhatsProt
           updateData('whatsprot.class.php', $WAver);
         }
 
-        $Socket = fsockopen(static::WHATSAPP_HOST, static::PORT);
-        if ($Socket !== false) {
-            stream_set_timeout($Socket, static::TIMEOUT_SEC, static::TIMEOUT_USEC);
-            $this->socket = $Socket;
+        /* Create a TCP/IP socket. */
+        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        if ($socket !== false) {
+            $result = socket_connect($socket, static::WHATSAPP_HOST, static::PORT);
+            if ($result === false) {
+                $socket = false;
+            }
+        }
+
+        if ($socket !== false) {
+
+            socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
+            socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
+
+            $this->socket = $socket;
             $this->eventManager()->fire("onConnect",
                 array(
                     $this->phoneNumber,
                     $this->socket
                 )
             );
+
         } else {
             if ($this->debug) {
                 print_r("Firing onConnectError\n");
@@ -482,7 +494,8 @@ class WhatsProt
                 array(
                     $this->phoneNumber,
                     $this->socket
-                ));
+                )
+            );
         }
     }
 
@@ -492,12 +505,10 @@ class WhatsProt
      */
     public function isConnected()
     {
-        if (!empty($this->socket) && feof($this->socket) === false)
-        {
-            return true; //Already connected.
+        if($this->socket === null) {
+            return false;
         }
-
-        return false;
+        return true;
     }
 
 
@@ -3429,7 +3440,20 @@ class WhatsProt
         $buff = '';
         if($this->socket != null)
         {
-            $header = @fread($this->socket, 3);//read stanza header
+            $header = @socket_read($this->socket, 3);//read stanza header
+            var_dump($header);
+            if($header === false) {
+                $error = "socket EOF, closing socket...";
+                socket_close($this->socket);
+                $this->socket = null;
+                $this->eventManager()->fire("onClose",
+                    array(
+                        $this->phoneNumber,
+                        $error
+                    )
+                );
+            }
+
             if(strlen($header) == 0)
             {
                 //no data received
@@ -3444,14 +3468,14 @@ class WhatsProt
             $treeLength |= ord($header[2]) << 0;
 
             //read full length
-            $buff = @fread($this->socket, $treeLength);
+            $buff = socket_read($this->socket, $treeLength);
             $trlen = $treeLength;
             $len = strlen($buff);
             $prev = 0;
             while(strlen($buff) < $treeLength)
             {
                 $toRead = $treeLength - strlen($buff);
-                $buff .= @fread($this->socket, $toRead);
+                $buff .= socket_read($this->socket, $toRead);
                 if($len == strlen($buff))
                 {
                     //no new data read, fuck it
@@ -3462,16 +3486,6 @@ class WhatsProt
 
             if (strlen($buff) != $treeLength) {
                 throw new Exception("Tree length did not match received length (buff = " . strlen($buff) . " & treeLength = $treeLength)");
-            } else
-            if (@feof($this->socket)) {
-                $error = "socket EOF, closing socket...";
-                fclose($this->socket);
-                $this->socket = null;
-                $this->eventManager()->fire("onClose",
-                    array(
-                        $this->phoneNumber,
-                        $error
-                    ));
             }
             $buff = $header . $buff;
         }
@@ -3575,7 +3589,7 @@ class WhatsProt
     {
         if($this->socket != null)
         {
-            fwrite($this->socket, $data, strlen($data));
+            socket_write($this->socket, $data, strlen($data));
         }
     }
 
