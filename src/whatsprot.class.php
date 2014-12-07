@@ -3441,7 +3441,6 @@ class WhatsProt
         if($this->socket != null)
         {
             $header = @socket_read($this->socket, 3);//read stanza header
-            var_dump($header);
             if($header === false) {
                 $error = "socket EOF, closing socket...";
                 socket_close($this->socket);
