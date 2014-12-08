@@ -1278,9 +1278,17 @@ class WhatsProt
        return $groupId;
      }
 
+     /**
+     * Change group subject
+     *
+     * @param string $gjid
+     *   The group id
+     * @param string $subject
+     *   The subject
+     */
     public function sendSetGroupSubject($gjid, $subject)
     {
-        $child = new ProtocolNode("subject", array("value" => $subject), null, null);
+        $child = new ProtocolNode("subject", null, null, $subject);
         $node = new ProtocolNode("iq", array(
             "id" => $this->createMsgId("set_group_subject"),
             "type" => "set",
@@ -3775,10 +3783,7 @@ class WhatsProt
             $data = fread($fp, filesize($filepath));
             if ($data) {
                 //this is where the fun starts
-                $picture = new ProtocolNode("picture", null, null, $data);
-
-                $icon = createIconGD($filepath, 96, true);
-                $thumb = new ProtocolNode("picture", array("type" => "preview"), null, $icon);
+                $picture = new ProtocolNode("picture", array("type" => "image"), null, $data);
 
                 $hash = array();
                 $nodeID = $this->createMsgId("setphoto");
@@ -3786,7 +3791,7 @@ class WhatsProt
                 $hash["to"] = $this->getJID($jid);
                 $hash["type"] = "set";
                 $hash["xmlns"] = "w:profile:picture";
-                $node = new ProtocolNode("iq", $hash, array($picture, $thumb), null);
+                $node = new ProtocolNode("iq", $hash, array($picture), null);
 
                 $this->sendNode($node);
                 $this->waitForServer($nodeID);
