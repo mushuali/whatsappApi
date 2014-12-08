@@ -287,6 +287,48 @@ class BinTreeNodeReader
         return null;
     }
 
+    protected function readNibble() {
+      $byte = $this->readInt8();
+
+      $ignoreLastNibble = (bool) ($byte & 0x80);
+      $size = ($byte & 0x7f);
+      $nrOfNibbles = $size * 2 - (int) $ignoreLastNibble;
+
+      $data = $this->fillArray($size);
+      $string = '';
+
+      for ($i = 0; $i < $nrOfNibbles; $i++) {
+        $byte = $data[(int) floor($i / 2)];
+        $ord = ord($byte);
+
+        $shift = 4 * (1 - $i % 2);
+        $decimal = ($ord & (15 << $shift)) >> $shift;
+
+        switch ($decimal) {
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+          case 4:
+          case 5:
+          case 6:
+          case 7:
+          case 8:
+          case 9:
+          $string .= $decimal;
+          break;
+          case 10:
+          case 11:
+          $string .= chr($decimal - 10 + 45);
+          break;
+          default:
+          throw new Exception("Bad nibble: $decimal");
+        }
+      }
+
+      return $string;
+    }
+
     protected function getToken($token)
     {
         $ret     = "";
@@ -326,6 +368,8 @@ class BinTreeNodeReader
             } elseif (strlen($server) > 0) {
                 $ret = $server;
             }
+        } elseif ($token == 0xff) {
+            $ret = $this->readNibble();
         }
 
         return $ret;
@@ -498,7 +542,7 @@ class BinTreeNodeWriter
         $attributes = array();
         $header     = "WA";
         $header .= $this->writeInt8(1);
-        $header .= $this->writeInt8(4);
+        $header .= $this->writeInt8(5);
 
         $attributes["to"]       = $domain;
         $attributes["resource"] = $resource;
