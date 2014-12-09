@@ -1771,9 +1771,10 @@ class WhatsProt
             $items[] = $item;
         }
         $child = new ProtocolNode("list", array("name" => "default"), $items, null);
-        $child2 = new ProtocolNode("query", array("xmlns" => "jabber:iq:privacy"), array($child), null);
+        $child2 = new ProtocolNode("query", null, array($child), null);
         $node = new ProtocolNode("iq", array(
             "id" => $this->createMsgId("setprivacy"),
+            "xmlns" => "jabber:iq:privacy",
             "type" => "set"
                 ), array($child2), null);
         $this->sendNode($node);
