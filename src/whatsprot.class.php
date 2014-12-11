@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.464';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.464 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.471';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.471 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -598,17 +598,23 @@ class WhatsProt
      */
     public function pollMessage($autoReceipt = true, $type = "read")
     {
-        if(!$this->isConnected()) {
-	       throw new Exception('Connection Closed!');
-        }
+      if(!$this->isConnected()) {
+        throw new Exception('Connection Closed!');
+      }
 
-        $stanza = $this->readStanza();
-        if($stanza)
-        {
-            $this->processInboundData($stanza, $autoReceipt, $type);
-            return true;
+      $r = array($this->socket);
+      $w = array();
+      $e = array();
+
+      if (socket_select($r, $w, $e, static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
+        // Something to read
+        if ($stanza = $this->readStanza()) {
+          $this->processInboundData($stanza, $autoReceipt, $type);
+          return true;
         }
-        return false;
+      }
+
+      return false;
     }
 
     /**
