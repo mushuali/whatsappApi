@@ -413,7 +413,19 @@ class WhatsProt
                     ));
                 $minutes = round($response->retry_after / 60);
                 throw new Exception("Code already sent. Retry after $minutes minutes.");
-            } else {
+
+            } else if (isset($response->reason) && $response->reason == "too_many_guesses") {
+              $this->eventManager()->fire("onCodeRequestFailedTooManyGuesses",
+              array(
+                $this->phoneNumber,
+                $method,
+                $response->reason,
+                $response->retry_after
+              ));
+              $minutes = round($response->retry_after / 60);
+              throw new Exception("Too many guesses. Retry after $minutes minutes.");
+
+          }  else {
                 $this->eventManager()->fire("onCodeRequestFailed",
                     array(
                         $this->phoneNumber,

@@ -46,6 +46,7 @@ abstract class AllEvents
     public function onCodeRequest( $mynumber, $method, $length ){}
     public function onCodeRequestFailed( $mynumber, $method, $reason, $param ){}
     public function onCodeRequestFailedTooRecent( $mynumber, $method, $reason, $retry_after ){}
+    public function onCodeRequestFailedTooManyGuesses( $mynumber, $method, $reason, $retry_after ){}
     public function onConnect( $mynumber, $socket ) {}
     public function onConnectError( $mynumber, $socket ){}
     public function onCredentialsBad( $mynumber, $status, $reason ){}
