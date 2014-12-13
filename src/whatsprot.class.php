@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.471';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.471 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.473';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.473 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -3775,35 +3775,22 @@ class WhatsProt
      */
     protected function sendSetPicture($jid, $filepath)
     {
-        if(stripos($filepath, 'http')!== false && !preg_match('/\s/',$filepath)){
-          $extension = end(explode(".", $filepath));
-          $newImageName = rand(0, 100000);
-          $imagePath = static::PICTURES_FOLDER."/".$newImageName.".jpg";
-            if($extension == 'jpg'){
-              copy($filepath, $imagePath);
-              $filepath = $imagePath;
-		        }
-        }
-        preprocessProfilePicture($filepath);
-        $fp = @fopen($filepath, "r");
-        if ($fp) {
-            $data = fread($fp, filesize($filepath));
-            if ($data) {
-                //this is where the fun starts
-                $picture = new ProtocolNode("picture", array("type" => "image"), null, $data);
+        $data = preprocessProfilePicture($filepath);
+        $preview = createIconGD($filepath, 96, true);
 
-                $hash = array();
-                $nodeID = $this->createMsgId("setphoto");
-                $hash["id"] = $nodeID;
-                $hash["to"] = $this->getJID($jid);
-                $hash["type"] = "set";
-                $hash["xmlns"] = "w:profile:picture";
-                $node = new ProtocolNode("iq", $hash, array($picture), null);
+        $picture = new ProtocolNode("picture", array("type" => "image"), null, $data);
+        $preview = new ProtocolNode("picture", array("type" => "preview"), null, $preview);
 
-                $this->sendNode($node);
-                $this->waitForServer($nodeID);
-            }
-        }
+        $hash = array();
+        $nodeID = $this->createMsgId("setphoto");
+        $hash["id"] = $nodeID;
+        $hash["to"] = $this->getJID($jid);
+        $hash["type"] = "set";
+        $hash["xmlns"] = "w:profile:picture";
+        $node = new ProtocolNode("iq", $hash, array($picture, $preview), null);
+
+        $this->sendNode($node);
+        $this->waitForServer($nodeID);
     }
     /**
      * Parse the message text for emojis

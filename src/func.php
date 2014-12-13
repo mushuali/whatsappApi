@@ -75,16 +75,30 @@ function wa_pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_outpu
 function preprocessProfilePicture($path)
 {
     list($width, $height) = getimagesize($path);
-    if ($width != $height) {
-        throw new Exception("Profile picture needs to be square (image is $width x $height)");
+    if ($width > $height) {
+      $y = 0;
+      $x = ($width - $height) / 2;
+      $smallestSide = $height;
+    } else {
+      $x = 0;
+      $y = ($height - $width) / 2;
+      $smallestSide = $width;
     }
-    if ($width > 640) {
-        throw new Exception("Profile picture maximum size of 640 x 640 (image is $width x $height)");
-    }
-    $img = imagecreatefromjpeg($path);
-    unlink($path);
-    imagejpeg($img, $path, 50);
+
+    $size = 639;
+    $image = imagecreatetruecolor($size, $size);
+    $img = imagecreatefromstring(file_get_contents($path));
+
+    imagecopyresampled($image, $img, 0, 0, $x, $y, $size, $size, $smallestSide, $smallestSide);
+    ob_start();
+    imagejpeg($image);
+    $i = ob_get_contents();
+    ob_end_clean();
+
+    imagedestroy($image);
     imagedestroy($img);
+
+    return $i;
 }
 
 function createIcon($file)
