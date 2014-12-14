@@ -21,7 +21,7 @@ And I also want to thank all the users that are collaborating with me and are ma
 - [Dennobaby](https://github.com/Dennobaby)
 - [0xTryCatch](https://github.com/0xTryCatch)
 
-[![Gratipay](http://img.shields.io/badge/Donate-Gratipay-brightgreen.svg)](https://gratipay.com/mgp25/) [![Paypal](https://www.paypalobjects.com/es_XC/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=me%40mgp25%2ecom&lc=US&item_name=WhatsAPI&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+[![Paypal](https://www.paypalobjects.com/es_XC/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KN6L7WMU7VM56)
 
 **Bitcoin:** 15NejBDahfe1eLAPSJh4iMfYLHYuKDrwJ2
 
