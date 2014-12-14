@@ -333,7 +333,7 @@ class WhatsProt
      *
      * @throws Exception
      */
-    public function codeRequest($method = 'sms', $carrier = null, $countryCode = null, $langCode = null)
+    public function codeRequest($method = 'sms', $carrier = "T-Mobile5", $countryCode = null, $langCode = null)
     {
         if (!$phone = $this->dissectPhone()) {
             throw new Exception('The provided phone number is not valid.');
@@ -368,12 +368,12 @@ class WhatsProt
             'id' => $this->identity,
             'lg' => $langCode,
             'lc' => $countryCode,
-            'mcc' => $phone['mcc'],
-            'mnc' => $mnc,
+            'mcc' => '000',
+            'mnc' => '000',
             'sim_mcc' => $phone['mcc'],
             'sim_mnc' => $mnc,
             'method' => $method,
-            //'reason' => "self-send-jailbroken",
+            'reason' => urlencode("self-send-jailbroken"),
             'token' => urlencode($token),
             'network_radio_type' => "1"
         );
