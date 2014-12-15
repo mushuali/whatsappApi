@@ -2912,7 +2912,7 @@ class WhatsProt
                 //There are multiple types of Group reponses. Also a valid group response can have NO children.
                 //Events fired depend on text in the ID field.
                 $groupList = array();
-                if ($node->getChild(0) != null) {
+                if ($node->getChild(0) != null && $node->getChild(0)->getChildren() != null) {
                     foreach ($node->getChild(0)->getChildren() as $child) {
                         $groupList[] = $child->getAttributes();
                     }
