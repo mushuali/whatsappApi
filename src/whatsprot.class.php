@@ -530,7 +530,7 @@ class WhatsProt
     public function disconnect()
     {
         if (is_resource($this->socket)) {
-            fclose($this->socket);
+            socket_close($this->socket);
             $this->socket = null;
             $this->eventManager()->fire("onDisconnect",
                 array(
