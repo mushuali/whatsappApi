@@ -373,8 +373,8 @@ class WhatsProt
             'sim_mcc' => $phone['mcc'],
             'sim_mnc' => $mnc,
             'method' => $method,
-            'reason' => urlencode("self-send-jailbroken"),
-            'token' => urlencode($token),
+            'reason' => "self-send-jailbroken",
+            'token' => $token,
             'network_radio_type' => "1"
         );
 
