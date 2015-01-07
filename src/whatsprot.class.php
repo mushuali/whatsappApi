@@ -1234,7 +1234,7 @@ class WhatsProt
         $children = array();
         foreach($jids as $jid)
         {
-            $children[] = new ProtocolNode("user", array("jid" => $this->getJID($jid), "t" => time()), null, null);
+            $children[] = new ProtocolNode("user", array("jid" => $this->getJID($jid)), null, null);
         }
         $node = new ProtocolNode("iq", array(
             "to" => "s.whatsapp.net",
