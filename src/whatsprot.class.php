@@ -2448,11 +2448,7 @@ class WhatsProt
     protected function getResponse($host, $query)
     {
         // Build the url.
-        $url = $host . '?';
-        foreach ($query as $key => $value) {
-            $url .= $key . '=' . $value . '&';
-        }
-        $url = rtrim($url, '&');
+        $url = $host . '?' . http_build_query($query);
 
         // Open connection.
         $ch = curl_init();
