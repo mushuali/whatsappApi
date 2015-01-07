@@ -2286,7 +2286,7 @@ class WhatsProt
 		else
 		{
 			$id = fopen($identity.".dat", "w");
-			$bytes = "%".implode("%", str_split(strtolower(bin2hex(openssl_random_pseudo_bytes(16))), 2));
+			$bytes = "%".implode("%", str_split(strtolower(bin2hex(openssl_random_pseudo_bytes(20))), 2));
 			fwrite($id, $bytes);
 			fclose($id);
 
