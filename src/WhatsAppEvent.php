@@ -280,11 +280,12 @@ class WhatsAppEvent
 
     function fireGetError(
         $phone,
+        $from,
         $id,
         $error
     ) {
-        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $id, $error) {
-            $listener->onGetError($phone, $id, $error);
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $from, $id, $error) {
+            $listener->onGetError($phone, $from, $id, $error);
         };
         $this->fireCallback($callbackEvent);
     }

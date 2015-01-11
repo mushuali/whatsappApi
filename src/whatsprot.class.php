@@ -3056,6 +3056,7 @@ class WhatsProt
             $this->eventManager()->fire("onGetError",
                 array(
                     $this->phoneNumber,
+                    $node->getAttribute('from'),
                     $node->getAttribute('id'),
                     $node->getChild(0)
                 ));
