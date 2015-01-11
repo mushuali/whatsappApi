@@ -46,8 +46,8 @@ class WhatsProt
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.481';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.481 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_VER = '2.11.489';                // The WhatsApp version.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.489 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -3573,11 +3573,6 @@ class WhatsProt
             $targets = array($targets);
         }
 
-        $serverNode = new ProtocolNode("server", null, null, "");
-        $xHash = array();
-        $xHash["xmlns"] = "jabber:x:event";
-        $xNode = new ProtocolNode("x", $xHash, array($serverNode), "");
-
         $toNodes = array();
         foreach ($targets as $target) {
             $jid = $this->getJID($target);
@@ -3594,7 +3589,7 @@ class WhatsProt
         $id = $this->createMsgId("broadcast");
         $messageHash["id"] = $id;
 
-        $messageNode = new ProtocolNode("message", $messageHash, array($broadcastNode, $xNode, $node), null);
+        $messageNode = new ProtocolNode("message", $messageHash, array($node, $broadcastNode), null);
         $this->sendNode($messageNode);
         //listen for response
         $this->eventManager()->fire("onSendMessage",
