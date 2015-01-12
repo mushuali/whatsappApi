@@ -14,11 +14,9 @@ I would like to thank all those who have made this project goes forward. First I
 
 And I also want to thank all the users that are collaborating with me and are making such good work:
 
-- [pastoso](https://github.com/pastoso)
 - [CODeRUS](https://github.com/CODeRUS)
-- [GitsUp](https://github.com/GitsUp)
+- [tgalal](https://github.com/tgalal)
 - [SikiFn](https://github.com/SikiFn)
-- [Dennobaby](https://github.com/Dennobaby)
 - [0xTryCatch](https://github.com/0xTryCatch)
 
 [![Paypal](https://www.paypalobjects.com/es_XC/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KN6L7WMU7VM56)
