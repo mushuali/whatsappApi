@@ -47,7 +47,7 @@ class WhatsProt
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
     const WHATSAPP_VER = '2.11.489';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.489 Android/4.3 Device/GalaxyS3'; // User agent used in request/registration code.
+    const WHATSAPP_USER_AGENT = 'WhatsApp/2.12.60 S40Version/14.26 Device/Nokia302'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -463,18 +463,18 @@ class WhatsProt
             return true;
         }
 
-        $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
+      //  $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
-        $WAverS = str_replace(".","",$WAver);
-        $ver = str_replace(".","",static::WHATSAPP_VER);
+      //  $WAverS = str_replace(".","",$WAver);
+      //  $ver = str_replace(".","",static::WHATSAPP_VER);
 
-        if($ver<$WAverS)
-        {
-          $classesMD5 = file_get_contents('https://coderus.openrepos.net/whitesoft/whatsapp_classes');
+      //  if($ver<$WAverS)
+      //  {
+      //    $classesMD5 = file_get_contents('https://coderus.openrepos.net/whitesoft/whatsapp_classes');
 
-          updateData('token.php', $WAver, $classesMD5);
-          updateData('whatsprot.class.php', $WAver);
-        }
+      //    updateData('token.php', $WAver, $classesMD5);
+      //    updateData('whatsprot.class.php', $WAver);
+      //  }
 
         /* Create a TCP/IP socket. */
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
