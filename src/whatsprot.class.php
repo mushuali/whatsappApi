@@ -858,6 +858,31 @@ class WhatsProt
     }
 
     /**
+    * Transfer your number to new one
+    *
+    * @param  string  $number
+    * @param  string  $identity
+    */
+    public function sendChangeNumber($number, $identity)
+    {
+      $msgId = $this->createMsgId("change_number");
+
+      $usernameNode = new ProtocolNode("username", null, null, $number);
+      $passwordNode = new ProtocolNode("password", null, null, urldecode($identity));
+
+      $modifyNode = new ProtocolNode("modify",null, array($usernameNode, $passwordNode) null);
+
+      $iqNode = new ProtocolNode("iq", array(
+        "xmlns" => "urn:xmpp:whatsapp:account",
+        "id" => $msgId,
+        "type" => "get",
+        "to" => "c.us"
+      ), array($modifyNode), null);
+
+      $this->sendNode($iqNode);
+    }
+
+    /**
      * Send a request to return a list of groups user is currently participating
      * in.
      *
