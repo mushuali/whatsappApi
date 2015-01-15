@@ -1594,8 +1594,8 @@ class WhatsProt
     public function sendMessageLocation($to, $long, $lat, $name = null, $url = null)
     {
         $mediaHash = array();
-        $mediaHash['xmlns'] = "urn:xmpp:whatsapp:mms";
         $mediaHash['type'] = "location";
+        $mediaHash['encoding'] = "raw";
         $mediaHash['latitude'] = $lat;
         $mediaHash['longitude'] = $long;
         $mediaHash['name'] = $name;
