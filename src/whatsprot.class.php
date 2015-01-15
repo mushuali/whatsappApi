@@ -870,7 +870,7 @@ class WhatsProt
       $usernameNode = new ProtocolNode("username", null, null, $number);
       $passwordNode = new ProtocolNode("password", null, null, urldecode($identity));
 
-      $modifyNode = new ProtocolNode("modify",null, array($usernameNode, $passwordNode) null);
+      $modifyNode = new ProtocolNode("modify", null, array($usernameNode, $passwordNode), null);
 
       $iqNode = new ProtocolNode("iq", array(
         "xmlns" => "urn:xmpp:whatsapp:account",
