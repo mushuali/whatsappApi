@@ -1040,6 +1040,38 @@ class WhatsProt
         $this->sendNode($node);
         $this->waitForServer($hash["id"]);
     }
+    
+    /**
+    *
+    * @param string array $numbers
+    *  Numbers of your contacts
+    */
+    public function sendGetProfilePhotoIds($numbers)
+    {
+
+        if(!is_array($numbers))
+        {
+            $numbers = array($numbers);
+        }
+
+        $msgId = $this->createMsgId("get_picture_ids");
+
+        $i = 0;
+        for($i; $i<count($numbers); $i++)
+        {
+            $userNode[$i] = new ProtocolNode("user", array("jid" => $this->getJID($numbers[$i])), null, $null);
+        }
+
+        $listNode = new ProtocolNode("list", null, $userNode, null);
+
+        $iqNode = new ProtocolNode("iq", array(
+          "id" => $msgId,
+          "xmlns" => "w:profile:picture",
+          "type" => "get"
+        ), array($listNode), null);
+
+        $this->sendNode($iqNode);
+    }
 
     /**
      * Request to retrieve the last online time of specific user.
