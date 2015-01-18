@@ -1040,7 +1040,7 @@ class WhatsProt
         $this->sendNode($node);
         $this->waitForServer($hash["id"]);
     }
-    
+
     /**
     *
     * @param string array $numbers
@@ -2367,20 +2367,72 @@ class WhatsProt
     	}
     }
 
-    public function sendSync(array $numbers, $mode = "full", $context = "registration", $index = 0, $last = true)
+    public function sendSync(array $numbers, array $deletedNumbers = null, $syncType = 4, $index = 0, $last = true)
     {
         $users = array();
-        foreach ($numbers as $number) { // number must start with '+' if international contact
-            $users[] = new ProtocolNode("user", null, null, (substr($number, 0, 1) != '+')?('+' . $number):($number));
+        $i = 0;
+        for ($i; $i<count($numbers); $i++) { // number must start with '+' if international contact
+            $users[$i] = new ProtocolNode("user", null, null, (substr($numbers[$i], 0, 1) != '+')?('+' . $numbers[$i]):($numbers[$i]));
+        }
+
+        if(($deletedNumbers != null) || (count($deletedNumbers) != 0))
+        {
+          $j = 0;
+          for ($j; $j<count($deletedNumbers); $j++) {
+            $users[$i] = new ProtocolNode("user", array("jid" => $this->getJID($deletedNumbers[$j]), "type" => "delete"), null, null);
+            $i++;
+          }
+        }
+
+        switch($syncType)
+        {
+            case 0:
+              $mode = "full";
+              $context = "registration";
+              break;
+            case 1:
+              $mode = "full";
+              $context = "interactive";
+              break;
+            case 2:
+              $mode = "full";
+              $context = "background";
+              break;
+            case 3:
+              $mode = "delta";
+              $context = "interactive";
+              break;
+            case 4:
+              $mode = "delta";
+              $context = "background";
+              break;
+            case 5:
+              $mode = "query";
+              $context = "interactive";
+              break;
+            case 6:
+              $mode = "chunked";
+              $context = "registration";
+              break;
+            case 7:
+              $mode = "chunked";
+              $context = "interactive";
+              break;
+            case 8:
+              $mode = "chunked";
+              $context = "background";
+              break;
+            default:
+              $mode = "delta";
+              $context = "background";
         }
 
         $id = $this->createMsgId("sendsync_");
 
         $node = new ProtocolNode("iq", array(
-            "to" => $this->getJID($this->phoneNumber),
-            "type" => "get",
             "id" => $id,
-            "xmlns" => "urn:xmpp:whatsapp:sync"
+            "xmlns" => "urn:xmpp:whatsapp:sync",
+            "type" => "get"
         ), array(
             new ProtocolNode("sync", array(
                 "mode" => $mode,
