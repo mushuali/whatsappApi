@@ -2355,8 +2355,8 @@ class WhatsProt
     {
     	if (file_exists($identity.".dat"))
 		  {
-        $id = urldecode(file_get_contents($identity.'.dat'));
-        if ((strlen($id) == 20) || (strlen($id) == 16))
+        $id = strlen(urldecode(file_get_contents($identity.'.dat')));
+        if (($id == 20) || ($id == 16))
         {
           return true;
         }
