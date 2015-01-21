@@ -463,18 +463,18 @@ class WhatsProt
             return true;
         }
 
-      //  $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
+        $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
-      //  $WAverS = str_replace(".","",$WAver);
-      //  $ver = str_replace(".","",static::WHATSAPP_VER);
+        $WAverS = str_replace(".","",$WAver);
+        $ver = str_replace(".","",static::WHATSAPP_VER);
 
-      //  if($ver<$WAverS)
-      //  {
+        if($ver<$WAverS)
+        {
       //    $classesMD5 = file_get_contents('https://coderus.openrepos.net/whitesoft/whatsapp_classes');
 
       //    updateData('token.php', $WAver, $classesMD5);
-      //    updateData('whatsprot.class.php', $WAver);
-      //  }
+          updateData('whatsprot.class.php', $WAver);
+        }
 
         /* Create a TCP/IP socket. */
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
