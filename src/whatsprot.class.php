@@ -835,9 +835,8 @@ class WhatsProt
         $phone = $this->dissectPhone();
 
         $attr = array();
-        $attr["platform"] = "none";
-        $attr["lc"] = $phone["ISO3166"];
-        $attr["lg"] = $phone["ISO639"];
+        $attr["platform"] = static::WHATSAPP_DEVICE;
+        $attr["version"] = static::WHATSAPP_VER;
         $child = new ProtocolNode("config", $attr, null, "");
         $node = new ProtocolNode("iq", array("id" => $this->createMsgId("config"), "type" => "set", "xmlns" => "urn:xmpp:whatsapp:push", "to" => static::WHATSAPP_SERVER), array($child), null);
         $this->sendNode($node);
