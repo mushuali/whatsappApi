@@ -47,3 +47,9 @@ abstract class CustomException extends Exception implements IException
     }
 
 }
+
+/*
+ * Exception occurs when we have no active socket
+ * connection to whatsapp
+ */
+class ConnectionClosedException extends Exception{}
