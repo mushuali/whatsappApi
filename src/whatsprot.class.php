@@ -45,8 +45,8 @@ class WhatsProt
     const WHATSAPP_REQUEST_HOST = 'v.whatsapp.net/v2/code';      // The request code host.
     const WHATSAPP_SERVER = 's.whatsapp.net';               // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
-    const WHATSAPP_DEVICE = 'Android';                      // The device name.
-    const WHATSAPP_VER = '2.11.491';                // The WhatsApp version.
+    const WHATSAPP_DEVICE = 'iPhone';                      // The device name.
+    const WHATSAPP_VER = '2.11.14';                // The WhatsApp version.
     const WHATSAPP_USER_AGENT = 'WhatsApp/2.12.60 S40Version/14.26 Device/Nokia302'; // User agent used in request/registration code.
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
@@ -468,13 +468,13 @@ class WhatsProt
         $WAverS = str_replace(".","",$WAver);
         $ver = str_replace(".","",static::WHATSAPP_VER);
 
-        if($ver<$WAverS)
-        {
+      //  if($ver<$WAverS)
+      //  {
       //    $classesMD5 = file_get_contents('https://coderus.openrepos.net/whitesoft/whatsapp_classes');
-
+      //
       //    updateData('token.php', $WAver, $classesMD5);
-          updateData('whatsprot.class.php', $WAver);
-        }
+      //    updateData('whatsprot.class.php', $WAver);
+      //  }
 
         /* Create a TCP/IP socket. */
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
