@@ -611,7 +611,7 @@ class WhatsProt
     public function pollMessage($autoReceipt = true, $type = "read")
     {
       if(!$this->isConnected()) {
-        throw new Exception('Connection Closed!');
+        throw new ConnectionException('Connection Closed!');
       }
 
       $r = array($this->socket);
@@ -3574,7 +3574,7 @@ class WhatsProt
             }
             if(strlen($header) != 3)
             {
-                throw new Exception("Failed to read stanza header");
+                throw new ConnectionException("Failed to read stanza header");
             }
             $treeLength = (ord($header[0]) & 0x0F) << 16;
             $treeLength |= ord($header[1]) << 8;
@@ -3598,7 +3598,7 @@ class WhatsProt
             }
 
             if (strlen($buff) != $treeLength) {
-                throw new Exception("Tree length did not match received length (buff = " . strlen($buff) . " & treeLength = $treeLength)");
+                throw new ConnectionException("Tree length did not match received length (buff = " . strlen($buff) . " & treeLength = $treeLength)");
             }
             $buff = $header . $buff;
         }
