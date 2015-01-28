@@ -2610,10 +2610,22 @@ class WhatsProt
 
 		}
         elseif ($node->getTag() == "success") {
-            $this->loginStatus = static::CONNECTED_STATUS;
-            $challengeData = $node->getData();
-            file_put_contents($this->challengeFilename, $challengeData);
-            $this->writer->setKey($this->outputKey);
+	    if ($node->getAttribute("status") == "active") {
+	            $this->loginStatus = static::CONNECTED_STATUS;
+	            $challengeData = $node->getData();
+	            file_put_contents($this->challengeFilename, $challengeData);
+	            $this->writer->setKey($this->outputKey);
+	   } elseif ($node->getAttribute("status") == "expired") 
+	   {
+            $this->eventManager()->fire("onAccountExpired",
+                array(
+                    $this->phoneNumber,
+                    $node->getAttribute("kind"),
+                    $node->getAttribute("status"),
+                    $node->getAttribute("creation"),
+                    $node->getAttribute("expiration")
+                ));
+	   }
         } elseif($node->getTag() == "failure")
         {
             $this->eventManager()->fire("onLoginFailed",
