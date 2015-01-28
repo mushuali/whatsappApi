@@ -1683,7 +1683,7 @@ class WhatsProt
         	return $this->sendCheckAndSendMedia($filepath, $size, $to, 'video', $allowedExtensions, $storeURLmedia, $caption);
         }
         else{
-    		$this->sendRequestFileUpload($fhash, 'video', $fsize, $filepath, $to);
+    		$this->sendRequestFileUpload($fhash, 'video', $fsize, $filepath, $to, $caption);
     		return true;
     	}
     }
