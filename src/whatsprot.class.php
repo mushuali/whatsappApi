@@ -2327,8 +2327,8 @@ class WhatsProt
 		else
 		{
 			$id = fopen($identity.".dat", "w");
-			$bytes = openssl_random_pseudo_bytes(20);
-			fwrite($id, strtolower(urlencode($bytes)));
+      $bytes = strtolower(openssl_random_pseudo_bytes(20));
+      fwrite($id, urlencode($bytes));
 			fclose($id);
 
 			return $bytes;
