@@ -2948,7 +2948,7 @@ class WhatsProt
 
             $index = $sync->getAttribute("index");
 
-            $result = new SyncResult($index, $sync->getAttribute("sync"), $existingUsers, $failedNumbers);
+            $result = new SyncResult($index, $sync->getAttribute("sid"), $existingUsers, $failedNumbers);
 
             $this->eventManager()->fire("onGetSyncResult",
                 array(
