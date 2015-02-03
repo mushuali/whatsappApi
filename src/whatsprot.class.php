@@ -3797,6 +3797,8 @@ class WhatsProt
                 $messageHash["id"],
                 $node
             ));
+        $this->waitForServer($messageHash["id"]);    
+
         return $messageHash["id"];
     }
 
