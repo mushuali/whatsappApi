@@ -2647,6 +2647,19 @@ class WhatsProt
         }
         elseif($node->getTag() == 'receipt')
         {
+            if ($node->hasChild("list")) {
+              foreach ($node->getChild("list")->getChildren() as $child) {
+                $this->eventManager()->fire("onMessageReceivedClient",
+                  array(
+                    $this->phoneNumber,
+                    $node->getAttribute('from'),
+                    $child->getAttribute('id'),
+                    $node->getAttribute('type'),
+                    $node->getAttribute('t')
+                  ));
+              }
+            }
+
             $this->eventManager()->fire("onMessageReceivedClient",
                 array(
                     $this->phoneNumber,
@@ -3797,7 +3810,7 @@ class WhatsProt
                 $messageHash["id"],
                 $node
             ));
-        $this->waitForServer($messageHash["id"]);    
+        $this->waitForServer($messageHash["id"]);
 
         return $messageHash["id"];
     }
