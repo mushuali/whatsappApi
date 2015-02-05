@@ -276,7 +276,7 @@ class WhatsProt
             'code' => $code,
             'lg' => $langCode,
             'lc' => $countryCode,
-            'network_radio_type' => "1"
+            //'network_radio_type' => "1"
         );
 
         $response = $this->getResponse($host, $query);
