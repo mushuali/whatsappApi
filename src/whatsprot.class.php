@@ -370,14 +370,14 @@ class WhatsProt
             'id' => $this->identity,
             'lg' => $langCode,
             'lc' => $countryCode,
-            'mcc' => '000',
-            'mnc' => '000',
+          //'mcc' => '000',
+          //'mnc' => '000',
             'sim_mcc' => $phone['mcc'],
             'sim_mnc' => $mnc,
             'method' => $method,
-            'reason' => "self-send-jailbroken",
+          //'reason' => "self-send-jailbroken",
             'token' => $token,
-            'network_radio_type' => "1"
+          //'network_radio_type' => "1"
         );
 
         if ($this->debug) {
