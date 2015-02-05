@@ -935,11 +935,10 @@ class WhatsProt
         $child = new ProtocolNode("list", array(
             "name" => "default"
                 ), null, null);
-        $child2 = new ProtocolNode("query", array(
-            "xmlns" => "jabber:iq:privacy"
-                ), array($child), null);
+        $child2 = new ProtocolNode("query", array(), array($child), null);
         $node = new ProtocolNode("iq", array(
             "id" => $msgId,
+            "xmlns" => "jabber:iq:privacy",
             "type" => "get"
                 ), array($child2), null);
         $this->sendNode($node);
