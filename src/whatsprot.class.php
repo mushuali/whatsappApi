@@ -3084,27 +3084,32 @@ class WhatsProt
                 }
             }
             if($node->nodeIdContains('get_groupv2_info')){
-		$groupId = self::parseJID($node->getAttribute('from'));
+                $groupId = self::parseJID($node->getAttribute('from'));
 
-		$type = "";
-		$groupList = array();
-		$groupChild = $node->getChild(0);
-		if ($groupChild != null) {
-			$type = $groupChild->getAttribute('type');
+                $groupList = array();
+                $groupChild = $node->getChild(0);
+                if ($groupChild != null) {
+                     $creator = $groupChild->getAttribute('creator');
+                     $creation = $groupChild->getAttribute('creation');
+                     $subject = $groupChild->getAttribute('subject');
+                     if ($groupChild->getChild(0) != null) {
+                          foreach ($groupChild->getChildren() as $child) {
+                                $participants[] = $child->getAttribute('jid');
+                                    if($child->getAttribute('type') != null)
+                                        $admin = $child->getAttribute('jid');
+				                   }
+			               }
+		            }
 
-			if ($groupChild->getChild(0) != null) {
-				foreach ($groupChild->getChildren() as $child) {
-					$groupList[] = $child->getAttributes();
-				}
-			}
-		}
-
-		$this->eventManager()->fire("onGetGroupV2Info",
-			array(
-			$this->phoneNumber,
-			$type,
-			$groupList
-		));
+		            $this->eventManager()->fire("onGetGroupV2Info",
+			          array(
+                     $this->phoneNumber,
+                     $creator,
+                     $creation,
+                     $subject,
+                     $participants,
+                     $admin
+		            ));
             }
             if ($node->nodeIdContains("get_lists")) {
                 $broadcastLists = array();

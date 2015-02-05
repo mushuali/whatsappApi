@@ -63,7 +63,7 @@ abstract class AllEvents
     public function onGetGroupParticipants( $mynumber, $groupId, $groupList ){}
     public function onGetGroups( $mynumber, $groupList ){}
     public function onGetGroupsInfo( $mynumber, $groupList ){}
-    public function onGetGroupV2Info( $mynumber, $type, $groupList ){}
+    public function onGetGroupV2Info( $mynumber, $creator, $creation, $subject, $participants, $admin ){}
     public function onGetGroupsSubject( $mynumber, $group_jid, $time, $author, $name, $subject ){}
     public function onGetImage( $mynumber, $from, $id, $type, $time, $name, $size, $url, $file, $mimeType, $fileHash, $width, $height, $preview, $caption ){}
     public function onGetKeysLeft( $mynumber, $keysLeft){}
