@@ -10,16 +10,13 @@ Interface to WhatsApp Messenger
 
 ### Special thanks
 
-I would like to thank all those who have made this project goes forward. First I have to thank [@shirioko](https://github.com/shirioko/) aka hero, when I came to the project, i knew nothing and introduced me to the project. He has been responsible of the API for a long time and he always be a hero! Now it's my turn and i hope to do as good as i can to make this API better.
-
-And I also want to thank all the users that are collaborating with me and are making such good work:
-
 - [CODeRUS](https://github.com/CODeRUS)
 - [tgalal](https://github.com/tgalal)
 - [SikiFn](https://github.com/SikiFn)
 - [0xTryCatch](https://github.com/0xTryCatch)
+- [Shirioko](https://github.com/shirioko)
 
-[![Paypal](https://www.paypalobjects.com/es_XC/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KN6L7WMU7VM56)
+[![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KN6L7WMU7VM56)
 
 **Bitcoin:** 15NejBDahfe1eLAPSJh4iMfYLHYuKDrwJ2
 
