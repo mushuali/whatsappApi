@@ -1037,7 +1037,7 @@ class WhatsProt
         $i = 0;
         for($i; $i<count($numbers); $i++)
         {
-            $userNode[$i] = new ProtocolNode("user", array("jid" => $this->getJID($numbers[$i])), null, $null);
+            $userNode[$i] = new ProtocolNode("user", array("jid" => $this->getJID($numbers[$i])), null, null);
         }
 
         $listNode = new ProtocolNode("list", null, $userNode, null);
@@ -2626,7 +2626,7 @@ class WhatsProt
 	            $challengeData = $node->getData();
 	            file_put_contents($this->challengeFilename, $challengeData);
 	            $this->writer->setKey($this->outputKey);
-	   		} elseif ($node->getAttribute("status") == "expired") 
+	   		} elseif ($node->getAttribute("status") == "expired")
 	   		{
             	$this->eventManager()->fire("onAccountExpired",
                 	array(
