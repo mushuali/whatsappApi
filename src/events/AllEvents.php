@@ -88,6 +88,7 @@ abstract class AllEvents
     public function onGroupsParticipantsRemove( $mynumber, $groupId, $jid){}
     public function onLogin( $mynumber ){}
     public function onLoginFailed( $mynumber, $data ){}
+    public function onAccountExpired( $mynumber, $kind, $status, $creation, $expiration ){}
     public function onMediaMessageSent( $mynumber, $to, $id, $filetype, $url, $filename, $filesize, $filehash, $caption, $icon ){}
     public function onMediaUploadFailed( $mynumber, $id, $node, $messageNode, $statusMessage ){}
     public function onMessageComposing( $mynumber, $from, $id, $type, $time ){}

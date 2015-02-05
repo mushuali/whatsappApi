@@ -609,6 +609,19 @@ class WhatsAppEvent
         };
         $this->fireCallback($callbackEvent);
     }
+    
+function fireAccountExpired(
+        $phone,
+        $kind,
+        $status,
+        $creation,
+        $expiration
+    ) {
+        $callbackEvent = function(WhatsAppEventListener $listener) use ($phone, $kind, $status, $creation, $expiration) {
+            $listener->onAccountExpired($phone, $kind, $status, $creation, $expiration);
+        };
+        $this->fireCallback($callbackEvent);
+    }
 
     function fireMessageComposing(
         $phone,
