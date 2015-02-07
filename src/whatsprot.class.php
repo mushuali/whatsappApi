@@ -274,8 +274,8 @@ class WhatsProt
             'in' => $phone['phone'],
             'id' => $this->identity,
             'code' => $code,
-            'lg' => $langCode,
-            'lc' => $countryCode,
+            //'lg' => $langCode,
+            //'lc' => $countryCode,
             //'network_radio_type' => "1"
         );
 
