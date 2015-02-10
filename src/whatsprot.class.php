@@ -2748,44 +2748,92 @@ class WhatsProt
             }
             if ($node->getAttribute("type") == "media" && $node->getChild('media') != null) {
                 if ($node->getChild("media")->getAttribute('type') == 'image') {
-                    $this->eventManager()->fire("onGetImage",
-                        array(
-                            $this->phoneNumber,
-                            $node->getAttribute('from'),
-                            $node->getAttribute('id'),
-                            $node->getAttribute('type'),
-                            $node->getAttribute('t'),
-                            $node->getAttribute('notify'),
-                            $node->getChild("media")->getAttribute('size'),
-                            $node->getChild("media")->getAttribute('url'),
-                            $node->getChild("media")->getAttribute('file'),
-                            $node->getChild("media")->getAttribute('mimetype'),
-                            $node->getChild("media")->getAttribute('filehash'),
-                            $node->getChild("media")->getAttribute('width'),
-                            $node->getChild("media")->getAttribute('height'),
-                            $node->getChild("media")->getData(),
-                            $node->getChild("media")->getAttribute('caption')
-                        ));
+
+                    if ($node->getAttribute("participant") == null) {
+                        $this->eventManager()->fire("onGetImage",
+                            array(
+                                $this->phoneNumber,
+                                $node->getAttribute('from'),                            
+                                $node->getAttribute('id'),
+                                $node->getAttribute('type'),
+                                $node->getAttribute('t'),
+                                $node->getAttribute('notify'),
+                                $node->getChild("media")->getAttribute('size'),
+                                $node->getChild("media")->getAttribute('url'),
+                                $node->getChild("media")->getAttribute('file'),
+                                $node->getChild("media")->getAttribute('mimetype'),
+                                $node->getChild("media")->getAttribute('filehash'),
+                                $node->getChild("media")->getAttribute('width'),
+                                $node->getChild("media")->getAttribute('height'),
+                                $node->getChild("media")->getData(),
+                                $node->getChild("media")->getAttribute('caption')
+                            ));    
+                    } else {
+                        $this->eventManager()->fire("onGetGroupImage",
+                            array(
+                                $this->phoneNumber,
+                                $node->getAttribute('from'),                            
+                                $node->getAttribute('participant'),
+                                $node->getAttribute('id'),
+                                $node->getAttribute('type'),
+                                $node->getAttribute('t'),
+                                $node->getAttribute('notify'),
+                                $node->getChild("media")->getAttribute('size'),
+                                $node->getChild("media")->getAttribute('url'),
+                                $node->getChild("media")->getAttribute('file'),
+                                $node->getChild("media")->getAttribute('mimetype'),
+                                $node->getChild("media")->getAttribute('filehash'),
+                                $node->getChild("media")->getAttribute('width'),
+                                $node->getChild("media")->getAttribute('height'),
+                                $node->getChild("media")->getData(),
+                                $node->getChild("media")->getAttribute('caption')
+                            ));
+                    }
+                    
                 } elseif ($node->getChild("media")->getAttribute('type') == 'video') {
-                    $this->eventManager()->fire("onGetVideo",
-                        array(
-                            $this->phoneNumber,
-                            $node->getAttribute('from'),
-                            $node->getAttribute('id'),
-                            $node->getAttribute('type'),
-                            $node->getAttribute('t'),
-                            $node->getAttribute('notify'),
-                            $node->getChild("media")->getAttribute('url'),
-                            $node->getChild("media")->getAttribute('file'),
-                            $node->getChild("media")->getAttribute('size'),
-                            $node->getChild("media")->getAttribute('mimetype'),
-                            $node->getChild("media")->getAttribute('filehash'),
-                            $node->getChild("media")->getAttribute('duration'),
-                            $node->getChild("media")->getAttribute('vcodec'),
-                            $node->getChild("media")->getAttribute('acodec'),
-                            $node->getChild("media")->getData(),
-                            $node->getChild("media")->getAttribute('caption')
-                        ));
+                    
+                    if ($node->getAttribute("participant") == null) {
+                        $this->eventManager()->fire("onGetVideo",
+                            array(
+                                $this->phoneNumber,
+                                $node->getAttribute('from'),
+                                $node->getAttribute('id'),
+                                $node->getAttribute('type'),
+                                $node->getAttribute('t'),
+                                $node->getAttribute('notify'),
+                                $node->getChild("media")->getAttribute('url'),
+                                $node->getChild("media")->getAttribute('file'),
+                                $node->getChild("media")->getAttribute('size'),
+                                $node->getChild("media")->getAttribute('mimetype'),
+                                $node->getChild("media")->getAttribute('filehash'),
+                                $node->getChild("media")->getAttribute('duration'),
+                                $node->getChild("media")->getAttribute('vcodec'),
+                                $node->getChild("media")->getAttribute('acodec'),
+                                $node->getChild("media")->getData(),
+                                $node->getChild("media")->getAttribute('caption')
+                            ));
+                    } else {
+                        $this->eventManager()->fire("onGetGroupVideo",
+                            array(
+                                $this->phoneNumber,
+                                $node->getAttribute('from'),
+                                $node->getAttribute('participant'),
+                                $node->getAttribute('id'),
+                                $node->getAttribute('type'),
+                                $node->getAttribute('t'),
+                                $node->getAttribute('notify'),
+                                $node->getChild("media")->getAttribute('url'),
+                                $node->getChild("media")->getAttribute('file'),
+                                $node->getChild("media")->getAttribute('size'),
+                                $node->getChild("media")->getAttribute('mimetype'),
+                                $node->getChild("media")->getAttribute('filehash'),
+                                $node->getChild("media")->getAttribute('duration'),
+                                $node->getChild("media")->getAttribute('vcodec'),
+                                $node->getChild("media")->getAttribute('acodec'),
+                                $node->getChild("media")->getData(),
+                                $node->getChild("media")->getAttribute('caption')
+                            ));
+                    }
                 } elseif ($node->getChild("media")->getAttribute('type') == 'audio') {
                     $this->eventManager()->fire("onGetAudio",
                         array(
