@@ -1605,6 +1605,7 @@ class WhatsProt
      */
     public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
+      $caption = $this->parseMessageForEmojis($caption);
     	if ($fsize==0 || $fhash == "")
     	{
         	$allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
@@ -1682,6 +1683,7 @@ class WhatsProt
      */
     public function sendMessageVideo($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
+      $caption = $this->parseMessageForEmojis($caption);
     	if ($fsize==0 || $fhash == "")
     	{
         	$allowedExtensions = array('3gp', 'mp4', 'mov', 'avi');
