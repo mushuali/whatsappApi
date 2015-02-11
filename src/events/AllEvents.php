@@ -66,6 +66,8 @@ abstract class AllEvents
     public function onGetGroupV2Info( $mynumber, $creator, $creation, $subject, $participants, $admin ){}
     public function onGetGroupsSubject( $mynumber, $group_jid, $time, $author, $name, $subject ){}
     public function onGetImage( $mynumber, $from, $id, $type, $time, $name, $size, $url, $file, $mimeType, $fileHash, $width, $height, $preview, $caption ){}
+    public function onGetGroupImage( $mynumber, $from_group_jid, $from_user_jid, $id, $type, $time, $name, $size, $url, $file, $mimeType, $fileHash, $width, $height, $preview, $caption ){}
+    public function onGetGroupVideo( $mynumber, $from_group_jid, $from_user_jid, $id, $type, $time, $name, $url, $file, $size, $mimeType, $fileHash, $duration, $vcodec, $acodec, $preview, $caption ){}
     public function onGetKeysLeft( $mynumber, $keysLeft){}
     public function onGetLocation( $mynumber, $from, $id, $type, $time, $name, $name, $longitude, $latitude, $url, $preview ){}
     public function onGetMessage( $mynumber, $from, $id, $type, $time, $name, $body ){}
