@@ -451,6 +451,7 @@ class WhatsProt
 
     /**
      * Connect (create a socket) to the WhatsApp network.
+     * @return bool
      */
     public function connect()
     {
@@ -460,8 +461,7 @@ class WhatsProt
         //http://ie2.php.net/manual/en/function.socket-read.php#115903
         //https://bugs.php.net/bug.php?id=47918
         //http://stackoverflow.com/questions/20334366/php-fsockopen-how-to-know-if-connection-is-alive
-        if ($this->isConnected())
-        {
+        if ($this->isConnected()) {
             return true;
         }
 
@@ -499,7 +499,7 @@ class WhatsProt
                     $this->socket
                 )
             );
-
+            return true;
         } else {
             if ($this->debug) {
                 print_r("Firing onConnectError\n");
@@ -510,6 +510,7 @@ class WhatsProt
                     $this->socket
                 )
             );
+            return false;
         }
     }
 
