@@ -3350,6 +3350,10 @@ class WhatsProt
                             ));
                   }
                     else if ($node->hasChild('create')) {
+                        $groupMembers = array();
+                        foreach ($node->getChild(0)->getChild(0)->getChildren() AS $cn) {
+                            $groupMembers[] = $cn->getAttribute('jid');
+                        }
                         $this->eventManager()->fire("onGroupisCreated",
                             array(
                                 $this->phoneNumber,
@@ -3357,7 +3361,8 @@ class WhatsProt
                                 $node->getChild(0)->getChild(0)->getAttribute('id'),
                                 $node->getChild(0)->getChild(0)->getAttribute('subject'),
                                 $node->getAttribute('participant'),
-                                $node->getChild(0)->getChild(0)->getAttribute('creation')
+                                $node->getChild(0)->getChild(0)->getAttribute('creation'),
+                                $groupMembers
                             ));
                   }
                     else if ($node->hasChild('subject')) {
