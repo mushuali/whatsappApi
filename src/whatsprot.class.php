@@ -2732,6 +2732,7 @@ class WhatsProt
                             $node->getAttribute('id'),
                             $node->getAttribute('type'),
                             $node->getAttribute('t'),
+                            $node->getAttribute('participant'),
                             $node->getAttribute("notify"),
                             $node->getChild("body")->getData()
                         ));
@@ -2739,7 +2740,7 @@ class WhatsProt
 
                 if($autoReceipt)
                 {
-                    $this->sendMessageReceived($node, $type);
+                    $this->sendMessageReceived($node, $type, $node->getAttribute('participant'));
                 }
             }
             if ($node->getAttribute("type") == "text" && $node->getChild(0)->getTag() == 'enc') {
@@ -3893,14 +3894,14 @@ class WhatsProt
      * @param ProtocolNode $msg The ProtocolTreeNode that contains the message.
      * @param null         $type
      */
-    protected function sendMessageReceived($msg, $type = "read")
+    protected function sendMessageReceived($msg, $type = "read", $participant = null)
     {
 
         $messageHash = array();
         if($type == "read")
-        {
             $messageHash["type"] = $type;
-        }
+        if($participant != null)
+            $messageHash["participant"] = $participant;
         $messageHash["to"] = $msg->getAttribute("from");
         $messageHash["id"] = $msg->getAttribute("id");
         $messageHash["t"] = time();
