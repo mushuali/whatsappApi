@@ -2732,7 +2732,6 @@ class WhatsProt
                             $node->getAttribute('id'),
                             $node->getAttribute('type'),
                             $node->getAttribute('t'),
-                            $node->getAttribute('participant'),
                             $node->getAttribute("notify"),
                             $node->getChild("body")->getData()
                         ));
