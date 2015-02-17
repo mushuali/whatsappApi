@@ -2839,6 +2839,7 @@ class WhatsProt
                             ));
                     }
                 } elseif ($node->getChild("media")->getAttribute('type') == 'audio') {
+                    $author = $node->getAttribute("participant");
                     $this->eventManager()->fire("onGetAudio",
                         array(
                             $this->phoneNumber,
@@ -2853,7 +2854,8 @@ class WhatsProt
                             $node->getChild("media")->getAttribute('mimetype'),
                             $node->getChild("media")->getAttribute('filehash'),
                             $node->getChild("media")->getAttribute('seconds'),
-                            $node->getChild("media")->getAttribute('acodec')
+                            $node->getChild("media")->getAttribute('acodec'),
+                            $author,
                         ));
                 } elseif ($node->getChild("media")->getAttribute('type') == 'vcard') {
                     if($node->getChild("media")->hasChild('vcard')) {
@@ -2863,6 +2865,7 @@ class WhatsProt
                         $name = "NO_NAME";
                         $data = $node->getChild("media")->getData();
                     }
+                    $author = $node->getAttribute("participant");
 
                     $this->eventManager()->fire("onGetvCard",
                         array(
@@ -2873,11 +2876,13 @@ class WhatsProt
                             $node->getAttribute('t'),
                             $node->getAttribute('notify'),
                             $name,
-                            $data
+                            $data,
+                            $author
                         ));
                 } elseif ($node->getChild("media")->getAttribute('type') == 'location') {
                     $url = $node->getChild("media")->getAttribute('url');
                     $name = $node->getChild("media")->getAttribute('name');
+                    $author = $node->getAttribute("participant");
 
                     $this->eventManager()->fire("onGetLocation",
                         array(
@@ -2891,7 +2896,8 @@ class WhatsProt
                             $node->getChild("media")->getAttribute('longitude'),
                             $node->getChild("media")->getAttribute('latitude'),
                             $url,
-                            $node->getChild("media")->getData()
+                            $node->getChild("media")->getData(),
+                            $author
                         ));
                 }
 
