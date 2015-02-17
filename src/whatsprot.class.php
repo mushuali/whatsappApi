@@ -2739,7 +2739,7 @@ class WhatsProt
 
                 if($autoReceipt)
                 {
-                    $this->sendMessageReceived($node, $type, $node->getAttribute('participant'));
+                    $this->sendMessageReceived($node, $type, $author);
                 }
             }
             if ($node->getAttribute("type") == "text" && $node->getChild(0)->getTag() == 'enc') {
@@ -2756,7 +2756,7 @@ class WhatsProt
                         $this->eventManager()->fire("onGetImage",
                             array(
                                 $this->phoneNumber,
-                                $node->getAttribute('from'),                            
+                                $node->getAttribute('from'),
                                 $node->getAttribute('id'),
                                 $node->getAttribute('type'),
                                 $node->getAttribute('t'),
@@ -2770,12 +2770,12 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('height'),
                                 $node->getChild("media")->getData(),
                                 $node->getChild("media")->getAttribute('caption')
-                            ));    
+                            ));
                     } else {
                         $this->eventManager()->fire("onGetGroupImage",
                             array(
                                 $this->phoneNumber,
-                                $node->getAttribute('from'),                            
+                                $node->getAttribute('from'),
                                 $node->getAttribute('participant'),
                                 $node->getAttribute('id'),
                                 $node->getAttribute('type'),
@@ -2792,9 +2792,9 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('caption')
                             ));
                     }
-                    
+
                 } elseif ($node->getChild("media")->getAttribute('type') == 'video') {
-                    
+
                     if ($node->getAttribute("participant") == null) {
                         $this->eventManager()->fire("onGetVideo",
                             array(
