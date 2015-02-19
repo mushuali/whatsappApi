@@ -3804,7 +3804,13 @@ class WhatsProt
     {
         if($this->socket != null)
         {
-            socket_write($this->socket, $data, strlen($data));
+          if (socket_write($this->socket, $data, strlen($data)) === false)
+          {
+
+              $this->disconnect();
+              throw new ConnectionException('Connection Closed!');
+
+          }
         }
     }
 
