@@ -160,25 +160,10 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
-        $countryCode = null;
-        $langCode    = null;
+        $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
+        $langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
-        if ($countryCode == null && $phone['ISO3166'] != '') {
-            $countryCode = $phone['ISO3166'];
-        }
-        if ($countryCode == null) {
-            $countryCode = 'US';
-        }
-        if ($langCode == null && $phone['ISO639'] != '') {
-            $langCode = $phone['ISO639'];
-        }
-        if ($langCode == null) {
-            $langCode = 'en';
-        }
-        if ($phone['cc'] == '77') {
-            $phone['cc'] = '7';
-        }
-        if ($phone['cc'] == '79') {
+        if ($phone['cc'] == '77' || $phone['cc'] == '79') {
             $phone['cc'] = '7';
         }
 
@@ -343,18 +328,8 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
-        if ($countryCode == null && $phone['ISO3166'] != '') {
-            $countryCode = $phone['ISO3166'];
-        }
-        if ($countryCode == null) {
-            $countryCode = 'US';
-        }
-        if ($langCode == null && $phone['ISO639'] != '') {
-            $langCode = $phone['ISO639'];
-        }
-        if ($langCode == null) {
-            $langCode = 'en';
-        }
+        $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
+        $langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
         if ($carrier != null) {
             $mnc = $this->detectMnc(strtolower($countryCode), $carrier);
