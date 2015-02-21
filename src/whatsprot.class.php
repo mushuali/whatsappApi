@@ -2450,14 +2450,16 @@ class WhatsProt
 
     protected function checkIdentity($identity)
     {
-        if (file_exists($identity.".dat")) {
+        if (file_exists($identity.".dat"))
+        {
             $id = strlen(urldecode(file_get_contents($identity.'.dat')));
-            if (($id == 20) || ($id == 16)) {
+            if (($id == 20) || ($id == 16))
+            {
                 return true;
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function sendSync(array $numbers, array $deletedNumbers = null, $syncType = 4, $index = 0, $last = true)
