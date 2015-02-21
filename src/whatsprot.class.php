@@ -523,10 +523,7 @@ class WhatsProt
      */
     public function isConnected()
     {
-        if ($this->socket === null) {
-            return false;
-        }
-        return true;
+        return ($this->socket !== null);
     }
 
 
@@ -621,11 +618,7 @@ class WhatsProt
             throw new ConnectionException('Connection Closed!');
         }
 
-        $r = array($this->socket);
-        $w = array();
-        $e = array();
-
-        if (socket_select($r, $w, $e, static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
+        if (socket_select(array($this->socket), array(), array(), static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
             // Something to read
             if ($stanza = $this->readStanza()) {
                 $this->processInboundData($stanza, $autoReceipt, $type);
