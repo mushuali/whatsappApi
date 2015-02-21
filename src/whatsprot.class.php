@@ -2225,13 +2225,11 @@ class WhatsProt
 
                     //hook:
                     //fix country code for North America
-                    if (substr($data[1], 0, 1) == "1")
-                    {
+                    if ($data[1][0] == "1") {
                         $data[1] = "1";
                     }
 
-                    $phone =
-                        array(
+                    $phone = array(
                             'country' => $data[0],
                             'cc' => $data[1],
                             'phone' => substr($this->phoneNumber, strlen($data[1]), strlen($this->phoneNumber)),
