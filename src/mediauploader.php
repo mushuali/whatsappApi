@@ -1,11 +1,9 @@
 <?php
-
 /**
  * Media uploader class
  */
 class WhatsMediaUploader
 {
-
     protected static function sendData($host, $POST, $HEAD, $filepath, $mediafile, $TAIL)
     {
         $sock = fsockopen("ssl://" . $host, 443);
@@ -90,5 +88,4 @@ class WhatsMediaUploader
 
         return self::sendData($host, $POST, $hBAOS, $filepath, $mediafile, $fBAOS);
     }
-
 }
