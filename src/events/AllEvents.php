@@ -1,8 +1,6 @@
 <?php
-
 abstract class AllEvents
 {
-
     protected $eventsToListenFor = array();
     protected $whatsProt;
 
@@ -37,7 +35,6 @@ abstract class AllEvents
         }
         return $this;
     }
-
 
     //Adding to this list? Please put them in alphabetical order!
     public function onClose($mynumber, $error){}
@@ -110,5 +107,4 @@ abstract class AllEvents
     public function onStreamError( $data ){}
     public function onUploadFile( $mynumber, $filename, $url ){}
     public function onUploadFileFailed( $mynumber, $filename ){}
-
 }

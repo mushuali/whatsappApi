@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * A class to generate vCards for contact data.
@@ -259,5 +258,4 @@ class vCard
 
         return $this->card;
     }
-
 }

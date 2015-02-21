@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 require '../src/whatsprot.class.php';
 
@@ -86,7 +85,9 @@ if ($_SERVER['argv'][1] == "-l") {
     while (TRUE) {
         $wa->pollMessage();
         $data = $wa->getMessages();
-        if(!empty($data)) print_r($data);
+        if (!empty($data)) {
+            print_r($data);
+        }
         sleep(1);
     }
     exit(0);

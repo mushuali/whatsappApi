@@ -4,7 +4,6 @@ require 'exception.php';
 
 class IncompleteMessageException extends CustomException
 {
-
     private $input;
 
     public function __construct($message = null, $code = 0)
@@ -21,12 +20,10 @@ class IncompleteMessageException extends CustomException
     {
         return $this->input;
     }
-
 }
 
 class ProtocolNode
 {
-
     private $tag;
     private $attributeHash;
     private $children;
@@ -223,7 +220,6 @@ class ProtocolNode
         }
     }
 
-
     /**
      * Print human readable ProtocolNode object
      *
@@ -240,12 +236,10 @@ class ProtocolNode
 
         return print_r($readableNode, true);
     }
-
 }
 
 class BinTreeNodeReader
 {
-
     private $input;
     /** @var $key KeyStream */
     private $key;
@@ -288,45 +282,45 @@ class BinTreeNodeReader
     }
 
     protected function readNibble() {
-      $byte = $this->readInt8();
+        $byte = $this->readInt8();
 
-      $ignoreLastNibble = (bool) ($byte & 0x80);
-      $size = ($byte & 0x7f);
-      $nrOfNibbles = $size * 2 - (int) $ignoreLastNibble;
+        $ignoreLastNibble = (bool) ($byte & 0x80);
+        $size = ($byte & 0x7f);
+        $nrOfNibbles = $size * 2 - (int) $ignoreLastNibble;
 
-      $data = $this->fillArray($size);
-      $string = '';
+        $data = $this->fillArray($size);
+        $string = '';
 
-      for ($i = 0; $i < $nrOfNibbles; $i++) {
-        $byte = $data[(int) floor($i / 2)];
-        $ord = ord($byte);
+        for ($i = 0; $i < $nrOfNibbles; $i++) {
+            $byte = $data[(int) floor($i / 2)];
+            $ord = ord($byte);
 
-        $shift = 4 * (1 - $i % 2);
-        $decimal = ($ord & (15 << $shift)) >> $shift;
+            $shift = 4 * (1 - $i % 2);
+            $decimal = ($ord & (15 << $shift)) >> $shift;
 
-        switch ($decimal) {
-          case 0:
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-          case 6:
-          case 7:
-          case 8:
-          case 9:
-          $string .= $decimal;
-          break;
-          case 10:
-          case 11:
-          $string .= chr($decimal - 10 + 45);
-          break;
-          default:
-          throw new Exception("Bad nibble: $decimal");
+            switch ($decimal) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    $string .= $decimal;
+                    break;
+                case 10:
+                case 11:
+                    $string .= chr($decimal - 10 + 45);
+                    break;
+                default:
+                    throw new Exception("Bad nibble: $decimal");
+            }
         }
-      }
 
-      return $string;
+        return $string;
     }
 
     protected function getToken($token)
@@ -334,22 +328,25 @@ class BinTreeNodeReader
         $ret     = "";
         $subdict = false;
         TokenMap::GetToken($token, $subdict, $ret);
-        if ( ! $ret) {
+        if (!$ret) {
             $token = $this->readInt8();
             TokenMap::GetToken($token, $subdict, $ret);
-            if ( ! $ret) {
+            if (!$ret) {
                 throw new Exception("BinTreeNodeReader->getToken: Invalid token $token");
             }
         }
+
         return $ret;
     }
 
     protected function readString($token)
     {
         $ret = "";
+
         if ($token == -1) {
             throw new Exception("BinTreeNodeReader->readString: Invalid token $token");
         }
+
         if (($token > 2) && ($token < 0xf5)) {
             $ret = $this->getToken($token);
         } elseif ($token == 0) {
@@ -379,6 +376,7 @@ class BinTreeNodeReader
     {
         $attributes  = array();
         $attribCount = ($size - 2 + $size % 2) / 2;
+
         for ($i = 0; $i < $attribCount; $i++) {
             $key              = $this->readString($this->readInt8());
             $value            = $this->readString($this->readInt8());
@@ -415,7 +413,7 @@ class BinTreeNodeReader
 
     protected function isListTag($token)
     {
-        return (($token == 248) || ($token == 0) || ($token == 249));
+        return ($token == 248 || $token == 0 || $token == 249);
     }
 
     protected function readList($token)
@@ -517,12 +515,10 @@ class BinTreeNodeReader
 
         return $ret;
     }
-
 }
 
 class BinTreeNodeWriter
 {
-
     private $output;
     /** @var $key KeyStream */
     private $key;

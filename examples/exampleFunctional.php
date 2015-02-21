@@ -4,7 +4,6 @@ require_once '../src/whatsprot.class.php';
 //Change to your time zone
 date_default_timezone_set('Europe/Madrid');
 
-
 // phone number, deviceIdentity, and name.
 $options = getopt("d::", array("debug::"));
 $debug = (array_key_exists("debug", $options) || array_key_exists("d", $options)) ? true : false;
@@ -54,11 +53,11 @@ function onGetProfilePicture($from, $target, $type, $data)
 
 function onPresenceReceived($username, $from, $type)
 {
-	$dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
-		if($type == "available")
-    		echo "<$dFrom is online>\n\n";
-    	else
-    		echo "<$dFrom is offline>\n\n";
+    $dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
+    if ($type == "available")
+        echo "<$dFrom is online>\n\n";
+    else
+        echo "<$dFrom is offline>\n\n";
 }
 
 echo "[] Logging in as '$nickname' ($username)\n";
@@ -95,8 +94,6 @@ $w->sendMessageImage($target, "demo/x3.jpg");
 
 //send Location
 //$w->sendLocation($target, '4.948568', '52.352957');
-
-
 
 // Implemented out queue messages and auto msgid
 $w->sendMessage($target, "Guess the number :)");
@@ -173,14 +170,14 @@ class ProcessNode
             $this->wp->sendMessage($this->target, "Congratulations you guessed the right number!");
         }
         elseif (ctype_digit($text)) {
-			if( (int)$text != "5")
-            	$this->wp->sendMessage($this->target, "I'm sorry, try again!");
+            if ((int)$text != "5")
+                $this->wp->sendMessage($this->target, "I'm sorry, try again!");
         }
         $text = $node->getChild('body');
         $text = $text->getData();
         $notify = $node->getAttribute("notify");
 
-		echo "\n- ".$notify.": ".$text."    ".date('H:i')."\n";
+        echo "\n- ".$notify.": ".$text."    ".date('H:i')."\n";
 
     }
 }
