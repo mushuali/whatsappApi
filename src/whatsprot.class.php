@@ -238,21 +238,8 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
-        $countryCode = null;
-        $langCode    = null;
-
-        if ($countryCode == null && $phone['ISO3166'] != '') {
-            $countryCode = $phone['ISO3166'];
-        }
-        if ($countryCode == null) {
-            $countryCode = 'US';
-        }
-        if ($langCode == null && $phone['ISO639'] != '') {
-            $langCode = $phone['ISO639'];
-        }
-        if ($langCode == null) {
-            $langCode = 'en';
-        }
+        //$countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
+        //$langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
         // Build the url.
         $host = 'https://' . static::WHATSAPP_REGISTER_HOST;
