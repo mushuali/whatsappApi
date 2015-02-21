@@ -187,10 +187,10 @@ class WhatsProt
                     $response->status,
                     $response->reason
                 ));
-            if ($this->debug) {
-                print_r($query);
-                print_r($response);
-            }
+
+            $this->debugPrint($query);
+            $this->debugPrint($response);
+
             throw new Exception('There was a problem trying to request the code.');
         } else {
             $this->eventManager()->fire("onCredentialsGood",
@@ -264,10 +264,10 @@ class WhatsProt
                     $response->reason,
                     $response->retry_after
                 ));
-            if ($this->debug) {
-                print_r($query);
-                print_r($response);
-            }
+
+            $this->debugPrint($query);
+            $this->debugPrint($response);
+
             throw new Exception('An error occurred registering the registration code from WhatsApp.');
         } else {
             $this->eventManager()->fire("onCodeRegister",
@@ -345,15 +345,11 @@ class WhatsProt
             //'network_radio_type' => "1"
         );
 
-        if ($this->debug) {
-            print_r($query);
-        }
+        $this->debugPrint($query);
 
         $response = $this->getResponse($host, $query);
 
-        if ($this->debug) {
-            print_r($response);
-        }
+        $this->debugPrint($response);
 
         if ($response->status == 'ok') {
             $this->eventManager()->fire("onCodeRegister",
@@ -466,9 +462,8 @@ class WhatsProt
             );
             return true;
         } else {
-            if ($this->debug) {
-                print_r("Firing onConnectError\n");
-            }
+            $this->debugPrint("Firing onConnectError\n");
+
             $this->eventManager()->fire("onConnectError",
                 array(
                     $this->phoneNumber,
@@ -541,9 +536,7 @@ class WhatsProt
     {
         $this->accountInfo = (array) $this->checkCredentials();
         if ($this->accountInfo['status'] == 'ok') {
-            if ($this->debug) {
-                print_r("New password received: " . $this->accountInfo['pw'] . "\n");
-            }
+            $this->debugPrint("New password received: " . $this->accountInfo['pw'] . "\n");
             $this->password = $this->accountInfo['pw'];
         }
         $this->doLogin();
@@ -2193,14 +2186,18 @@ class WhatsProt
     /**
      * Print a message to the debug console.
      *
-     * @param string $debugMsg
+     * @param  mixed $debugMsg
      *   The debug message.
+     * @return string
      */
     protected function debugPrint($debugMsg)
     {
         if ($this->debug) {
-            echo $debugMsg;
+            var_dump($debugMsg);
+            return true;
         }
+
+        return false;
     }
 
     /**
