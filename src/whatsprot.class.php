@@ -2068,14 +2068,14 @@ class WhatsProt
                     $url
                 ));
             return $url;
-        } else {
-            $this->eventManager()->fire("onUploadFileFailed",
-                array(
-                    $this->phoneNumber,
-                    basename($file)
-                ));
-            return false;
         }
+
+        $this->eventManager()->fire("onUploadFileFailed",
+            array(
+                $this->phoneNumber,
+                basename($file)
+            ));
+        return false;
     }
 
     /**
@@ -2364,14 +2364,14 @@ class WhatsProt
     {
         if (file_exists($identity.".dat")) {
             return urldecode(file_get_contents($identity.'.dat'));
-        } else {
-            $id = fopen($identity.".dat", "w");
-            $bytes = strtolower(openssl_random_pseudo_bytes(20));
-            fwrite($id, urlencode($bytes));
-            fclose($id);
-
-            return $bytes;
         }
+
+        $id = fopen($identity.".dat", "w");
+        $bytes = strtolower(openssl_random_pseudo_bytes(20));
+        fwrite($id, urlencode($bytes));
+        fclose($id);
+
+        return $bytes;
     }
 
     protected function checkIdentity($identity)
