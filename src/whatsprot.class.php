@@ -449,7 +449,6 @@ class WhatsProt
         }
 
         if ($socket !== false) {
-
             socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
             socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
 
@@ -482,7 +481,6 @@ class WhatsProt
     {
         return ($this->socket !== null);
     }
-
 
     /**
      * Disconnect from the WhatsApp network.
@@ -2280,7 +2278,7 @@ class WhatsProt
      *
      * Returns mnc value
      */
-    protected function detectMnc ($lc, $carrierName)
+    protected function detectMnc($lc, $carrierName)
     {
         $fp = fopen(__DIR__ . DIRECTORY_SEPARATOR . 'networkinfo.csv', 'r');
         $mnc = null;
