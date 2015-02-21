@@ -9,6 +9,7 @@ $u        = $_GET["u"];
 if ( ! is_array($u)) {
     $u = array($u);
 }
+
 $numbers = array();
 foreach ($u as $number) {
     if (substr($number, 0, 1) != "+") {
@@ -30,9 +31,8 @@ function onSyncResult($result)
     foreach ($result->nonExisting as $number) {
         echo "$number does not exist<br />";
     }
-    die();//to break out of the while(true) loop
+    die(); //to break out of the while(true) loop
 }
-
 
 $wa = new WhatsProt($username, "", "WhatsApp", false);
 

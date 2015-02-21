@@ -1,5 +1,4 @@
 <?php
-
 require_once('../src/whatsprot.class.php');
 
 $debug = true;
@@ -24,26 +23,20 @@ $w = new WhatsProt($username, $identity, $nickname, $debug);
 echo "\n\nType sms or voice: ";
 $option = fgets(STDIN);
 
-try
-{
-  $w->codeRequest(trim($option), $carrier);
-}
-catch(Exception $e)
-{
-  echo $e->getMessage();
-  exit(0);
+try {
+    $w->codeRequest(trim($option), $carrier);
+} catch(Exception $e) {
+    echo $e->getMessage();
+    exit(0);
 }
 
 echo "\n\nEnter the received code: ";
 $code = fgets(STDIN);
 
-try
-{
-  $result = $w->codeRegister(trim($code));
-  echo "\nYour password is: ".$result->pw."\n";
-}
-catch(Exception $e)
-{
-  echo $e->getMessage();
-  exit(0);
+try {
+    $result = $w->codeRegister(trim($code));
+    echo "\nYour password is: ".$result->pw."\n";
+} catch(Exception $e) {
+    echo $e->getMessage();
+    exit(0);
 }

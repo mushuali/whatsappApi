@@ -8,7 +8,6 @@
  *
  */
 
-
 require_once('../src/whatsprot.class.php');
 
 /**
@@ -19,7 +18,6 @@ $debug = true;
 $username = '34666554433';                      // Telephone number including the country code without '+' or '00'.
 $identity = 'myIdentity';                       // Name of the file where the identity will be stored. In this exaple, a file called myIdentity.dat will be created
 $nickname = 'John Doe';                         // This is the username displayed by WhatsApp clients.
-
 
 // Create a instance of WhastPort.
 $w = new WhatsProt($username, $identity, $nickname, $debug);
@@ -46,7 +44,6 @@ $w = new WhatsProt($username, $identity, $nickname, $debug);
  *   - retry_after: Waiting time before requesting a new code.
  */
 $w->codeRequest('sms');
-
 
 // You must wait until you receive a code from WhatsApp, either to your phone via sms
 // or phonecall depending on what you selected above.
