@@ -114,7 +114,7 @@ class WhatsProt
     }
 
     /**
-     * If you need use diferent challenge fileName you can use this
+     * If you need use different challenge fileName you can use this
      *
      * @param string $filename
      */
@@ -125,6 +125,7 @@ class WhatsProt
 
     /**
      * Add message to the outgoing queue.
+     *
      * @param $node
      */
     public function addMsgOutQueue($node)
@@ -412,6 +413,7 @@ class WhatsProt
 
     /**
      * Connect (create a socket) to the WhatsApp network.
+     *
      * @return bool
      */
     public function connect()
@@ -474,7 +476,8 @@ class WhatsProt
     }
 
     /**
-     * Do we have an active socket connection to whatsapp?
+     * Do we have an active socket connection to WhatsApp?
+     *
      * @return bool
      */
     public function isConnected()
@@ -522,7 +525,7 @@ class WhatsProt
     }
 
     /**
-     * Log into the Whatsapp server.
+     * Log into the WhatsApp server.
      *
      * ###Warning### using this method will generate a new password
      * from the WhatsApp servers each time.
@@ -541,7 +544,7 @@ class WhatsProt
     }
 
     /**
-     * Login to the Whatsapp server with your password
+     * Login to the WhatsApp server with your password
      *
      * If you already know your password you can log into the Whatsapp server
      * using this method.
@@ -564,6 +567,8 @@ class WhatsProt
      * Fetch a single message node
      * @param bool $autoReceipt
      * @return bool
+     *
+     * @throws Exception
      */
     public function pollMessage($autoReceipt = true, $type = "read")
     {
@@ -2623,6 +2628,7 @@ class WhatsProt
      *
      * @param      $data
      * @param bool $autoReceipt
+     * @param      $type
      * @throws Exception
      */
     protected function processInboundData($data, $autoReceipt = true, $type = "read")
@@ -2639,6 +2645,7 @@ class WhatsProt
      * This also provides a convenient method to use to unit test the event framework.
      * @param ProtocolNode $node
      * @param bool         $autoReceipt
+     * @param              $type
      * @throws Exception
      */
     protected function processInboundDataNode(ProtocolNode $node, $autoReceipt = true, $type = "read") {
@@ -3905,7 +3912,8 @@ class WhatsProt
      * Tell the server we received the message.
      *
      * @param ProtocolNode $msg The ProtocolTreeNode that contains the message.
-     * @param null         $type
+     * @param string       $type
+     * @param string       $participant
      */
     protected function sendMessageReceived($msg, $type = "read", $participant = null)
     {
