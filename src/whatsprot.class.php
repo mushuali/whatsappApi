@@ -1058,8 +1058,7 @@ class WhatsProt
 
         $msgId = $this->createMsgId("get_picture_ids");
 
-        $i = 0;
-        for ($i; $i<count($numbers); $i++) {
+        for ($i=0; $i < count($numbers); $i++) {
             $userNode[$i] = new ProtocolNode("user",
                 array(
                     "jid" => $this->getJID($numbers[$i])
@@ -2413,19 +2412,9 @@ class WhatsProt
      * @return bool
      */
     protected function isLoggedIn(){
-        //If you aren't connected you can't be logged in!
-        if ( ! $this->isConnected())
-        {
-            return false;
-        }
-
-        //We are connected - but are we logged in?
-        if ( ! empty ($this->loginStatus) && $this->loginStatus === static::CONNECTED_STATUS)
-        {
-            return true;
-        }
-
-        return false;
+        //If you aren't connected you can't be logged in! ($this->isConnected())
+        //We are connected - but are we logged in? (the rest)
+        return ($this->isConnected() && !empty($this->loginStatus) && $this->loginStatus === static::CONNECTED_STATUS);
     }
 
     /**
@@ -2453,7 +2442,7 @@ class WhatsProt
         if (file_exists($identity.".dat"))
         {
             $id = strlen(urldecode(file_get_contents($identity.'.dat')));
-            if (($id == 20) || ($id == 16))
+            if ($id == 20 || $id == 16)
             {
                 return true;
             }
@@ -2465,17 +2454,14 @@ class WhatsProt
     public function sendSync(array $numbers, array $deletedNumbers = null, $syncType = 4, $index = 0, $last = true)
     {
         $users = array();
-        $i = 0;
-        for ($i; $i<count($numbers); $i++) { // number must start with '+' if international contact
+
+        for ($i=0; $i<count($numbers); $i++) { // number must start with '+' if international contact
             $users[$i] = new ProtocolNode("user", null, null, (substr($numbers[$i], 0, 1) != '+')?('+' . $numbers[$i]):($numbers[$i]));
         }
 
-        if (($deletedNumbers != null) || (count($deletedNumbers) != 0))
-        {
-            $j = 0;
-            for ($j; $j<count($deletedNumbers); $j++) {
+        if ($deletedNumbers != null || count($deletedNumbers)) {
+            for ($j=0; $j<count($deletedNumbers); $j++, $i++) {
                 $users[$i] = new ProtocolNode("user", array("jid" => $this->getJID($deletedNumbers[$j]), "type" => "delete"), null, null);
-                $i++;
             }
         }
 
