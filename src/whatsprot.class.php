@@ -2082,28 +2082,6 @@ class WhatsProt
     }
 
     /**
-     * Wait for message delivery notification.
-     */
-    public function waitForMessageReceipt()
-    {
-        $received = false;
-        do {
-            $this->pollMessage();
-            $msgs = $this->getMessages();
-            foreach ($msgs as $m) {
-                // Process inbound messages.
-                if ($m->getTag() == "message") {
-                    if ($m->getChild('received') != null && $m->getAttribute('retry') != null) {
-                        $received = true;
-                    } elseif ($m->getChild('received') != null && $m->getAttribute('retry') != null) {
-                        throw new Exception('There was a problem trying to send the message, please retry.');
-                    }
-                }
-            }
-        } while (!$received);
-    }
-
-    /**
      * Wait for Whatsapp server to acknowledge *it* has received message.
      * @param  string $id The id of the node sent that we are awaiting acknowledgement of.
      * @param int     $timeout
