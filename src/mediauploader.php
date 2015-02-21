@@ -58,7 +58,6 @@ class WhatsMediaUploader
         //filename to md5 digest
         $cryptoname    = md5($filepath) . "." . $mediafile['fileextension'];
         $boundary      = "zzXXzzYYzzXXzzQQ";
-        $contentlength = 0;
 
         if (is_array($to)) {
             $to = implode(',', $to);
@@ -76,9 +75,7 @@ class WhatsMediaUploader
 
         $fBAOS = "\r\n--" . $boundary . "--\r\n";
 
-        $contentlength += strlen($hBAOS);
-        $contentlength += strlen($fBAOS);
-        $contentlength += $mediafile['filesize'];
+        $contentlength = strlen($hBAOS) + strlen($fBAOS) + $mediafile['filesize'];
 
         $POST = "POST " . $url . "\r\n";
         $POST .= "Content-Type: multipart/form-data; boundary=" . $boundary . "\r\n";
