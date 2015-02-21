@@ -3358,7 +3358,8 @@ class WhatsProt
         }
 
         $children = $node->getChild(0);
-        if ($node->getTag() == "stream:error" && empty($children) == false && $node->getChild(0)->getTag() == "system-shutdown") {
+        if ($node->getTag() == "stream:error" && !empty($children) && $node->getChild(0)->getTag() == "system-shutdown")
+        {
             $this->eventManager()->fire("onStreamError",
                 array(
                     $node->getChild(0)->getTag()
