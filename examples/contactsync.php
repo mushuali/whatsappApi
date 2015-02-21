@@ -6,13 +6,14 @@ require_once("../src/whatsprot.class.php");
 $username = $_GET["phone"];
 $password = $_GET["pass"];
 $u        = $_GET["u"];
-if ( ! is_array($u)) {
+
+if (!is_array($u)) {
     $u = array($u);
 }
 
 $numbers = array();
 foreach ($u as $number) {
-    if (substr($number, 0, 1) != "+") {
+    if ($number[0] != "+") {
         //add leading +
         $number = "+$number";
     }

@@ -160,25 +160,10 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
-        $countryCode = null;
-        $langCode    = null;
+        $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
+        $langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
-        if ($countryCode == null && $phone['ISO3166'] != '') {
-            $countryCode = $phone['ISO3166'];
-        }
-        if ($countryCode == null) {
-            $countryCode = 'US';
-        }
-        if ($langCode == null && $phone['ISO639'] != '') {
-            $langCode = $phone['ISO639'];
-        }
-        if ($langCode == null) {
-            $langCode = 'en';
-        }
-        if ($phone['cc'] == '77') {
-            $phone['cc'] = '7';
-        }
-        if ($phone['cc'] == '79') {
+        if ($phone['cc'] == '77' || $phone['cc'] == '79') {
             $phone['cc'] = '7';
         }
 
@@ -253,21 +238,8 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
-        $countryCode = null;
-        $langCode    = null;
-
-        if ($countryCode == null && $phone['ISO3166'] != '') {
-            $countryCode = $phone['ISO3166'];
-        }
-        if ($countryCode == null) {
-            $countryCode = 'US';
-        }
-        if ($langCode == null && $phone['ISO639'] != '') {
-            $langCode = $phone['ISO639'];
-        }
-        if ($langCode == null) {
-            $langCode = 'en';
-        }
+        //$countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
+        //$langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
         // Build the url.
         $host = 'https://' . static::WHATSAPP_REGISTER_HOST;
@@ -343,18 +315,8 @@ class WhatsProt
             throw new Exception('The provided phone number is not valid.');
         }
 
-        if ($countryCode == null && $phone['ISO3166'] != '') {
-            $countryCode = $phone['ISO3166'];
-        }
-        if ($countryCode == null) {
-            $countryCode = 'US';
-        }
-        if ($langCode == null && $phone['ISO639'] != '') {
-            $langCode = $phone['ISO639'];
-        }
-        if ($langCode == null) {
-            $langCode = 'en';
-        }
+        $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
+        $langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
         if ($carrier != null) {
             $mnc = $this->detectMnc(strtolower($countryCode), $carrier);
@@ -523,10 +485,7 @@ class WhatsProt
      */
     public function isConnected()
     {
-        if ($this->socket === null) {
-            return false;
-        }
-        return true;
+        return ($this->socket !== null);
     }
 
 
@@ -621,11 +580,7 @@ class WhatsProt
             throw new ConnectionException('Connection Closed!');
         }
 
-        $r = array($this->socket);
-        $w = array();
-        $e = array();
-
-        if (socket_select($r, $w, $e, static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
+        if (socket_select(array($this->socket), array(), array(), static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
             // Something to read
             if ($stanza = $this->readStanza()) {
                 $this->processInboundData($stanza, $autoReceipt, $type);
@@ -840,8 +795,6 @@ class WhatsProt
 
     public function sendClientConfig()
     {
-        $phone = $this->dissectPhone();
-
         $attr = array();
         $attr["platform"] = static::WHATSAPP_DEVICE;
         $attr["version"] = static::WHATSAPP_VER;
@@ -1065,8 +1018,7 @@ class WhatsProt
 
         $msgId = $this->createMsgId("get_picture_ids");
 
-        $i = 0;
-        for ($i; $i<count($numbers); $i++) {
+        for ($i=0; $i < count($numbers); $i++) {
             $userNode[$i] = new ProtocolNode("user",
                 array(
                     "jid" => $this->getJID($numbers[$i])
@@ -2130,28 +2082,6 @@ class WhatsProt
     }
 
     /**
-     * Wait for message delivery notification.
-     */
-    public function waitForMessageReceipt()
-    {
-        $received = false;
-        do {
-            $this->pollMessage();
-            $msgs = $this->getMessages();
-            foreach ($msgs as $m) {
-                // Process inbound messages.
-                if ($m->getTag() == "message") {
-                    if ($m->getChild('received') != null && $m->getAttribute('retry') != null) {
-                        $received = true;
-                    } elseif ($m->getChild('received') != null && $m->getAttribute('retry') != null) {
-                        throw new Exception('There was a problem trying to send the message, please retry.');
-                    }
-                }
-            }
-        } while (!$received);
-    }
-
-    /**
      * Wait for Whatsapp server to acknowledge *it* has received message.
      * @param  string $id The id of the node sent that we are awaiting acknowledgement of.
      * @param int     $timeout
@@ -2176,7 +2106,6 @@ class WhatsProt
         $keys = KeyStream::GenerateKeys(base64_decode($this->password), $this->challengeData);
         $this->inputKey = new KeyStream($keys[2], $keys[3]);
         $this->outputKey = new KeyStream($keys[0], $keys[1]);
-        $phone = $this->dissectPhone();
         $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData;// . time() . static::WHATSAPP_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
         $response = $this->outputKey->EncodeMessage($array, 0, 4, strlen($array) - 4);
         return $response;
@@ -2404,15 +2333,15 @@ class WhatsProt
             $this->pollMessage();
         }
 
-        if (strcmp($this->loginStatus, static::DISCONNECTED_STATUS) == 0) {
-            throw new Exception('Login Failure');
-        } else {
+        if ($this->loginStatus === static::DISCONNECTED_STATUS) {
             $this->eventManager()->fire("onLogin",
                 array(
                     $this->phoneNumber
                 ));
             $this->sendAvailableForChat();
         }
+
+        throw new Exception('Login Failure');
     }
 
     /**
@@ -2420,19 +2349,9 @@ class WhatsProt
      * @return bool
      */
     protected function isLoggedIn(){
-        //If you aren't connected you can't be logged in!
-        if ( ! $this->isConnected())
-        {
-            return false;
-        }
-
-        //We are connected - but are we logged in?
-        if ( ! empty ($this->loginStatus) && $this->loginStatus === static::CONNECTED_STATUS)
-        {
-            return true;
-        }
-
-        return false;
+        //If you aren't connected you can't be logged in! ($this->isConnected())
+        //We are connected - but are we logged in? (the rest)
+        return ($this->isConnected() && !empty($this->loginStatus) && $this->loginStatus === static::CONNECTED_STATUS);
     }
 
     /**
@@ -2457,30 +2376,29 @@ class WhatsProt
 
     protected function checkIdentity($identity)
     {
-        if (file_exists($identity.".dat")) {
+        if (file_exists($identity.".dat"))
+        {
             $id = strlen(urldecode(file_get_contents($identity.'.dat')));
-            if (($id == 20) || ($id == 16)) {
+            if ($id == 20 || $id == 16)
+            {
                 return true;
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function sendSync(array $numbers, array $deletedNumbers = null, $syncType = 4, $index = 0, $last = true)
     {
         $users = array();
-        $i = 0;
-        for ($i; $i<count($numbers); $i++) { // number must start with '+' if international contact
+
+        for ($i=0; $i<count($numbers); $i++) { // number must start with '+' if international contact
             $users[$i] = new ProtocolNode("user", null, null, (substr($numbers[$i], 0, 1) != '+')?('+' . $numbers[$i]):($numbers[$i]));
         }
 
-        if (($deletedNumbers != null) || (count($deletedNumbers) != 0))
-        {
-            $j = 0;
-            for ($j; $j<count($deletedNumbers); $j++) {
+        if ($deletedNumbers != null || count($deletedNumbers)) {
+            for ($j=0; $j<count($deletedNumbers); $j++, $i++) {
                 $users[$i] = new ProtocolNode("user", array("jid" => $this->getJID($deletedNumbers[$j]), "type" => "delete"), null, null);
-                $i++;
             }
         }
 
@@ -3027,7 +2945,7 @@ class WhatsProt
         }
         if (strcmp($node->getTag(), "presence") == 0
             && strncmp($node->getAttribute('from'), $this->phoneNumber, strlen($this->phoneNumber)) != 0
-            && strpos($node->getAttribute('from'), "-") == false) {
+            && strpos($node->getAttribute('from'), "-") === false) {
             $presence = array();
             if ($node->getAttribute('type') == null) {
                 $this->eventManager()->fire("onPresence",
@@ -3068,8 +2986,8 @@ class WhatsProt
         }
         if (strcmp($node->getTag(), "chatstate") == 0
             && strncmp($node->getAttribute('from'), $this->phoneNumber, strlen($this->phoneNumber)) != 0
-            && strpos($node->getAttribute('from'), "-") == false) {
-            if ($node->getChild(0)->getTag() == "composing") {
+            && strpos($node->getAttribute('from'), "-") === false) {
+            if($node->getChild(0)->getTag() == "composing"){
                 $this->eventManager()->fire("onMessageComposing",
                     array(
                         $this->phoneNumber,
@@ -3363,7 +3281,8 @@ class WhatsProt
         }
 
         $children = $node->getChild(0);
-        if ($node->getTag() == "stream:error" && empty($children) == false && $node->getChild(0)->getTag() == "system-shutdown") {
+        if ($node->getTag() == "stream:error" && !empty($children) && $node->getChild(0)->getTag() == "system-shutdown")
+        {
             $this->eventManager()->fire("onStreamError",
                 array(
                     $node->getChild(0)->getTag()

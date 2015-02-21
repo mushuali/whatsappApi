@@ -429,16 +429,15 @@ class BinTreeNodeReader
 
     protected function readListSize($token)
     {
-        $size = 0;
         if ($token == 0xf8) {
-            $size = $this->readInt8();
+            return $this->readInt8();
         } elseif ($token == 0xf9) {
-            $size = $this->readInt16();
+            return $this->readInt16();
         } else {
             throw new Exception("BinTreeNodeReader->readListSize: Invalid token $token");
         }
 
-        return $size;
+        return false; //should never be reached.
     }
 
     protected function peekInt24($offset = 0)
