@@ -2271,6 +2271,7 @@ class WhatsProt
      *
      * @param $lc LangCode
      * @param $carrierName Name of the carrier
+     * @return string
      *
      * Returns mnc value
      */
