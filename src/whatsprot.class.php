@@ -624,7 +624,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with audio.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
@@ -646,7 +646,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with an image.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
@@ -669,7 +669,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with location data.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * If no name is supplied , receiver will see large sized google map
@@ -696,7 +696,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
@@ -714,7 +714,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with a video.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
