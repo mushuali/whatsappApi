@@ -1149,7 +1149,7 @@ class WhatsProt
      * Send a request to get the normalized mobile number respresenting the JID
      *
      *  @param string $countryCode
-     *   Contry Code
+     *   Country Code
      *  @param string $number
      *   Mobile Number
      */
@@ -1234,7 +1234,7 @@ class WhatsProt
     }
 
     /**
-     * Get voip info. of a number/s
+     * Get VOIP info. of a number/s
      *
      * @param string $jids
      */
