@@ -6,7 +6,7 @@
 class vCard
 {
 
-    // An array of this vcard's contact data.
+    // An array of this vCard's contact data.
     protected $data;
     // Filename for download file naming.
     protected $filename;
@@ -14,7 +14,7 @@ class vCard
     protected $class;
     // vCard revision date.
     protected $revisionDate;
-    // The vCard gnerated.
+    // The vCard generated.
     protected $card;
 
     /**
