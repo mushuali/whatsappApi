@@ -432,8 +432,8 @@ class WhatsProt
 
         $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
-        $WAverS = str_replace(".","",$WAver);
-        $ver = str_replace(".","",static::WHATSAPP_VER);
+        //$WAverS = str_replace(".","",$WAver);
+        //$ver = str_replace(".","",static::WHATSAPP_VER);
 
         //  if($ver<$WAverS)
         //  {
