@@ -2397,15 +2397,15 @@ class WhatsProt
             $this->pollMessage();
         }
 
-        if (strcmp($this->loginStatus, static::DISCONNECTED_STATUS) == 0) {
-            throw new Exception('Login Failure');
-        } else {
+        if ($this->loginStatus === static::DISCONNECTED_STATUS) {
             $this->eventManager()->fire("onLogin",
                 array(
                     $this->phoneNumber
                 ));
             $this->sendAvailableForChat();
         }
+
+        throw new Exception('Login Failure');
     }
 
     /**
