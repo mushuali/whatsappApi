@@ -3022,7 +3022,7 @@ class WhatsProt
         }
         if (strcmp($node->getTag(), "presence") == 0
             && strncmp($node->getAttribute('from'), $this->phoneNumber, strlen($this->phoneNumber)) != 0
-            && strpos($node->getAttribute('from'), "-") == false) {
+            && strpos($node->getAttribute('from'), "-") === false) {
             $presence = array();
             if ($node->getAttribute('type') == null) {
                 $this->eventManager()->fire("onPresence",
@@ -3063,8 +3063,8 @@ class WhatsProt
         }
         if (strcmp($node->getTag(), "chatstate") == 0
             && strncmp($node->getAttribute('from'), $this->phoneNumber, strlen($this->phoneNumber)) != 0
-            && strpos($node->getAttribute('from'), "-") == false) {
-            if ($node->getChild(0)->getTag() == "composing") {
+            && strpos($node->getAttribute('from'), "-") === false) {
+            if($node->getChild(0)->getTag() == "composing"){
                 $this->eventManager()->fire("onMessageComposing",
                     array(
                         $this->phoneNumber,
