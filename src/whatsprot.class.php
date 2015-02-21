@@ -795,8 +795,6 @@ class WhatsProt
 
     public function sendClientConfig()
     {
-        $phone = $this->dissectPhone();
-
         $attr = array();
         $attr["platform"] = static::WHATSAPP_DEVICE;
         $attr["version"] = static::WHATSAPP_VER;
@@ -2130,7 +2128,6 @@ class WhatsProt
         $keys = KeyStream::GenerateKeys(base64_decode($this->password), $this->challengeData);
         $this->inputKey = new KeyStream($keys[2], $keys[3]);
         $this->outputKey = new KeyStream($keys[0], $keys[1]);
-        $phone = $this->dissectPhone();
         $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData;// . time() . static::WHATSAPP_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
         $response = $this->outputKey->EncodeMessage($array, 0, 4, strlen($array) - 4);
         return $response;
