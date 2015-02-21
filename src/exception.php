@@ -22,12 +22,10 @@ interface IException
 
 abstract class CustomException extends Exception implements IException
 {
-    protected $message = 'Unknown exception'; // Exception message
-    protected $code = 0; // User-defined exception code
-    protected $file; // Source filename of exception
-    protected $line; // Source line of exception
-    private $string; // Unknown
-    private $trace; // Unknown
+    protected $message = 'Unknown exception';     // Exception message
+    protected $code = 0;                       // User-defined exception code
+    protected $file;                              // Source filename of exception
+    protected $line;                              // Source line of exception
 
     public function __construct($message = null, $code = 0)
     {
