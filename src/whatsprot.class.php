@@ -873,7 +873,7 @@ class WhatsProt
         $queryNode = new ProtocolNode("query",
             array(
                 "request" => "interactive"
-            ),null, null);
+            ), null, null);
 
         $node = new ProtocolNode("iq",
             array(
@@ -1269,15 +1269,16 @@ class WhatsProt
      */
     public function sendGetStatuses($jids)
     {
-        if (!is_array($jids))
-        {
+        if (!is_array($jids)) {
             $jids = array($jids);
         }
+
         $children = array();
         foreach ($jids as $jid)
         {
             $children[] = new ProtocolNode("user", array("jid" => $this->getJID($jid)), null, null);
         }
+
         $node = new ProtocolNode("iq",
             array(
                 "to" => "s.whatsapp.net",
@@ -1307,8 +1308,8 @@ class WhatsProt
         if (!is_array($participants)) {
             $participants = array($participants);
         }
-        foreach ($participants as $participant)
-        {
+
+        foreach ($participants as $participant) {
             $participantNode[] = new ProtocolNode("participant", array(
                 "jid" => $this->getJID($participant)
             ), null, null);
@@ -1408,6 +1409,7 @@ class WhatsProt
         if (!is_array($gjids)) {
             $gjids = array($this->getJID($gjids));
         }
+
         $nodes = array();
         foreach ($gjids as $gjid) {
             $nodes[] = new ProtocolNode("group",
@@ -1415,6 +1417,7 @@ class WhatsProt
                     "id" => $this->getJID($gjid)
                 ), null, null);
         }
+
         $leave = new ProtocolNode("leave",
             array(
                 'action'=>'delete'
@@ -1600,12 +1603,10 @@ class WhatsProt
      */
     public function sendMessageAudio($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "")
     {
-        if ($fsize==0 || $fhash == "")
-        {
+        if ($fsize == 0 || $fhash == "") {
             $allowedExtensions = array('3gp', 'caf', 'wav', 'mp3', 'wma', 'ogg', 'aif', 'aac', 'm4a');
             $size = 10 * 1024 * 1024; // Easy way to set maximum file size for this media type.
             return $this->sendCheckAndSendMedia($filepath, $size, $to, 'audio', $allowedExtensions, $storeURLmedia);
-
         } else {
             $this->sendRequestFileUpload($fhash, 'audio', $fsize, $filepath, $to);
             return true;
@@ -1637,8 +1638,7 @@ class WhatsProt
     public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
         $caption = $this->parseMessageForEmojis($caption);
-        if ($fsize==0 || $fhash == "")
-        {
+        if ($fsize == 0 || $fhash == "") {
             $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
             $size = 5 * 1024 * 1024; // Easy way to set maximum file size for this media type.
             return $this->sendCheckAndSendMedia($filepath, $size, $to, 'image', $allowedExtensions, $storeURLmedia, $caption);
@@ -1727,14 +1727,12 @@ class WhatsProt
     public function sendMessageVideo($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
         $caption = $this->parseMessageForEmojis($caption);
-        if ($fsize==0 || $fhash == "")
-        {
+
+        if ($fsize == 0 || $fhash == "") {
             $allowedExtensions = array('3gp', 'mp4', 'mov', 'avi');
             $size = 20 * 1024 * 1024; // Easy way to set maximum file size for this media type.
             return $this->sendCheckAndSendMedia($filepath, $size, $to, 'video', $allowedExtensions, $storeURLmedia, $caption);
-        }
-        else
-        {
+        } else {
             $this->sendRequestFileUpload($fhash, 'video', $fsize, $filepath, $to, $caption);
             return true;
         }
@@ -1790,11 +1788,11 @@ class WhatsProt
     public function sendAvailableForChat($nickname = null)
     {
         $presence = array();
-        if ($nickname)
-        {
+        if ($nickname) {
             //update nickname
             $this->name = $nickname;
         }
+
         $presence['name'] = $this->name;
         $node = new ProtocolNode("presence", $presence, null, "");
         $this->sendNode($node);
@@ -1867,6 +1865,7 @@ class WhatsProt
         if (!is_array($blockedJids)) {
             $blockedJids = array($blockedJids);
         }
+
         $items = array();
         foreach ($blockedJids as $index => $jid) {
             $item = new ProtocolNode("item",
@@ -1878,6 +1877,7 @@ class WhatsProt
                 ), null, null);
             $items[] = $item;
         }
+
         $child = new ProtocolNode("list",
             array(
                 "name" => "default"
@@ -2047,6 +2047,7 @@ class WhatsProt
     public function uploadFile($file)
     {
         $data['file'] = "@" . $file;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
@@ -2285,14 +2286,15 @@ class WhatsProt
         $mnc = null;
 
         while ($data = fgetcsv($fp, 0, ',')) {
-            if (($data[4] === $lc) && ($data[7] === $carrierName)) {
+            if ($data[4] === $lc && $data[7] === $carrierName) {
                 $mnc = $data[2];
                 break;
             }
         }
 
-        if ($mnc == null)
+        if ($mnc == null) {
             $mnc = '000';
+        }
 
         fclose($fp);
 
@@ -2306,8 +2308,7 @@ class WhatsProt
      */
     protected function doLogin()
     {
-        if ($this->isLoggedIn())
-        {
+        if ($this->isLoggedIn()) {
             return true;
         }
 
@@ -2935,12 +2936,13 @@ class WhatsProt
         if ($node->getTag() == "presence" && $node->getAttribute("status") == "dirty") {
             //clear dirty
             $categories = array();
-            if (count($node->getChildren()) > 0)
+            if (count($node->getChildren()) > 0) {
                 foreach ($node->getChildren() as $child) {
                     if ($child->getTag() == "category") {
                         $categories[] = $child->getAttribute("name");
                     }
                 }
+            }
             $this->sendClearDirty($categories);
         }
         if (strcmp($node->getTag(), "presence") == 0
