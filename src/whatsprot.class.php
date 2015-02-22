@@ -999,8 +999,8 @@ class WhatsProt
     }
 
     /**
-     * @param string array $numbers
-     *  Numbers of your contacts
+     * @param  mixed $numbers Numbers to get profile profile photos of.
+     * @return bool
      */
     public function sendGetProfilePhotoIds($numbers)
     {
@@ -1010,11 +1010,16 @@ class WhatsProt
 
         $msgId = $this->createMsgId("get_picture_ids");
 
+        $userNode = array();
         for ($i=0; $i < count($numbers); $i++) {
             $userNode[$i] = new ProtocolNode("user",
                 array(
                     "jid" => $this->getJID($numbers[$i])
                 ), null, null);
+        }
+
+        if (!sizeof($userNode)) {
+            return false;
         }
 
         $listNode = new ProtocolNode("list", null, $userNode, null);
@@ -1027,6 +1032,8 @@ class WhatsProt
             ), array($listNode), null);
 
         $this->sendNode($iqNode);
+
+        return true;
     }
 
     /**
@@ -1297,6 +1304,7 @@ class WhatsProt
             $participants = array($participants);
         }
 
+        $participantNode = array();
         foreach ($participants as $participant) {
             $participantNode[] = new ProtocolNode("participant", array(
                 "jid" => $this->getJID($participant)
