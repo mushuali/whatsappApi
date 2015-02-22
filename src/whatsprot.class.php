@@ -3845,29 +3845,29 @@ class WhatsProt
      */
     protected function sendMessageNode($to, $node, $id = null)
     {
-        $messageHash = array();
-        $messageHash["to"] = $this->getJID($to);
-        if ($node->getTag() == "body") {
-            $messageHash["type"] = "text";
-        } else {
-            $messageHash["type"] = "media";
-        }
-        $messageHash["id"] = ($id == null?$this->createMsgId("message"):$id);
-        $messageHash["t"] = time();
+        $msgId = ($id == null) ? $this->createMsgId("message") : $id;
+        $to = $this->getJID($to);
 
-        $messageNode = new ProtocolNode("message", $messageHash, array($node), "");
+        $messageNode = new ProtocolNode("message", array(
+            'to'   => $to,
+            'type' => ($node->getTag() == "body") ? 'text' : 'media',
+            'id'   => $msgId,
+            't'    => time()
+        ), array($node), "");
+
         $this->sendNode($messageNode);
 
         $this->eventManager()->fire("onSendMessage",
             array(
                 $this->phoneNumber,
-                $this->getJID($to),
-                $messageHash["id"],
+                $to,
+                $msgId,
                 $node
             ));
-        $this->waitForServer($messageHash["id"]);
 
-        return $messageHash["id"];
+        $this->waitForServer($msgId);
+
+        return $msgId;
     }
 
     /**
@@ -3924,29 +3924,37 @@ class WhatsProt
      */
     protected function sendRequestFileUpload($b64hash, $type, $size, $filepath, $to, $caption = "")
     {
-        $hash = array();
-        $hash["hash"] = $b64hash;
-        $hash["type"] = $type;
-        $hash["size"] = $size;
-        $mediaNode = new ProtocolNode("media", $hash, null, null);
-
-        $hash = array();
         $id = $this->createMsgId("upload");
-        $hash["id"] = $id;
-        $hash["to"] = static::WHATSAPP_SERVER;
-        $hash["type"] = "set";
-        $hash["xmlns"] = "w:m";
-        $node = new ProtocolNode("iq", $hash, array($mediaNode), null);
 
         if (!is_array($to)) {
             $to = $this->getJID($to);
         }
+
+        $mediaNode = new ProtocolNode("media", array(
+            'hash'  => $b64hash,
+            'type'  => $type,
+            'size'  => $size
+        ), null, null);
+
+        $node = new ProtocolNode("iq", array(
+            'id'    => $id,
+            'to'    => static::WHATSAPP_SERVER,
+            'type'  => 'set',
+            'xmlns' => 'w:m'
+        ), array($mediaNode), null);
+
         //add to queue
         $messageId = $this->createMsgId("message");
-        $this->mediaQueue[$id] = array("messageNode" => $node, "filePath" => $filepath, "to" => $to, "message_id" => $messageId, "caption" => $caption);
+        $this->mediaQueue[$id] = array(
+            "messageNode" => $node,
+            "filePath"    => $filepath,
+            "to"          => $to,
+            "message_id"  => $messageId,
+            "caption"     => $caption
+        );
 
         $this->sendNode($node);
-        $this->waitForServer($hash["id"]);
+        $this->waitForServer($id);
     }
 
     /**
@@ -3957,19 +3965,20 @@ class WhatsProt
      */
     protected function sendSetPicture($jid, $filepath)
     {
+        $nodeID = $this->createMsgId("setphoto");
+
         $data = preprocessProfilePicture($filepath);
         $preview = createIconGD($filepath, 96, true);
 
         $picture = new ProtocolNode("picture", array("type" => "image"), null, $data);
         $preview = new ProtocolNode("picture", array("type" => "preview"), null, $preview);
 
-        $hash = array();
-        $nodeID = $this->createMsgId("setphoto");
-        $hash["id"] = $nodeID;
-        $hash["to"] = $this->getJID($jid);
-        $hash["type"] = "set";
-        $hash["xmlns"] = "w:profile:picture";
-        $node = new ProtocolNode("iq", $hash, array($picture, $preview), null);
+        $node = new ProtocolNode("iq", array(
+            'id' => $nodeID,
+            'to' => $this->getJID($jid),
+            'type' => 'set',
+            'xmlns' => 'w:profile:picture'
+        ), array($picture, $preview), null);
 
         $this->sendNode($node);
         $this->waitForServer($nodeID);
