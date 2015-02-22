@@ -2304,14 +2304,16 @@ class WhatsProt
         }
 
         if ($this->loginStatus === static::DISCONNECTED_STATUS) {
-            $this->eventManager()->fire("onLogin",
-                array(
-                    $this->phoneNumber
-                ));
-            $this->sendAvailableForChat();
+            throw new Exception('Login Failure');
         }
 
-        throw new Exception('Login Failure');
+        $this->eventManager()->fire("onLogin",
+            array(
+                $this->phoneNumber
+            ));
+        $this->sendAvailableForChat();
+
+        return true;
     }
 
     /**
