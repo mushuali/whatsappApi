@@ -2167,7 +2167,7 @@ class WhatsProt
     protected function debugPrint($debugMsg)
     {
         if ($this->debug) {
-            var_dump($debugMsg);
+            echo $debugMsg;
             return true;
         }
 
@@ -3914,7 +3914,7 @@ class WhatsProt
      */
     protected function sendNode($node, $encrypt = true)
     {
-        $this->debugPrint($node->nodeString("tx  "));
+        $this->debugPrint($node->nodeString("tx  ") . "\n");
         $this->sendData($this->writer->write($node, $encrypt));
     }
 
