@@ -292,12 +292,8 @@ class WhatsProt
     /**
      * Request a registration code from WhatsApp.
      *
-     * @param string $method
-     *   Accepts only 'sms' or 'voice' as a value.
-     * @param string $countryCode
-     *   ISO Country Code, 2 Digit.
-     * @param string $langCode
-     *   ISO 639-1 Language Code: two-letter codes.
+     * @param string $method Accepts only 'sms' or 'voice' as a value.
+     * @param string $carrier
      *
      * @return object
      *   An object with server response.
@@ -310,7 +306,7 @@ class WhatsProt
      *
      * @throws Exception
      */
-    public function codeRequest($method = 'sms', $carrier = "T-Mobile5", $countryCode = null, $langCode = null)
+    public function codeRequest($method = 'sms', $carrier = "T-Mobile5")
     {
         if (!$phone = $this->dissectPhone()) {
             throw new Exception('The provided phone number is not valid.');
