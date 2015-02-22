@@ -114,7 +114,7 @@ class WhatsProt
     }
 
     /**
-     * If you need use diferent challenge fileName you can use this
+     * If you need use different challenge fileName you can use this
      *
      * @param string $filename
      */
@@ -125,6 +125,7 @@ class WhatsProt
 
     /**
      * Add message to the outgoing queue.
+     *
      * @param $node
      */
     public function addMsgOutQueue($node)
@@ -187,10 +188,10 @@ class WhatsProt
                     $response->status,
                     $response->reason
                 ));
-            if ($this->debug) {
-                print_r($query);
-                print_r($response);
-            }
+
+            $this->debugPrint($query);
+            $this->debugPrint($response);
+
             throw new Exception('There was a problem trying to request the code.');
         } else {
             $this->eventManager()->fire("onCredentialsGood",
@@ -264,10 +265,10 @@ class WhatsProt
                     $response->reason,
                     $response->retry_after
                 ));
-            if ($this->debug) {
-                print_r($query);
-                print_r($response);
-            }
+
+            $this->debugPrint($query);
+            $this->debugPrint($response);
+
             throw new Exception('An error occurred registering the registration code from WhatsApp.');
         } else {
             $this->eventManager()->fire("onCodeRegister",
@@ -345,15 +346,11 @@ class WhatsProt
             //'network_radio_type' => "1"
         );
 
-        if ($this->debug) {
-            print_r($query);
-        }
+        $this->debugPrint($query);
 
         $response = $this->getResponse($host, $query);
 
-        if ($this->debug) {
-            print_r($response);
-        }
+        $this->debugPrint($response);
 
         if ($response->status == 'ok') {
             $this->eventManager()->fire("onCodeRegister",
@@ -416,6 +413,7 @@ class WhatsProt
 
     /**
      * Connect (create a socket) to the WhatsApp network.
+     *
      * @return bool
      */
     public function connect()
@@ -432,8 +430,8 @@ class WhatsProt
 
         $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
-        $WAverS = str_replace(".","",$WAver);
-        $ver = str_replace(".","",static::WHATSAPP_VER);
+        //$WAverS = str_replace(".","",$WAver);
+        //$ver = str_replace(".","",static::WHATSAPP_VER);
 
         //  if($ver<$WAverS)
         //  {
@@ -453,7 +451,6 @@ class WhatsProt
         }
 
         if ($socket !== false) {
-
             socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
             socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
 
@@ -466,9 +463,8 @@ class WhatsProt
             );
             return true;
         } else {
-            if ($this->debug) {
-                print_r("Firing onConnectError\n");
-            }
+            $this->debugPrint("Firing onConnectError\n");
+
             $this->eventManager()->fire("onConnectError",
                 array(
                     $this->phoneNumber,
@@ -480,14 +476,14 @@ class WhatsProt
     }
 
     /**
-     * Do we have an active socket connection to whatsapp?
+     * Do we have an active socket connection to WhatsApp?
+     *
      * @return bool
      */
     public function isConnected()
     {
         return ($this->socket !== null);
     }
-
 
     /**
      * Disconnect from the WhatsApp network.
@@ -529,7 +525,7 @@ class WhatsProt
     }
 
     /**
-     * Log into the Whatsapp server.
+     * Log into the WhatsApp server.
      *
      * ###Warning### using this method will generate a new password
      * from the WhatsApp servers each time.
@@ -541,16 +537,14 @@ class WhatsProt
     {
         $this->accountInfo = (array) $this->checkCredentials();
         if ($this->accountInfo['status'] == 'ok') {
-            if ($this->debug) {
-                print_r("New password received: " . $this->accountInfo['pw'] . "\n");
-            }
+            $this->debugPrint("New password received: " . $this->accountInfo['pw'] . "\n");
             $this->password = $this->accountInfo['pw'];
         }
         $this->doLogin();
     }
 
     /**
-     * Login to the Whatsapp server with your password
+     * Login to the WhatsApp server with your password
      *
      * If you already know your password you can log into the Whatsapp server
      * using this method.
@@ -573,6 +567,8 @@ class WhatsProt
      * Fetch a single message node
      * @param bool $autoReceipt
      * @return bool
+     *
+     * @throws Exception
      */
     public function pollMessage($autoReceipt = true, $type = "read")
     {
@@ -580,7 +576,11 @@ class WhatsProt
             throw new ConnectionException('Connection Closed!');
         }
 
-        if (socket_select(array($this->socket), array(), array(), static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
+        $r = array($this->socket);
+        $w = array();
+        $e = array();
+
+        if (socket_select($r, $w, $e, static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
             // Something to read
             if ($stanza = $this->readStanza()) {
                 $this->processInboundData($stanza, $autoReceipt, $type);
@@ -629,7 +629,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with audio.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
@@ -651,7 +651,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with an image.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
@@ -674,7 +674,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with location data.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * If no name is supplied , receiver will see large sized google map
@@ -701,7 +701,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
@@ -719,7 +719,7 @@ class WhatsProt
     /**
      * Send a Broadcast Message with a video.
      *
-     * The receiptiant MUST have your number (synced) and in their contact list
+     * The recipients MUST have your number (synced) and in their contact list
      * otherwise the message will not deliver to that person.
      *
      * Approx 20 (unverified) is the maximum number of targets
@@ -2072,14 +2072,14 @@ class WhatsProt
                     $url
                 ));
             return $url;
-        } else {
-            $this->eventManager()->fire("onUploadFileFailed",
-                array(
-                    $this->phoneNumber,
-                    basename($file)
-                ));
-            return false;
         }
+
+        $this->eventManager()->fire("onUploadFileFailed",
+            array(
+                $this->phoneNumber,
+                basename($file)
+            ));
+        return false;
     }
 
     /**
@@ -2194,14 +2194,18 @@ class WhatsProt
     /**
      * Print a message to the debug console.
      *
-     * @param string $debugMsg
+     * @param  mixed $debugMsg
      *   The debug message.
+     * @return string
      */
     protected function debugPrint($debugMsg)
     {
         if ($this->debug) {
-            echo $debugMsg;
+            var_dump($debugMsg);
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -2229,13 +2233,11 @@ class WhatsProt
 
                     //hook:
                     //fix country code for North America
-                    if (substr($data[1], 0, 1) == "1")
-                    {
+                    if ($data[1][0] == "1") {
                         $data[1] = "1";
                     }
 
-                    $phone =
-                        array(
+                    $phone = array(
                             'country' => $data[0],
                             'cc' => $data[1],
                             'phone' => substr($this->phoneNumber, strlen($data[1]), strlen($this->phoneNumber)),
@@ -2277,10 +2279,11 @@ class WhatsProt
      *
      * @param $lc LangCode
      * @param $carrierName Name of the carrier
+     * @return string
      *
      * Returns mnc value
      */
-    protected function detectMnc ($lc, $carrierName)
+    protected function detectMnc($lc, $carrierName)
     {
         $fp = fopen(__DIR__ . DIRECTORY_SEPARATOR . 'networkinfo.csv', 'r');
         $mnc = null;
@@ -2365,14 +2368,14 @@ class WhatsProt
     {
         if (file_exists($identity.".dat")) {
             return urldecode(file_get_contents($identity.'.dat'));
-        } else {
-            $id = fopen($identity.".dat", "w");
-            $bytes = strtolower(openssl_random_pseudo_bytes(20));
-            fwrite($id, urlencode($bytes));
-            fclose($id);
-
-            return $bytes;
         }
+
+        $id = fopen($identity.".dat", "w");
+        $bytes = strtolower(openssl_random_pseudo_bytes(20));
+        fwrite($id, urlencode($bytes));
+        fclose($id);
+
+        return $bytes;
     }
 
     protected function checkIdentity($identity)
@@ -2625,6 +2628,7 @@ class WhatsProt
      *
      * @param      $data
      * @param bool $autoReceipt
+     * @param      $type
      * @throws Exception
      */
     protected function processInboundData($data, $autoReceipt = true, $type = "read")
@@ -2641,6 +2645,7 @@ class WhatsProt
      * This also provides a convenient method to use to unit test the event framework.
      * @param ProtocolNode $node
      * @param bool         $autoReceipt
+     * @param              $type
      * @throws Exception
      */
     protected function processInboundDataNode(ProtocolNode $node, $autoReceipt = true, $type = "read") {
@@ -3907,7 +3912,8 @@ class WhatsProt
      * Tell the server we received the message.
      *
      * @param ProtocolNode $msg The ProtocolTreeNode that contains the message.
-     * @param null         $type
+     * @param string       $type
+     * @param string       $participant
      */
     protected function sendMessageReceived($msg, $type = "read", $participant = null)
     {
