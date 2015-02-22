@@ -292,12 +292,8 @@ class WhatsProt
     /**
      * Request a registration code from WhatsApp.
      *
-     * @param string $method
-     *   Accepts only 'sms' or 'voice' as a value.
-     * @param string $countryCode
-     *   ISO Country Code, 2 Digit.
-     * @param string $langCode
-     *   ISO 639-1 Language Code: two-letter codes.
+     * @param string $method Accepts only 'sms' or 'voice' as a value.
+     * @param string $carrier
      *
      * @return object
      *   An object with server response.
@@ -310,7 +306,7 @@ class WhatsProt
      *
      * @throws Exception
      */
-    public function codeRequest($method = 'sms', $carrier = "T-Mobile5", $countryCode = null, $langCode = null)
+    public function codeRequest($method = 'sms', $carrier = "T-Mobile5")
     {
         if (!$phone = $this->dissectPhone()) {
             throw new Exception('The provided phone number is not valid.');
@@ -428,7 +424,7 @@ class WhatsProt
             return true;
         }
 
-        $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
+        //$WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
         //$WAverS = str_replace(".","",$WAver);
         //$ver = str_replace(".","",static::WHATSAPP_VER);
@@ -565,7 +561,8 @@ class WhatsProt
 
     /**
      * Fetch a single message node
-     * @param bool $autoReceipt
+     * @param  bool   $autoReceipt
+     * @param  string $type
      * @return bool
      *
      * @throws Exception
@@ -853,8 +850,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to return a list of groups user is currently participating
-     * in.
+     * Send a request to return a list of groups user is currently participating in.
      *
      * To capture this list you will need to bind the "onGetGroups" event.
      */
@@ -864,7 +860,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to get new Groups V2 info
+     * Send a request to get new Groups V2 info.
      *
      * @param $groupID
      *    The group JID
@@ -890,8 +886,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to return a list of groups user has started
-     * in.
+     * Send a request to return a list of groups user has started in.
      *
      * To capture this list you will need to bind the "onGetGroups" event.
      */
@@ -901,7 +896,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to get a list of people you have currently blocked
+     * Send a request to get a list of people you have currently blocked.
      */
     public function sendGetPrivacyBlockedList()
     {
@@ -924,7 +919,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to get privacy settings
+     * Send a request to get privacy settings.
      */
     public function sendGetPrivacySettings()
     {
@@ -943,8 +938,7 @@ class WhatsProt
     }
 
     /**
-     * Set privacy of 'last seen', status or profile picture
-     * to All, contacts or none
+     * Set privacy of 'last seen', status or profile picture to all, contacts or none.
      *
      * @param string $category
      *   Options: 'last', 'status' or 'profile'
@@ -974,11 +968,10 @@ class WhatsProt
     }
 
     /**
-     * Get profile picture of specified user
+     * Get profile picture of specified user.
      *
      * @param string $number
      *  Number or JID of user
-     *
      * @param bool $large
      *  Request large picture
      */
@@ -1006,9 +999,8 @@ class WhatsProt
     }
 
     /**
-     *
-     * @param string array $numbers
-     *  Numbers of your contacts
+     * @param  mixed $numbers Numbers to get profile profile photos of.
+     * @return bool
      */
     public function sendGetProfilePhotoIds($numbers)
     {
@@ -1018,11 +1010,16 @@ class WhatsProt
 
         $msgId = $this->createMsgId("get_picture_ids");
 
+        $userNode = array();
         for ($i=0; $i < count($numbers); $i++) {
             $userNode[$i] = new ProtocolNode("user",
                 array(
                     "jid" => $this->getJID($numbers[$i])
                 ), null, null);
+        }
+
+        if (!sizeof($userNode)) {
+            return false;
         }
 
         $listNode = new ProtocolNode("list", null, $userNode, null);
@@ -1035,13 +1032,14 @@ class WhatsProt
             ), array($listNode), null);
 
         $this->sendNode($iqNode);
+
+        return true;
     }
 
     /**
      * Request to retrieve the last online time of specific user.
      *
-     * @param string $to
-     *  Number or JID of user
+     * @param string $to Number or JID of user
      */
     public function sendGetRequestLastSeen($to)
     {
@@ -1062,7 +1060,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to get the current server properties
+     * Send a request to get the current server properties.
      */
     public function sendGetServerProperties()
     {
@@ -1081,7 +1079,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to get the current service pricing
+     * Send a request to get the current service pricing.
      *
      *  @param string $lg
      *   Language
@@ -1109,7 +1107,7 @@ class WhatsProt
     }
 
     /**
-     * Send a request to extend the account
+     * Send a request to extend the account.
      */
     public function sendExtendAccount()
     {
@@ -1128,7 +1126,7 @@ class WhatsProt
     }
 
     /**
-     * Gets all the broadcast lists for an account
+     * Gets all the broadcast lists for an account.
      */
     public function sendGetBroadcastLists()
     {
@@ -1146,12 +1144,10 @@ class WhatsProt
     }
 
     /**
-     * Send a request to get the normalized mobile number respresenting the JID
+     * Send a request to get the normalized mobile number representing the JID.
      *
-     *  @param string $countryCode
-     *   Country Code
-     *  @param string $number
-     *   Mobile Number
+     *  @param string $countryCode Country Code
+     *  @param string $number      Mobile Number
      */
     public function sendGetNormalizedJid($countryCode, $number)
     {
@@ -1171,14 +1167,11 @@ class WhatsProt
     }
 
     /**
-     * Removes an account from WhatsApp
+     * Removes an account from WhatsApp.
      *
-     * @param string $lg
-     * Language
-     * @param string $lc
-     * Country
-     * @param string $feedback
-     * User Feedback
+     * @param string $lg       Language
+     * @param string $lc       Country
+     * @param string $feedback User Feedback
      */
     public function sendRemoveAccount($lg = null, $lc = null, $feedback = null)
     {
@@ -1216,7 +1209,7 @@ class WhatsProt
     }
 
     /**
-     * Send a ping to the server
+     * Send a ping to the server.
      */
     public function sendPing()
     {
@@ -1234,9 +1227,9 @@ class WhatsProt
     }
 
     /**
-     * Get VOIP info. of a number/s
+     * Get VOIP information of a number or numbers.
      *
-     * @param string $jids
+     * @param mixed $jids
      */
     public function sendGetHasVoipEnabled($jids)
     {
@@ -1268,7 +1261,7 @@ class WhatsProt
     /**
      * Get the current status message of a specific user.
      *
-     * @param  string[] $jids The users' JIDs
+     * @param mixed $jids The users' JIDs
      */
     public function sendGetStatuses($jids)
     {
@@ -1277,8 +1270,7 @@ class WhatsProt
         }
 
         $children = array();
-        foreach ($jids as $jid)
-        {
+        foreach ($jids as $jid) {
             $children[] = new ProtocolNode("user", array("jid" => $this->getJID($jid)), null, null);
         }
 
@@ -1312,6 +1304,7 @@ class WhatsProt
             $participants = array($participants);
         }
 
+        $participantNode = array();
         foreach ($participants as $participant) {
             $participantNode[] = new ProtocolNode("participant", array(
                 "jid" => $this->getJID($participant)
@@ -1347,12 +1340,10 @@ class WhatsProt
     }
 
     /**
-     * Change group subject
+     * Change group's subject.
      *
-     * @param string $gjid
-     *   The group id
-     * @param string $subject
-     *   The subject
+     * @param string $gjid    The group id
+     * @param string $subject The subject
      */
     public function sendSetGroupSubject($gjid, $subject)
     {
@@ -1369,9 +1360,9 @@ class WhatsProt
     }
 
     /**
-     * End or delete a group chat
+     * End or delete a group chat.
      *
-     * @param  string $gjid The group ID
+     * @param string $gjid The group's ID
      */
     public function sendGroupsChatEnd($gjid)
     {
@@ -1401,9 +1392,9 @@ class WhatsProt
     }
 
     /**
-     * Leave a group chat
+     * Leave a group chat.
      *
-     * @param  array $gjids An array of group IDs
+     * @param mixed $gjids Group or group's ID(s)
      */
     public function sendGroupsLeave($gjids)
     {
@@ -1441,10 +1432,8 @@ class WhatsProt
     /**
      * Add participant(s) to a group.
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants numbers to add
+     * @param string $groupId      The group ID.
+     * @param mixed  $participants An array with the participants numbers to add
      */
     public function sendGroupsParticipantsAdd($groupId, $participants)
     {
@@ -1458,10 +1447,8 @@ class WhatsProt
     /**
      * Remove participant(s) from a group.
      *
-     * @param string $groupId
-     *   The group ID.
-     * @param array $participants
-     *   An array with the participants numbers to remove
+     * @param string $groupId      The group ID.
+     * @param mixed  $participants An array with the participants numbers to remove
      */
     public function sendGroupsParticipantsRemove($groupId, $participants)
     {
@@ -1473,11 +1460,10 @@ class WhatsProt
     }
 
     /**
-     * Promote participant(s) of a group
-     * Makes a participant admin of a group
+     * Promote participant(s) of a group; Make a participant an admin of a group.
      *
      * @param string $gId          The group ID.
-     * @param array  $participants An array with the participants numbers to promote
+     * @param mixed  $participants An array with the participants numbers to promote
      */
     public function sendPromoteParticipants($gId, $participants)
     {
@@ -1489,8 +1475,7 @@ class WhatsProt
     }
 
     /**
-     * Demote participant(s) of a group.
-     * Remove participant of being admin of a group.
+     * Demote participant(s) of a group; remove participant of being admin of a group.
      *
      * @param string $gId          The group ID.
      * @param array  $participants An array with the participants numbers to demote
@@ -1505,8 +1490,7 @@ class WhatsProt
     }
 
     /**
-     * Lock group: Paritipants cant change group subject or
-     *             profile picture except admin
+     * Lock group: participants cant change group subject or profile picture except admin.
      *
      * @param string $gId The group ID.
      */
@@ -1527,8 +1511,7 @@ class WhatsProt
     }
 
     /**
-     * Unlock group: Any participant can change
-     *               group subject or profile picture
+     * Unlock group: Any participant can change group subject or profile picture.
      *
      *
      * @param string $gId The group ID.
@@ -1575,7 +1558,7 @@ class WhatsProt
     }
 
     /**
-     * Send a read receipt to a message
+     * Send a read receipt to a message.
      *
      * @param $to
      *   The recipient.
@@ -1619,8 +1602,7 @@ class WhatsProt
     /**
      * Send the composing message status. When typing a message.
      *
-     * @param string $to
-     *   The recipient to send status to.
+     * @param string $to The recipient to send status to.
      */
     public function sendMessageComposing($to)
     {
@@ -1628,7 +1610,7 @@ class WhatsProt
     }
 
     /**
-     * Send an image file to group/user
+     * Send an image file to group/user.
      *
      * @param string $to            Recipient number
      * @param string $filepath      The url/uri to the image file.
@@ -1657,13 +1639,13 @@ class WhatsProt
      * If no name is supplied , receiver will see large sized google map
      * thumbnail of entered Lat/Long but NO name/url for location.
      *
-     * With name supplied, a combined map thumbnail/name box is displayed
+     * With name supplied, a combined map thumbnail/name box is displayed.
      *
-     * @param array|string $to The recipient(s) to send to.
-     * @param  float $long    The longitude of the location eg 54.31652
-     * @param  float $lat     The latitude if the location eg -6.833496
-     * @param string $name (Optional)  The custom name you would like to give this location.
-     * @param string $url (Optional) A URL to attach to the location.
+     * @param mixed  $to    The recipient(s) to send to.
+     * @param float  $long  The longitude of the location eg 54.31652
+     * @param float  $lat   The latitude if the location eg -6.833496
+     * @param string $name  (Optional) The custom name you would like to give this location.
+     * @param string $url   (Optional) A URL to attach to the location.
      */
     public function sendMessageLocation($to, $long, $lat, $name = null, $url = null)
     {
@@ -1697,8 +1679,7 @@ class WhatsProt
     /**
      * Send the 'paused composing message' status.
      *
-     * @param string $to
-     *   The recipient number or ID.
+     * @param string $to The recipient number or ID.
      */
     public function sendMessagePaused($to)
     {
@@ -1768,8 +1749,7 @@ class WhatsProt
     /**
      * Send a pong to the whatsapp server. I'm alive!
      *
-     * @param string $msgid
-     *   The id of the message.
+     * @param string $msgid The id of the message.
      */
     public function sendPong($msgid)
     {
@@ -1804,8 +1784,7 @@ class WhatsProt
     /**
      * Send presence status.
      *
-     * @param string $type
-     *   The presence status.
+     * @param string $type The presence status.
      */
     public function sendPresence($type = "active")
     {
@@ -1826,8 +1805,7 @@ class WhatsProt
     /**
      * Send presence subscription, automatically receive presence updates as long as the socket is open.
      *
-     * @param string $to
-     *   Phone number.
+     * @param string $to Phone number.
      */
     public function sendPresenceSubscription($to)
     {
@@ -1836,10 +1814,9 @@ class WhatsProt
     }
 
     /**
-     * Unsubscribe, will stop subscription
+     * Unsubscribe, will stop subscription.
      *
-     * @param string $to
-     *   Phone number.
+     * @param string $to Phone number.
      */
     public function sendPresenceUnsubscription($to)
     {
@@ -1848,10 +1825,10 @@ class WhatsProt
     }
 
     /**
-     * Set the picture for the group
+     * Set the picture for the group.
      *
-     * @param  string $gjid The groupID
-     * @param  string $path The URL/URI of the image to use
+     * @param string $gjid The groupID
+     * @param string $path The URL/URI of the image to use
      */
     public function sendSetGroupPicture($gjid, $path)
     {
@@ -1861,7 +1838,7 @@ class WhatsProt
     /**
      * Set the list of numbers you wish to block receiving from.
      *
-     * @param array $blockedJids Array of numbers to block messages from.
+     * @param mixed $blockedJids One or more numbers to block messages from.
      */
     public function sendSetPrivacyBlockedList($blockedJids = array())
     {
@@ -1898,9 +1875,9 @@ class WhatsProt
     }
 
     /**
-     * Set your profile picture
+     * Set your profile picture.
      *
-     * @param  string $path URL/URI of image
+     * @param string $path URL/URI of image
      */
     public function sendSetProfilePicture($path)
     {
@@ -1908,7 +1885,7 @@ class WhatsProt
     }
 
     /*
-     *	Removes the profile photo
+     *	Removes the profile photo.
      */
     public function sendRemoveProfilePicture()
     {
@@ -1933,8 +1910,8 @@ class WhatsProt
     }
 
     /**
-     * Set the recovery token for your account to allow you to
-     * retrieve your password at a later stage.
+     * Set the recovery token for your account to allow you to retrieve your password at a later stage.
+     *
      * @param  string $token A user generated token.
      */
     public function sendSetRecoveryToken($token)
@@ -1957,8 +1934,7 @@ class WhatsProt
     /**
      * Update the user status.
      *
-     * @param string $txt
-     *   The text of the message status to send.
+     * @param string $txt The text of the message status to send.
      */
     public function sendStatusUpdate($txt)
     {
@@ -1982,12 +1958,9 @@ class WhatsProt
     /**
      * Send a vCard to the user/group.
      *
-     * @param $to
-     *   The recipient to send.
-     * @param $name
-     *   The contact name.
-     * @param $vCard
-     *   The contact vCard to send.
+     * @param string $to    The recipient to send.
+     * @param string $name  The contact name.
+     * @param object $vCard The contact vCard to send.
      */
     public function sendVcard($to, $name, $vCard)
     {
@@ -2007,12 +1980,9 @@ class WhatsProt
     /**
      * Send a vCard to the user/group as Broadcast.
      *
-     * @param $targets
-     *   Array of recipients to send.
-     * @param $name
-     *   The vCard contact name.
-     * @param $vCard
-     *   The contact vCard to send.
+     * @param array  $targets An array of recipients to send to.
+     * @param string $name    The vCard contact name.
+     * @param object $vCard   The contact vCard to send.
      */
     public function sendBroadcastVcard($targets, $name, $vCard)
     {
@@ -2031,6 +2001,7 @@ class WhatsProt
 
     /**
      * Sets the bind of the new message.
+     *
      * @param $bind
      */
     public function setNewMessageBind($bind)
@@ -2041,11 +2012,9 @@ class WhatsProt
     /**
      * Upload file to WhatsApp servers.
      *
-     * @param $file
-     *   The uri of the file.
+     * @param string $file The uri of the file.
      *
-     * @return string|bool
-     *   Return the remote url or false on failure.
+     * @return string|bool Return the remote url or false on failure.
      */
     public function uploadFile($file)
     {
@@ -2083,9 +2052,9 @@ class WhatsProt
     }
 
     /**
-     * Wait for Whatsapp server to acknowledge *it* has received message.
-     * @param  string $id The id of the node sent that we are awaiting acknowledgement of.
-     * @param int     $timeout
+     * Wait for WhatsApp server to acknowledge *it* has received message.
+     * @param string $id The id of the node sent that we are awaiting acknowledgement of.
+     * @param int    $timeout
      */
     public function waitForServer($id, $timeout = 5)
     {
@@ -2097,10 +2066,9 @@ class WhatsProt
     }
 
     /**
-     * Authenticate with the Whatsapp Server.
+     * Authenticate with the WhatsApp Server.
      *
-     * @return String
-     *   Returns binary string
+     * @return string Returns binary string
      */
     protected function authenticate()
     {
@@ -2115,8 +2083,7 @@ class WhatsProt
     /**
      * Add the authentication nodes.
      *
-     * @return ProtocolNode
-     *   Return itself.
+     * @return ProtocolNode Returns itself.
      */
     protected function createAuthNode()
     {
@@ -2194,9 +2161,8 @@ class WhatsProt
     /**
      * Print a message to the debug console.
      *
-     * @param  mixed $debugMsg
-     *   The debug message.
-     * @return string
+     * @param  mixed $debugMsg The debug message.
+     * @return bool
      */
     protected function debugPrint($debugMsg)
     {
@@ -2275,10 +2241,10 @@ class WhatsProt
     }
 
     /**
-     * Detects mnc from specified carrier
+     * Detects mnc from specified carrier.
      *
-     * @param $lc LangCode
-     * @param $carrierName Name of the carrier
+     * @param string $lc          LangCode
+     * @param string $carrierName Name of the carrier
      * @return string
      *
      * Returns mnc value
@@ -2305,7 +2271,7 @@ class WhatsProt
     }
 
     /**
-     * Send the nodes to the Whatsapp server to log in.
+     * Send the nodes to the WhatsApp server to log in.
      *
      * @throws Exception
      */
@@ -2338,18 +2304,21 @@ class WhatsProt
         }
 
         if ($this->loginStatus === static::DISCONNECTED_STATUS) {
-            $this->eventManager()->fire("onLogin",
-                array(
-                    $this->phoneNumber
-                ));
-            $this->sendAvailableForChat();
+            throw new Exception('Login Failure');
         }
 
-        throw new Exception('Login Failure');
+        $this->eventManager()->fire("onLogin",
+            array(
+                $this->phoneNumber
+            ));
+        $this->sendAvailableForChat();
+
+        return true;
     }
 
     /**
      * Have we an active connection with WhatsAPP AND a valid login already?
+     *
      * @return bool
      */
     protected function isLoggedIn(){
@@ -2504,10 +2473,8 @@ class WhatsProt
     /**
      * Retrieves media file and info from either a URL or localpath
      *
-     * @param $filepath
-     * The URL or path to the mediafile you wish to send
-     * @param $maxsizebytes
-     * The maximum size in bytes the media file can be. Default 1MB
+     * @param string  $filepath     The URL or path to the mediafile you wish to send
+     * @param integer $maxsizebytes The maximum size in bytes the media file can be. Default 1MB
      *
      * @return bool  false if file information can not be obtained.
      */
@@ -2582,8 +2549,8 @@ class WhatsProt
      * Get a decoded JSON response from Whatsapp server
      *
      * @param  string $host  The host URL
-     * @param  array $query A associative array of keys and values to send to server.
-     * @return object   NULL is returned if the json cannot be decoded or if the encoded data is deeper than the recursion limit
+     * @param  array  $query A associative array of keys and values to send to server.
+     * @return null|object   NULL if the json cannot be decoded or if the encoded data is deeper than the recursion limit
      */
     protected function getResponse($host, $query)
     {
@@ -2614,9 +2581,7 @@ class WhatsProt
     /**
      * Process the challenge.
      *
-     *
-     * @param ProtocolNode $node
-     *   The node that contains the challenge.
+     * @param ProtocolNode $node The node that contains the challenge.
      */
     protected function processChallenge($node)
     {
@@ -2629,6 +2594,7 @@ class WhatsProt
      * @param      $data
      * @param bool $autoReceipt
      * @param      $type
+     *
      * @throws Exception
      */
     protected function processInboundData($data, $autoReceipt = true, $type = "read")
@@ -2646,6 +2612,7 @@ class WhatsProt
      * @param ProtocolNode $node
      * @param bool         $autoReceipt
      * @param              $type
+     *
      * @throws Exception
      */
     protected function processInboundDataNode(ProtocolNode $node, $autoReceipt = true, $type = "read") {
@@ -2815,9 +2782,7 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('caption')
                             ));
                     }
-
                 } elseif ($node->getChild("media")->getAttribute('type') == 'video') {
-
                     if ($node->getAttribute("participant") == null) {
                         $this->eventManager()->fire("onGetVideo",
                             array(
@@ -3480,10 +3445,9 @@ class WhatsProt
     }
 
     /**
-     * Process and save media image
+     * Process and save media image.
      *
-     * @param ProtocolNode $node
-     * ProtocolNode containing media
+     * @param ProtocolNode $node ProtocolNode containing media
      */
     protected function processMediaImage($node)
     {
@@ -3511,10 +3475,9 @@ class WhatsProt
     }
 
     /**
-     * Processes received picture node
+     * Processes received picture node.
      *
-     * @param ProtocolNode $node
-     *  ProtocolNode containing the picture
+     * @param ProtocolNode $node ProtocolNode containing the picture
      */
     protected function processProfilePicture($node)
     {
@@ -3560,8 +3523,7 @@ class WhatsProt
     /**
      * Process media upload response
      *
-     * @param ProtocolNode $node
-     *  Message node
+     * @param ProtocolNode $node Message node
      * @return bool
      */
     protected function processUploadResponse($node)
@@ -3673,6 +3635,8 @@ class WhatsProt
 
     /**
      * Read 1024 bytes from the whatsapp server.
+     *
+     * @throws Exception
      */
     public function readStanza()
     {
@@ -3704,9 +3668,9 @@ class WhatsProt
 
             //read full length
             $buff = socket_read($this->socket, $treeLength);
-            $trlen = $treeLength;
+            //$trlen = $treeLength;
             $len = strlen($buff);
-            $prev = 0;
+            //$prev = 0;
             while (strlen($buff) < $treeLength) {
                 $toRead = $treeLength - strlen($buff);
                 $buff .= socket_read($this->socket, $toRead);
@@ -3813,6 +3777,8 @@ class WhatsProt
     /**
      * Send data to the whatsapp server.
      * @param string $data
+     *
+     * @throws Exception
      */
     protected function sendData($data)
     {
@@ -3880,32 +3846,34 @@ class WhatsProt
      * @param              $to
      * @param ProtocolNode $node
      * @param null         $id
-     * @return null|string
+     *
+     * @return string            Message ID.
      */
     protected function sendMessageNode($to, $node, $id = null)
     {
-        $messageHash = array();
-        $messageHash["to"] = $this->getJID($to);
-        if ($node->getTag() == "body") {
-            $messageHash["type"] = "text";
-        } else {
-            $messageHash["type"] = "media";
-        }
-        $messageHash["id"] = ($id == null?$this->createMsgId("message"):$id);
-        $messageHash["t"] = time();
+        $msgId = ($id == null) ? $this->createMsgId("message") : $id;
+        $to = $this->getJID($to);
 
-        $messageNode = new ProtocolNode("message", $messageHash, array($node), "");
+        $messageNode = new ProtocolNode("message", array(
+            'to'   => $to,
+            'type' => ($node->getTag() == "body") ? 'text' : 'media',
+            'id'   => $msgId,
+            't'    => time()
+        ), array($node), "");
+
         $this->sendNode($messageNode);
+
         $this->eventManager()->fire("onSendMessage",
             array(
                 $this->phoneNumber,
-                $this->getJID($to),
-                $messageHash["id"],
+                $to,
+                $msgId,
                 $node
             ));
-        $this->waitForServer($messageHash["id"]);
 
-        return $messageHash["id"];
+        $this->waitForServer($msgId);
+
+        return $msgId;
     }
 
     /**
@@ -3917,7 +3885,6 @@ class WhatsProt
      */
     protected function sendMessageReceived($msg, $type = "read", $participant = null)
     {
-
         $messageHash = array();
         if ($type == "read") {
             $messageHash["type"] = $type;
@@ -3928,6 +3895,7 @@ class WhatsProt
         $messageHash["to"] = $msg->getAttribute("from");
         $messageHash["id"] = $msg->getAttribute("id");
         $messageHash["t"] = time();
+
         $messageNode = new ProtocolNode("receipt", $messageHash, null, null);
         $this->sendNode($messageNode);
         $this->eventManager()->fire("onSendMessageReceived",
@@ -3946,7 +3914,7 @@ class WhatsProt
      */
     protected function sendNode($node, $encrypt = true)
     {
-        $this->debugPrint($node->nodeString("tx  ") . "\n");
+        $this->debugPrint($node->nodeString("tx  "));
         $this->sendData($this->writer->write($node, $encrypt));
     }
 
@@ -3957,58 +3925,66 @@ class WhatsProt
      * @param string $type     File type
      * @param string $size     File size
      * @param string $filepath Path to image file
-     * @param string $to       Recipient
+     * @param mixed  $to       Recipient(s)
      * @param string $caption
      */
     protected function sendRequestFileUpload($b64hash, $type, $size, $filepath, $to, $caption = "")
     {
-        $hash = array();
-        $hash["hash"] = $b64hash;
-        $hash["type"] = $type;
-        $hash["size"] = $size;
-        $mediaNode = new ProtocolNode("media", $hash, null, null);
-
-        $hash = array();
         $id = $this->createMsgId("upload");
-        $hash["id"] = $id;
-        $hash["to"] = static::WHATSAPP_SERVER;
-        $hash["type"] = "set";
-        $hash["xmlns"] = "w:m";
-        $node = new ProtocolNode("iq", $hash, array($mediaNode), null);
 
         if (!is_array($to)) {
             $to = $this->getJID($to);
         }
+
+        $mediaNode = new ProtocolNode("media", array(
+            'hash'  => $b64hash,
+            'type'  => $type,
+            'size'  => $size
+        ), null, null);
+
+        $node = new ProtocolNode("iq", array(
+            'id'    => $id,
+            'to'    => static::WHATSAPP_SERVER,
+            'type'  => 'set',
+            'xmlns' => 'w:m'
+        ), array($mediaNode), null);
+
         //add to queue
         $messageId = $this->createMsgId("message");
-        $this->mediaQueue[$id] = array("messageNode" => $node, "filePath" => $filepath, "to" => $to, "message_id" => $messageId, "caption" => $caption);
+        $this->mediaQueue[$id] = array(
+            "messageNode" => $node,
+            "filePath"    => $filepath,
+            "to"          => $to,
+            "message_id"  => $messageId,
+            "caption"     => $caption
+        );
 
         $this->sendNode($node);
-        $this->waitForServer($hash["id"]);
+        $this->waitForServer($id);
     }
 
     /**
      * Set your profile picture
      *
      * @param string $jid
-     * @param string $filepath
-     *  URL or localpath to image file
+     * @param string $filepath URL or localpath to image file
      */
     protected function sendSetPicture($jid, $filepath)
     {
+        $nodeID = $this->createMsgId("setphoto");
+
         $data = preprocessProfilePicture($filepath);
         $preview = createIconGD($filepath, 96, true);
 
         $picture = new ProtocolNode("picture", array("type" => "image"), null, $data);
         $preview = new ProtocolNode("picture", array("type" => "preview"), null, $preview);
 
-        $hash = array();
-        $nodeID = $this->createMsgId("setphoto");
-        $hash["id"] = $nodeID;
-        $hash["to"] = $this->getJID($jid);
-        $hash["type"] = "set";
-        $hash["xmlns"] = "w:profile:picture";
-        $node = new ProtocolNode("iq", $hash, array($picture, $preview), null);
+        $node = new ProtocolNode("iq", array(
+            'id' => $nodeID,
+            'to' => $this->getJID($jid),
+            'type' => 'set',
+            'xmlns' => 'w:profile:picture'
+        ), array($picture, $preview), null);
 
         $this->sendNode($node);
         $this->waitForServer($nodeID);
@@ -4032,8 +4008,7 @@ class WhatsProt
      * with an underscore.
      *
      *
-     * @param string $txt
-     * The message to be parsed for emoji code.
+     * @param string $txt The message to be parsed for emoji code.
      *
      * @return string
      */
@@ -4053,7 +4028,8 @@ class WhatsProt
     /**
      * Creates the correct unicode character from the unicode code point
      *
-     * @param int $int
+     * @param  integer $int
+     *
      * @return string
      */
     private function unichr($int)
@@ -4070,6 +4046,7 @@ class WhatsProt
 
     /**
      * @param string $jid
+     *
      * @return string
      */
     public static function parseJID($jid)
