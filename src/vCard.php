@@ -5,7 +5,6 @@
  */
 class vCard
 {
-
     // An array of this vCard's contact data.
     protected $data;
     // Filename for download file naming.
@@ -99,22 +98,22 @@ class vCard
      */
     function build()
     {
-        if ( ! $this->class) {
+        if (!$this->class) {
             $this->class = 'PUBLIC';
         }
-        if ( ! $this->data['display_name']) {
+        if (!$this->data['display_name']) {
             $this->data['display_name'] = $this->data['first_name'] . ' ' . $this->data['last_name'];
         }
-        if ( ! $this->data['sort_string']) {
+        if (!$this->data['sort_string']) {
             $this->data['sort_string'] = $this->data['last_name'];
         }
-        if ( ! $this->data['sort_string']) {
+        if (!$this->data['sort_string']) {
             $this->data['sort_string'] = $this->data['company'];
         }
-        if ( ! $this->data['timezone']) {
+        if (!$this->data['timezone']) {
             $this->data['timezone'] = date("O");
         }
-        if ( ! $this->revisionDate) {
+        if (!$this->revisionDate) {
             $this->revisionDate = date('Y-m-d H:i:s');
         }
 
@@ -226,14 +225,16 @@ class vCard
 
     /**
      * Streams the vcard to the browser client.
+     *
+     * @return bool
      */
     function download()
     {
-        if ( ! $this->card) {
+        if (!$this->card) {
             $this->build();
         }
 
-        if ( ! $this->filename) {
+        if (!$this->filename) {
             $this->filename = $this->data['display_name'];
         }
 
@@ -248,11 +249,13 @@ class vCard
     }
 
     /**
-     * Show the vcard.
+     * Show the vCard.
+     *
+     * @return object vCard
      */
     function show()
     {
-        if ( ! $this->card) {
+        if (!$this->card) {
             $this->build();
         }
 

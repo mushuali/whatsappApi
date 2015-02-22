@@ -2349,11 +2349,9 @@ class WhatsProt
 
     protected function checkIdentity($identity)
     {
-        if (file_exists($identity.".dat"))
-        {
+        if (file_exists($identity.".dat")) {
             $id = strlen(urldecode(file_get_contents($identity.'.dat')));
-            if ($id == 20 || $id == 16)
-            {
+            if ($id == 20 || $id == 16) {
                 return true;
             }
         }
@@ -3700,7 +3698,7 @@ class WhatsProt
      * Checks that the media file to send is of allowable filetype and within size limits.
      *
      * @param string $filepath          The URL/URI to the media file
-     * @param int    $maxSize           Maximim filesize allowed for media type
+     * @param int    $maxSize           Maximum filesize allowed for media type
      * @param string $to                Recipient ID/number
      * @param string $type              media filetype. 'audio', 'video', 'image'
      * @param array  $allowedExtensions An array of allowable file types for the media file
@@ -3775,7 +3773,7 @@ class WhatsProt
     }
 
     /**
-     * Send data to the whatsapp server.
+     * Send data to the WhatsApp server.
      * @param string $data
      *
      * @throws Exception
@@ -3791,7 +3789,7 @@ class WhatsProt
     }
 
     /**
-     * Send the getGroupList request to Whatsapp
+     * Send the getGroupList request to WhatsApp
      * @param  string $type Type of list of groups to retrieve. "owning" or "participating"
      */
     protected function sendGetGroupsFiltered($type)
