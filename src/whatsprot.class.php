@@ -3908,7 +3908,7 @@ class WhatsProt
      */
     protected function sendNode($node, $encrypt = true)
     {
-        $this->debugPrint($node->nodeString("tx  ") . "\n");
+        $this->debugPrint($node->nodeString("tx  "));
         $this->sendData($this->writer->write($node, $encrypt));
     }
 
