@@ -1267,8 +1267,7 @@ class WhatsProt
         }
 
         $children = array();
-        foreach ($jids as $jid)
-        {
+        foreach ($jids as $jid) {
             $children[] = new ProtocolNode("user", array("jid" => $this->getJID($jid)), null, null);
         }
 
@@ -2777,9 +2776,7 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('caption')
                             ));
                     }
-
                 } elseif ($node->getChild("media")->getAttribute('type') == 'video') {
-
                     if ($node->getAttribute("participant") == null) {
                         $this->eventManager()->fire("onGetVideo",
                             array(
@@ -3860,6 +3857,7 @@ class WhatsProt
 
         $messageNode = new ProtocolNode("message", $messageHash, array($node), "");
         $this->sendNode($messageNode);
+
         $this->eventManager()->fire("onSendMessage",
             array(
                 $this->phoneNumber,
@@ -3881,7 +3879,6 @@ class WhatsProt
      */
     protected function sendMessageReceived($msg, $type = "read", $participant = null)
     {
-
         $messageHash = array();
         if ($type == "read") {
             $messageHash["type"] = $type;
@@ -3892,6 +3889,7 @@ class WhatsProt
         $messageHash["to"] = $msg->getAttribute("from");
         $messageHash["id"] = $msg->getAttribute("id");
         $messageHash["t"] = time();
+
         $messageNode = new ProtocolNode("receipt", $messageHash, null, null);
         $this->sendNode($messageNode);
         $this->eventManager()->fire("onSendMessageReceived",
