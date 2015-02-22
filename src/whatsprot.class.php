@@ -424,7 +424,7 @@ class WhatsProt
             return true;
         }
 
-        $WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
+        //$WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
 
         //$WAverS = str_replace(".","",$WAver);
         //$ver = str_replace(".","",static::WHATSAPP_VER);
@@ -3658,9 +3658,9 @@ class WhatsProt
 
             //read full length
             $buff = socket_read($this->socket, $treeLength);
-            $trlen = $treeLength;
+            //$trlen = $treeLength;
             $len = strlen($buff);
-            $prev = 0;
+            //$prev = 0;
             while (strlen($buff) < $treeLength) {
                 $toRead = $treeLength - strlen($buff);
                 $buff .= socket_read($this->socket, $toRead);
