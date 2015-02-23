@@ -1536,13 +1536,11 @@ class WhatsProt
     /**
      * Send a text message to the user/group.
      *
-     * @param $to
-     *   The recipient.
-     * @param string $txt
-     *   The text message.
+     * @param string $to  The recipient.
+     * @param string $txt The text message.
      * @param $id
      *
-     * @return string
+     * @return string     Message ID.
      */
     public function sendMessage($to, $txt, $id = null)
     {
@@ -1561,8 +1559,7 @@ class WhatsProt
     /**
      * Send a read receipt to a message.
      *
-     * @param $to
-     *   The recipient.
+     * @param $to The recipient.
      * @param $id
      */
     public function sendMessageRead($to, $id)
@@ -1586,6 +1583,7 @@ class WhatsProt
      * @param bool   $storeURLmedia Keep copy of file
      * @param int    $fsize
      * @param string $fhash
+     *
      * @return bool
      */
     public function sendMessageAudio($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "")
@@ -1637,16 +1635,16 @@ class WhatsProt
     /**
      * Send a location to the user/group.
      *
-     * If no name is supplied , receiver will see large sized google map
-     * thumbnail of entered Lat/Long but NO name/url for location.
+     * If no name is supplied, the receiver will see a large google maps thumbnail of the lat/long,
+     * but NO name or url of the location.
      *
-     * With name supplied, a combined map thumbnail/name box is displayed.
+     * When a name supplied, a combined map thumbnail/name box is displayed.
      *
-     * @param mixed  $to    The recipient(s) to send to.
-     * @param float  $long  The longitude of the location eg 54.31652
-     * @param float  $lat   The latitude if the location eg -6.833496
-     * @param string $name  (Optional) The custom name you would like to give this location.
-     * @param string $url   (Optional) A URL to attach to the location.
+     * @param mixed  $to    The recipient(s) to send the location to.
+     * @param float  $long  The longitude of the location, e.g. 54.31652.
+     * @param float  $lat   The latitude of the location, e.g. -6.833496.
+     * @param string $name  (Optional) A custom name for the specified location.
+     * @param string $url   (Optional) A URL to attach to the specified location.
      */
     public function sendMessageLocation($to, $long, $lat, $name = null, $url = null)
     {
@@ -1701,9 +1699,9 @@ class WhatsProt
      * Send a video to the user/group.
      *
      * @param string $to            The recipient to send.
-     * @param string $filepath      The url/uri to the MP4/MOV video.
+     * @param string $filepath      A URL/URI to the MP4/MOV video.
      * @param bool   $storeURLmedia Keep a copy of media file.
-     * @param int    $fsize         size of the media file
+     * @param int    $fsize         Size of the media file
      * @param string $fhash         base64 hash of the media file
      * @param string $caption
      *
@@ -1748,7 +1746,7 @@ class WhatsProt
     }
 
     /**
-     * Send a pong to the whatsapp server. I'm alive!
+     * Send a pong to the WhatsApp server. I'm alive!
      *
      * @param string $msgid The id of the message.
      */
@@ -2084,7 +2082,7 @@ class WhatsProt
     /**
      * Add the authentication nodes.
      *
-     * @return ProtocolNode Returns itself.
+     * @return ProtocolNode Returns an authentication node.
      */
     protected function createAuthNode()
     {
@@ -2117,8 +2115,7 @@ class WhatsProt
     /**
      * Add the auth response to protocoltreenode.
      *
-     * @return ProtocolNode
-     *   Return itself.
+     * @return ProtocolNode Returns a response node.
      */
     protected function createAuthResponseNode()
     {
@@ -2549,6 +2546,7 @@ class WhatsProt
      *
      * @param  string $host  The host URL
      * @param  array  $query A associative array of keys and values to send to server.
+     *
      * @return null|object   NULL if the json cannot be decoded or if the encoded data is deeper than the recursion limit
      */
     protected function getResponse($host, $query)
