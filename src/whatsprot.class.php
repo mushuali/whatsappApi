@@ -3412,10 +3412,6 @@ class WhatsProt
                 }
             }
         }
-        if ($node->getTag() == "ack") {
-            ////on get ack
-        }
-
     }
 
     /**
