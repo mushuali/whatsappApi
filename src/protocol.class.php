@@ -1,5 +1,4 @@
 <?php
-require 'decode.php';
 require 'exception.php';
 
 class IncompleteMessageException extends CustomException
@@ -433,11 +432,9 @@ class BinTreeNodeReader
             return $this->readInt8();
         } elseif ($token == 0xf9) {
             return $this->readInt16();
-        } else {
-            throw new Exception("BinTreeNodeReader->readListSize: Invalid token $token");
         }
 
-        return false; //should never be reached.
+        throw new Exception("BinTreeNodeReader->readListSize: Invalid token $token");
     }
 
     protected function peekInt24($offset = 0)
@@ -535,9 +532,6 @@ class BinTreeNodeWriter
     public function StartStream($domain, $resource)
     {
         $attributes = array();
-        $header     = "WA";
-        $header .= $this->writeInt8(1);
-        $header .= $this->writeInt8(5);
 
         $attributes["to"]       = $domain;
         $attributes["resource"] = $resource;
@@ -545,14 +539,14 @@ class BinTreeNodeWriter
 
         $this->output .= "\x01";
         $this->writeAttributes($attributes);
-        $ret = $header . $this->flushBuffer();
 
-        return $ret;
+        return "WA" . $this->writeInt8(1) . $this->writeInt8(5) . $this->flushBuffer();
     }
 
     /**
      * @param ProtocolNode $node
      * @param bool         $encrypt
+     *
      * @return string
      */
     public function write($node, $encrypt = true)

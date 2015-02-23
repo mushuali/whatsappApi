@@ -157,13 +157,13 @@ function createVideoIcon($file)
 
 function checkFFMPEG()
 {
-    //check if ffmpeg is intalled
-    $cmd = "ffmpeg -version";
-    $res = exec($cmd, $output, $returnvalue);
-    if ($returnvalue == 0) {
-        return true;
-    }
-    return false;
+    //check if ffmpeg is installed.
+    $output = array();
+    $returnvalue = false;
+
+    exec('ffmpeg -version', $output, $returnvalue);
+
+    return ($returnvalue === 0);
 }
 
 function giftThumbnail()
@@ -203,26 +203,18 @@ function updateData($nameFile, $WAver, $classesMD5 = "")
 /**
  * This function generates a paymentLink where you can extend the account-expiration.
  *
- * @param string $number
- * Your number with international code, e.g. 49123456789
- * @param int    $sku
- * The Time in years (1, 3 or 5) you want to extend the account-expiration.
+ * @param string $number Your number with international code, e.g. 49123456789
+ * @param int    $sku    The Time in years (1, 3 or 5) you want to extend the account-expiration.
  *
- * @return string
- * Returns the link.
- *
+ * @return string        Returns the link.
  **/
 function generatePaymentLink($number, $sku)
 {
-    if ($sku != 1 or $sku != 3 or $sku != 5) {
-        $sku = 1;
-    }
-    $base     = "https://www.whatsapp.com/payments/cksum_pay.php?phone=";
-    $middle   = "&cksum=";
-    $end      = "&sku=" . $sku;
-    $checksum = md5($number . "abc");
-    $link     = $base . $number . $middle . $checksum . $end;
-    return $link;
+    return sprintf("https://www.whatsapp.com/payments/cksum_pay.php?phone=%s&cksum=%s&sku=%d",
+        $number,
+        md5($number."abc"),
+        $sku,
+        ($sku != 1 && $sku != 3 && $sku != 5) ? 1 : $sku);
 }
 
 // Gets mime type of a file using various methods

@@ -487,8 +487,10 @@ class WhatsProt
     public function disconnect()
     {
         if (is_resource($this->socket)) {
-            socket_close($this->socket);
+            @socket_shutdown($this->socket, 2);
+            @socket_close($this->socket);
             $this->socket = null;
+            $this->loginStatus  = static::DISCONNECTED_STATUS;
             $this->eventManager()->fire("onDisconnect",
                 array(
                     $this->phoneNumber,
@@ -759,7 +761,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:b",
                 "type" => "set",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($deleteNode), null);
 
         $this->sendNode($node);
@@ -783,7 +785,7 @@ class WhatsProt
             array(
                 "id" => $msgId,
                 "type" => "set",
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "xmlns" => "urn:xmpp:whatsapp:dirty"
             ), $catnodes, null);
 
@@ -1071,8 +1073,7 @@ class WhatsProt
                 "id" => $id,
                 "type" => "get",
                 "xmlns" => "w",
-                "to" => "s.whatsapp.net"
-
+                "to" => static::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -1100,7 +1101,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($pricingNode), null);
 
         $this->sendNode($node);
@@ -1119,7 +1120,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "set",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($extendingNode), null);
 
         $this->sendNode($node);
@@ -1137,7 +1138,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:b",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($listsNode), null);
 
         $this->sendNode($node);
@@ -1160,7 +1161,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($normalizeNode), null);
 
         $this->sendNode($node);
@@ -1199,7 +1200,7 @@ class WhatsProt
         $removeNode = new ProtocolNode("remove", null, $childNode, null);
         $node = new ProtocolNode("iq",
             array(
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
                 "id" => $msgId
@@ -1220,7 +1221,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:p",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($pingNode), null);
 
         $this->sendNode($node);
@@ -1276,7 +1277,7 @@ class WhatsProt
 
         $node = new ProtocolNode("iq",
             array(
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "type" => "get",
                 "xmlns" => "status",
                 "id" => $this->createMsgId("getstatus")
@@ -1323,7 +1324,7 @@ class WhatsProt
                 "xmlns" => "w:g2",
                 "id" => $id,
                 "type" => "set",
-                "to" => "g.us"
+                "to" => static::WHATSAPP_GROUP_SERVER
             ), array($createNode), null);
 
         $this->sendNode($iqNode);
@@ -1925,7 +1926,7 @@ class WhatsProt
             array(
                 "id" => $this->createMsgId("settoken"),
                 "type" => "set",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -1941,7 +1942,7 @@ class WhatsProt
         $child = new ProtocolNode("status", null, null, $txt);
         $node = new ProtocolNode("iq",
             array(
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "type" => "set",
                 "id" => $this->createMsgId("sendstatus"),
                 "xmlns" => "status"
@@ -2349,11 +2350,9 @@ class WhatsProt
 
     protected function checkIdentity($identity)
     {
-        if (file_exists($identity.".dat"))
-        {
+        if (file_exists($identity.".dat")) {
             $id = strlen(urldecode(file_get_contents($identity.'.dat')));
-            if ($id == 20 || $id == 16)
-            {
+            if ($id == 20 || $id == 16) {
                 return true;
             }
         }
@@ -3412,10 +3411,6 @@ class WhatsProt
                 }
             }
         }
-        if ($node->getTag() == "ack") {
-            ////on get ack
-        }
-
     }
 
     /**
@@ -3700,7 +3695,7 @@ class WhatsProt
      * Checks that the media file to send is of allowable filetype and within size limits.
      *
      * @param string $filepath          The URL/URI to the media file
-     * @param int    $maxSize           Maximim filesize allowed for media type
+     * @param int    $maxSize           Maximum filesize allowed for media type
      * @param string $to                Recipient ID/number
      * @param string $type              media filetype. 'audio', 'video', 'image'
      * @param array  $allowedExtensions An array of allowable file types for the media file
@@ -3775,7 +3770,7 @@ class WhatsProt
     }
 
     /**
-     * Send data to the whatsapp server.
+     * Send data to the WhatsApp server.
      * @param string $data
      *
      * @throws Exception
@@ -3791,7 +3786,7 @@ class WhatsProt
     }
 
     /**
-     * Send the getGroupList request to Whatsapp
+     * Send the getGroupList request to WhatsApp
      * @param  string $type Type of list of groups to retrieve. "owning" or "participating"
      */
     protected function sendGetGroupsFiltered($type)
@@ -3803,7 +3798,7 @@ class WhatsProt
                 "id" => $msgID,
                 "type" => "get",
                 "xmlns" => "w:g2",
-                "to" => "g.us"
+                "to" => static::WHATSAPP_GROUP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
