@@ -487,8 +487,10 @@ class WhatsProt
     public function disconnect()
     {
         if (is_resource($this->socket)) {
-            socket_close($this->socket);
+            @socket_shutdown($this->socket, 2);
+            @socket_close($this->socket);
             $this->socket = null;
+            $this->loginStatus  = static::DISCONNECTED_STATUS;
             $this->eventManager()->fire("onDisconnect",
                 array(
                     $this->phoneNumber,
