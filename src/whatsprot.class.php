@@ -2149,7 +2149,12 @@ class WhatsProt
     protected function debugPrint($debugMsg)
     {
         if ($this->debug) {
-            echo $debugMsg;
+            if (is_array($debugMsg) || is_object($debugMsg)) {
+                print_r($debugMsg);
+            }
+            else {
+                echo $debugMsg;
+            }
             return true;
         }
 
