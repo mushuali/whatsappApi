@@ -225,19 +225,19 @@ function get_mime($file)
         $mime  = finfo_file($finfo, $file);
         finfo_close($finfo);
         return $mime;
-    } else {
-        if (function_exists("mime_content_type")) {
-            return mime_content_type($file);
-        } else {
-            if ( ! strncasecmp(PHP_OS, 'WIN', 3) == 0 && ! stristr(ini_get("disable_functions"), "shell_exec")) {
-                $file = escapeshellarg($file);
-                $mime = shell_exec("file -bi " . $file);
-                return $mime;
-            } else {
-                return false;
-            }
-        }
     }
+
+    if (function_exists("mime_content_type")) {
+        return mime_content_type($file);
+    }
+
+    if (!strncasecmp(PHP_OS, 'WIN', 3) == 0 && !stristr(ini_get("disable_functions"), "shell_exec")) {
+        $file = escapeshellarg($file);
+        $mime = shell_exec("file -bi " . $file);
+        return $mime;
+    }
+
+    return false;
 }
 
 //Generate Array of Emojis iOS2, iOS5 and iOS7
