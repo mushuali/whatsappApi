@@ -1648,14 +1648,6 @@ class WhatsProt
      */
     public function sendMessageLocation($to, $long, $lat, $name = null, $url = null)
     {
-        $mediaHash = array();
-        $mediaHash['type'] = "location";
-        $mediaHash['encoding'] = "raw";
-        $mediaHash['latitude'] = $lat;
-        $mediaHash['longitude'] = $long;
-        $mediaHash['name'] = $name;
-        $mediaHash['url'] = $url;
-
         $mediaNode = new ProtocolNode("media",
             array(
                 "type" => "location",
@@ -1666,11 +1658,7 @@ class WhatsProt
                 "url" => $url
             ), null, null);
 
-        if (is_array($to)) {
-            $id = $this->sendBroadcast($to, $mediaNode, "media");
-        } else {
-            $id = $this->sendMessageNode($to, $mediaNode);
-        }
+        $id = (is_array($to)) ? $this->sendBroadcast($to, $mediaNode, "media") : $this->sendMessageNode($to, $mediaNode);
 
         $this->waitForServer($id);
     }
@@ -2086,12 +2074,11 @@ class WhatsProt
      */
     protected function createAuthNode()
     {
-        $authHash = array();
-        $authHash["mechanism"] = "WAUTH-2";
-        $authHash["user"] = $this->phoneNumber;
-        //$authHash["passive"] = "true";
         $data = $this->createAuthBlob();
-        $node = new ProtocolNode("auth", $authHash, null, $data);
+        $node = new ProtocolNode("auth", array(
+            'mechanism' => 'WAUTH-2',
+            'user'      => $this->phoneNumber
+        ), null, $data);
 
         return $node;
     }
@@ -2119,10 +2106,7 @@ class WhatsProt
      */
     protected function createAuthResponseNode()
     {
-        $resp = $this->authenticate();
-        $node = new ProtocolNode("response", null, null, $resp);
-
-        return $node;
+        return new ProtocolNode("response", null, null, $this->authenticate());
     }
 
     /**
