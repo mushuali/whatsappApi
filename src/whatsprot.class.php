@@ -761,7 +761,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:b",
                 "type" => "set",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($deleteNode), null);
 
         $this->sendNode($node);
@@ -785,7 +785,7 @@ class WhatsProt
             array(
                 "id" => $msgId,
                 "type" => "set",
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "xmlns" => "urn:xmpp:whatsapp:dirty"
             ), $catnodes, null);
 
@@ -1073,8 +1073,7 @@ class WhatsProt
                 "id" => $id,
                 "type" => "get",
                 "xmlns" => "w",
-                "to" => "s.whatsapp.net"
-
+                "to" => static::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -1102,7 +1101,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($pricingNode), null);
 
         $this->sendNode($node);
@@ -1121,7 +1120,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "set",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($extendingNode), null);
 
         $this->sendNode($node);
@@ -1139,7 +1138,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:b",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($listsNode), null);
 
         $this->sendNode($node);
@@ -1162,7 +1161,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($normalizeNode), null);
 
         $this->sendNode($node);
@@ -1201,7 +1200,7 @@ class WhatsProt
         $removeNode = new ProtocolNode("remove", null, $childNode, null);
         $node = new ProtocolNode("iq",
             array(
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
                 "id" => $msgId
@@ -1222,7 +1221,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:p",
                 "type" => "get",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($pingNode), null);
 
         $this->sendNode($node);
@@ -1278,7 +1277,7 @@ class WhatsProt
 
         $node = new ProtocolNode("iq",
             array(
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "type" => "get",
                 "xmlns" => "status",
                 "id" => $this->createMsgId("getstatus")
@@ -1325,7 +1324,7 @@ class WhatsProt
                 "xmlns" => "w:g2",
                 "id" => $id,
                 "type" => "set",
-                "to" => "g.us"
+                "to" => static::WHATSAPP_GROUP_SERVER
             ), array($createNode), null);
 
         $this->sendNode($iqNode);
@@ -1927,7 +1926,7 @@ class WhatsProt
             array(
                 "id" => $this->createMsgId("settoken"),
                 "type" => "set",
-                "to" => "s.whatsapp.net"
+                "to" => static::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -1943,7 +1942,7 @@ class WhatsProt
         $child = new ProtocolNode("status", null, null, $txt);
         $node = new ProtocolNode("iq",
             array(
-                "to" => "s.whatsapp.net",
+                "to" => static::WHATSAPP_SERVER,
                 "type" => "set",
                 "id" => $this->createMsgId("sendstatus"),
                 "xmlns" => "status"
@@ -3799,7 +3798,7 @@ class WhatsProt
                 "id" => $msgID,
                 "type" => "get",
                 "xmlns" => "w:g2",
-                "to" => "g.us"
+                "to" => static::WHATSAPP_GROUP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
