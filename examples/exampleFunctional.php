@@ -41,23 +41,19 @@ function onGetProfilePicture($from, $target, $type, $data)
     } else {
         $filename = $target . ".jpg";
     }
+
     $filename = WhatsProt::PICTURES_FOLDER."/" . $filename;
-    $fp = @fopen($filename, "w");
-    if ($fp) {
-        fwrite($fp, $data);
-        fclose($fp);
-    }
+
+    file_put_contents($filename, $data);
 
     echo "- Profile picture saved in /".WhatsProt::PICTURES_FOLDER."\n";
 }
 
 function onPresenceReceived($username, $from, $type)
 {
-    $dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
-    if ($type == "available")
-        echo "<$dFrom is online>\n\n";
-    else
-        echo "<$dFrom is offline>\n\n";
+    printf("<%s is %s>\n\n",
+        str_replace(array("@s.whatsapp.net","@g.us"), "", $from),
+        ($type == 'available') ? 'online' : 'offline');
 }
 
 echo "[] Logging in as '$nickname' ($username)\n";
