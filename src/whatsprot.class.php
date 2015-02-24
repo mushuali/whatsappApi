@@ -3429,25 +3429,15 @@ class WhatsProt
     protected function processMediaImage($node)
     {
         $media = $node->getChild("media");
+
         if ($media != null) {
             $filename = $media->getAttribute("file");
             $url = $media->getAttribute("url");
 
             //save thumbnail
-            $data = $media->getData();
-            $fp = @fopen(static::MEDIA_FOLDER . "/thumb_" . $filename, "w");
-            if ($fp) {
-                fwrite($fp, $data);
-                fclose($fp);
-            }
-
+            file_put_contents(static::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
             //download and save original
-            $data = file_get_contents($url);
-            $fp = @fopen(static::MEDIA_FOLDER . "/" . $filename, "w");
-            if ($fp) {
-                fwrite($fp, $data);
-                fclose($fp);
-            }
+            file_put_contents(static::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
         }
     }
 
@@ -3461,18 +3451,13 @@ class WhatsProt
         $pictureNode = $node->getChild("picture");
 
         if ($pictureNode != null) {
-            $type = $pictureNode->getAttribute("type");
-            $data = $pictureNode->getData();
-            if ($type == "preview") {
-                $filename = static::PICTURES_FOLDER . "/preview_" . $node->getAttribute("from") . ".jpg";
+            if ($pictureNode->getAttribute("type") == "preview") {
+                $filename = static::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
             } else {
-                $filename = static::PICTURES_FOLDER . "/" . $node->getAttribute("from") . ".jpg";
+                $filename = static::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
             }
-            $fp = @fopen($filename, "w");
-            if ($fp) {
-                fwrite($fp, $data);
-                fclose($fp);
-            }
+
+            file_put_contents($filename, $pictureNode->getData());
         }
     }
 
