@@ -102,18 +102,13 @@ class WhatsProt
         $this->debug = $debug;
         $this->phoneNumber = $number;
 
-        if (!$this->checkIdentity($identity)) {
-            //compute identity with pseudo_random_bytes
-            $this->identity = $this->buildIdentity($identity);
-        } else {
-            //use provided identity hash
-            $this->identity = urldecode(file_get_contents($identity.'.dat'));
-        }
         //e.g. ./cache/nextChallenge.12125557788.dat
         $this->challengeFilename = sprintf('%s%s.nextChallenge.%s.dat',
             self::CACHE_FOLDER,
             DIRECTORY_SEPARATOR,
             $number);
+
+        $this->identity = $this->buildIdentity($identity);
 
         $this->name         = $nickname;
         $this->loginStatus  = static::DISCONNECTED_STATUS;
@@ -2319,33 +2314,32 @@ class WhatsProt
     /**
      * Create an identity string
      *
-     * @param  string $identity File name where identity is going to be saved.
+     * @param  string $identity Identity.
+
      * @return string           Correctly formatted identity
+     *
+     * @throws Exception        Error when cannot write identity data to file.
      */
     protected function buildIdentity($identity)
     {
-        if (file_exists($identity.".dat")) {
-            return urldecode(file_get_contents($identity.'.dat'));
-        }
+        $identity_file = sprintf('%s%sid.%s.dat', self::CACHE_FOLDER, DIRECTORY_SEPARATOR, $identity);
 
-        $id = fopen($identity.".dat", "w");
-        $bytes = strtolower(openssl_random_pseudo_bytes(20));
-        fwrite($id, urlencode($bytes));
-        fclose($id);
+        if (is_readable($identity_file)) {
+            $data = file_get_contents($identity_file);
+            $length = strlen($data);
 
-        return $bytes;
-    }
-
-    protected function checkIdentity($identity)
-    {
-        if (file_exists($identity.".dat")) {
-            $id = strlen(urldecode(file_get_contents($identity.'.dat')));
-            if ($id == 20 || $id == 16) {
-                return true;
+            if ($length == 20 || $length == 16) {
+                return urldecode($data);
             }
         }
 
-        return false;
+        $bytes = strtolower(openssl_random_pseudo_bytes(20));
+
+        if (file_put_contents($identity_file.'.dat', urlencode($bytes)) === false) {
+            throw new Exception('Unable to write identity file to ' . $identity_file);
+        }
+
+        return $bytes;
     }
 
     public function sendSync(array $numbers, array $deletedNumbers = null, $syncType = 4, $index = 0, $last = true)
