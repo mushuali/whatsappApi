@@ -2338,7 +2338,7 @@ class WhatsProt
 
         $bytes = strtolower(openssl_random_pseudo_bytes(20));
 
-        if (file_put_contents($identity_file.'.dat', urlencode($bytes)) === false) {
+        if (file_put_contents($identity_file, urlencode($bytes)) === false) {
             throw new Exception('Unable to write identity file to ' . $identity_file);
         }
 
