@@ -36,7 +36,7 @@ class WhatsProt
     const DISCONNECTED_STATUS = 'disconnected';                                              // Describes the connection status with the WhatsApp server.
     const MEDIA_FOLDER = 'media';                                                            // The relative folder to store received media files
     const PICTURES_FOLDER = 'pictures';                                                      // The relative folder to store picture files
-    const CACHE_FOLDER = 'cache';                                                            // The relative folder to store cache files.
+    const CACHE_FOLDER = 'cache/';                                                            // The relative folder to store cache files.
     const PORT = 443;                                                                        // The port of the WhatsApp server.
     const TIMEOUT_SEC = 2;                                                                   // The timeout for the connection with the WhatsApp servers.
     const TIMEOUT_USEC = 0;
@@ -80,6 +80,7 @@ class WhatsProt
     protected $socket;                  // A socket to connect to the WhatsApp network.
     protected $writer;                  // An instance of the BinaryTreeNodeWriter class.
     protected $messageStore;
+    protected $storagePath;
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
 
     /**
@@ -95,20 +96,22 @@ class WhatsProt
      * @param $debug
      *   Debug on or off, false by default.
      */
-    public function __construct($number, $identity, $nickname, $debug = false)
+    public function __construct($number, $storagePath, $nickname, $debug = false)
     {
         $this->writer = new BinTreeNodeWriter();
         $this->reader = new BinTreeNodeReader();
         $this->debug = $debug;
         $this->phoneNumber = $number;
+        $this->storagePath = $storagePath;
 
         //e.g. ./cache/nextChallenge.12125557788.dat
-        $this->challengeFilename = sprintf('%s%s.nextChallenge.%s.dat',
-            self::CACHE_FOLDER,
+        $this->challengeFilename = sprintf('%s%s%snextChallenge.%s.dat',
+            $storagePath,
             DIRECTORY_SEPARATOR,
+            self::CACHE_FOLDER,
             $number);
 
-        $this->identity = $this->buildIdentity($identity);
+        $this->identity = $this->buildIdentity();
 
         $this->name         = $nickname;
         $this->loginStatus  = static::DISCONNECTED_STATUS;
@@ -2320,9 +2323,9 @@ class WhatsProt
      *
      * @throws Exception        Error when cannot write identity data to file.
      */
-    protected function buildIdentity($identity)
+    protected function buildIdentity()
     {
-        $identity_file = sprintf('%s%sid.%s.dat', self::CACHE_FOLDER, DIRECTORY_SEPARATOR, $identity);
+        $identity_file = sprintf('%s%s%sid.%s.dat', $this->storagePath, DIRECTORY_SEPARATOR, self::CACHE_FOLDER, $this->phoneNumber);
 
         if (is_readable($identity_file)) {
             $data = file_get_contents($identity_file);
