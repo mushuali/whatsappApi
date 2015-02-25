@@ -36,7 +36,7 @@ class WhatsProt
     const DISCONNECTED_STATUS = 'disconnected';                                              // Describes the connection status with the WhatsApp server.
     const MEDIA_FOLDER = 'media';                                                            // The relative folder to store received media files
     const PICTURES_FOLDER = 'pictures';                                                      // The relative folder to store picture files
-    const CACHE_FOLDER = 'cache/';                                                            // The relative folder to store cache files.
+    const DATA_FOLDER = 'wadata';                                                            // The relative folder to store cache files.
     const PORT = 443;                                                                        // The port of the WhatsApp server.
     const TIMEOUT_SEC = 2;                                                                   // The timeout for the connection with the WhatsApp servers.
     const TIMEOUT_USEC = 0;
@@ -108,7 +108,7 @@ class WhatsProt
         $this->challengeFilename = sprintf('%s%s%snextChallenge.%s.dat',
             $storagePath,
             DIRECTORY_SEPARATOR,
-            self::CACHE_FOLDER,
+            self::DATA_FOLDER . DIRECTORY_SEPARATOR,
             $number);
 
         $this->identity = $this->buildIdentity();
@@ -2325,14 +2325,14 @@ class WhatsProt
      */
     protected function buildIdentity()
     {
-        $identity_file = sprintf('%s%s%sid.%s.dat', $this->storagePath, DIRECTORY_SEPARATOR, self::CACHE_FOLDER, $this->phoneNumber);
+        $identity_file = sprintf('%s%s%sid.%s.dat', $this->storagePath, DIRECTORY_SEPARATOR, self::DATA_FOLDER . DIRECTORY_SEPARATOR, $this->phoneNumber);
 
         if (is_readable($identity_file)) {
-            $data = file_get_contents($identity_file);
+            $data = urldecode(file_get_contents($identity_file));
             $length = strlen($data);
 
             if ($length == 20 || $length == 16) {
-                return urldecode($data);
+                return $data;
             }
         }
 
@@ -2491,7 +2491,7 @@ class WhatsProt
             //TODO check what max file size whatsapp server accepts.
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
                 //Create temp file in media folder. Media folder must be writable!
-                $this->mediaFileInfo['filepath'] = tempnam(getcwd() . '/' . static::MEDIA_FOLDER, 'WHA');
+                $this->mediaFileInfo['filepath'] = tempnam($this->storagePath . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER, 'WHA');
                 $fp = fopen($this->mediaFileInfo['filepath'], 'w');
                 if ($fp) {
                     curl_setopt($curl, CURLOPT_NOBODY, false);
@@ -3439,9 +3439,9 @@ class WhatsProt
             $url = $media->getAttribute("url");
 
             //save thumbnail
-            file_put_contents(static::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
+            file_put_contents($this->storagePath . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
             //download and save original
-            file_put_contents(static::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
+            file_put_contents($this->storagePath . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
         }
     }
 
@@ -3456,9 +3456,9 @@ class WhatsProt
 
         if ($pictureNode != null) {
             if ($pictureNode->getAttribute("type") == "preview") {
-                $filename = static::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
+                $filename = $this->storagePath . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
             } else {
-                $filename = static::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
+                $filename = $this->storagePath . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
             }
 
             file_put_contents($filename, $pictureNode->getData());
