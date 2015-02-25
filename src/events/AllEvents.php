@@ -87,6 +87,7 @@ abstract class AllEvents
     public function onGroupsParticipantsRemove($mynumber, $groupId, $jid) {}
     public function onLogin($mynumber) {}
     public function onLoginFailed($mynumber, $data) {}
+    public function onLoginSuccess($mynumber, $kind, $status, $creation, $expiration) {}
     public function onAccountExpired($mynumber, $kind, $status, $creation, $expiration ){}
     public function onMediaMessageSent($mynumber, $to, $id, $filetype, $url, $filename, $filesize, $filehash, $caption, $icon) {}
     public function onMediaUploadFailed($mynumber, $id, $node, $messageNode, $statusMessage) {}
@@ -95,6 +96,7 @@ abstract class AllEvents
     public function onMessageReceivedClient($mynumber, $from, $id, $type, $time) {}
     public function onMessageReceivedServer($mynumber, $from, $id, $type, $time) {}
     public function onPaidAccount($mynumber, $author, $kind, $status, $creation, $expiration) {}
+    public function onPaymentRecieved($mynumber, $kind, $status, $creation, $expiration) {}
     public function onPing($mynumber, $id) {}
     public function onPresence($mynumber, $from, $status) {}
     public function onProfilePictureChanged($mynumber, $from, $id, $time) {}
