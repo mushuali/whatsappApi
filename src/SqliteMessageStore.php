@@ -6,11 +6,13 @@ interface MessageStoreInterface
 
 class SqliteMessageStore implements MessageStoreInterface
 {
+    const DATA_FOLDER = 'wadata';
+
     private $db;
 
-    public function __construct($number)
+    public function __construct($number, $pathStore)
     {
-        $fileName = 'msgstore-'.$number.'.db';
+        $fileName = $pathStore . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . 'msgstore-'.$number.'.db';
         $createTable = !file_exists($fileName);
 
         $this->db = new \PDO("sqlite:" . $fileName, null, null, array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
