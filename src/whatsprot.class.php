@@ -2605,8 +2605,6 @@ class WhatsProt
         $this->debugPrint($node->nodeString("rx  ") . "\n");
         $this->serverReceivedId = $node->getAttribute('id');
 
-        //var_dump($node);
-
         if ($node->getTag() == "challenge") {
             $this->processChallenge($node);
         } elseif ($node->getTag() == "failure") {
