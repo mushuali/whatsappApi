@@ -3402,13 +3402,14 @@ class WhatsProt
                         $this->sendClearDirty(array($child->getAttribute("type")));
                         break;
                     case "account":
-                        $this->eventManager()->fire("onPaymentRecieved",[
+                        $this->eventManager()->fire("onPaymentRecieved",
+                        array(
                             $this->phoneNumber,
                             $child->getAttribute("kind"),
                             $child->getAttribute("status"),
                             $child->getAttribute("creation"),
                             $child->getAttribute("expiration")
-                        ]);
+                        ));
                         break;
                     case "offline":
 
