@@ -80,7 +80,6 @@ class WhatsProt
     protected $socket;                  // A socket to connect to the WhatsApp network.
     protected $writer;                  // An instance of the BinaryTreeNodeWriter class.
     protected $messageStore;
-    protected $storagePath;
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
 
     /**
@@ -102,7 +101,6 @@ class WhatsProt
         $this->reader = new BinTreeNodeReader();
         $this->debug = $debug;
         $this->phoneNumber = $number;
-        $this->storagePath = $storagePath;
 
         //e.g. ./cache/nextChallenge.12125557788.dat
         $this->challengeFilename = sprintf('%s%s%snextChallenge.%s.dat',
