@@ -36,6 +36,7 @@ class WhatsProt
     const DISCONNECTED_STATUS = 'disconnected';                                              // Describes the connection status with the WhatsApp server.
     const MEDIA_FOLDER = 'media';                                                            // The relative folder to store received media files
     const PICTURES_FOLDER = 'pictures';                                                      // The relative folder to store picture files
+    const DATA_FOLDER = 'wadata';                                                            // The relative folder to store cache files.
     const PORT = 443;                                                                        // The port of the WhatsApp server.
     const TIMEOUT_SEC = 2;                                                                   // The timeout for the connection with the WhatsApp servers.
     const TIMEOUT_USEC = 0;
@@ -55,7 +56,7 @@ class WhatsProt
      * Property declarations.
      */
     protected $accountInfo;             // The AccountInfo object.
-    protected $challengeFilename = 'nextChallenge.dat';
+    protected $challengeFilename;       // Path to nextChallenge.dat.
     protected $challengeData;           //
     protected $debug;                   // Determines whether debug mode is on or off.
     protected $event;                   // An instance of the WhatsApiEvent Manager.
@@ -79,6 +80,7 @@ class WhatsProt
     protected $socket;                  // A socket to connect to the WhatsApp network.
     protected $writer;                  // An instance of the BinaryTreeNodeWriter class.
     protected $messageStore;
+    protected $storagePath;
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
 
     /**
@@ -94,20 +96,23 @@ class WhatsProt
      * @param $debug
      *   Debug on or off, false by default.
      */
-    public function __construct($number, $identity, $nickname, $debug = false)
+    public function __construct($number, $nickname, $debug = false)
     {
         $this->writer = new BinTreeNodeWriter();
         $this->reader = new BinTreeNodeReader();
         $this->debug = $debug;
         $this->phoneNumber = $number;
+        $this->storagePath = $storagePath;
 
-        if (!$this->checkIdentity($identity)) {
-            //compute identity with pseudo_random_bytes
-            $this->identity = $this->buildIdentity($identity);
-        } else {
-            //use provided identity hash
-            $this->identity = urldecode(file_get_contents($identity.'.dat'));
-        }
+        //e.g. ./cache/nextChallenge.12125557788.dat
+        $this->challengeFilename = sprintf('%s%s%snextChallenge.%s.dat',
+            __DIR__,
+            DIRECTORY_SEPARATOR,
+            self::DATA_FOLDER . DIRECTORY_SEPARATOR,
+            $number);
+
+        $this->identity = $this->buildIdentity();
+
         $this->name         = $nickname;
         $this->loginStatus  = static::DISCONNECTED_STATUS;
         $this->eventManager = new WhatsApiEventsManager();
@@ -2317,33 +2322,32 @@ class WhatsProt
     /**
      * Create an identity string
      *
-     * @param  string $identity File name where identity is going to be saved.
+     * @param  string $identity Identity.
+
      * @return string           Correctly formatted identity
+     *
+     * @throws Exception        Error when cannot write identity data to file.
      */
-    protected function buildIdentity($identity)
+    protected function buildIdentity()
     {
-        if (file_exists($identity.".dat")) {
-            return urldecode(file_get_contents($identity.'.dat'));
-        }
+        $identity_file = sprintf('%s%s%sid.%s.dat', __DIR__, DIRECTORY_SEPARATOR, self::DATA_FOLDER . DIRECTORY_SEPARATOR, $this->phoneNumber);
 
-        $id = fopen($identity.".dat", "w");
-        $bytes = strtolower(openssl_random_pseudo_bytes(20));
-        fwrite($id, urlencode($bytes));
-        fclose($id);
+        if (is_readable($identity_file)) {
+            $data = urldecode(file_get_contents($identity_file));
+            $length = strlen($data);
 
-        return $bytes;
-    }
-
-    protected function checkIdentity($identity)
-    {
-        if (file_exists($identity.".dat")) {
-            $id = strlen(urldecode(file_get_contents($identity.'.dat')));
-            if ($id == 20 || $id == 16) {
-                return true;
+            if ($length == 20 || $length == 16) {
+                return $data;
             }
         }
 
-        return false;
+        $bytes = strtolower(openssl_random_pseudo_bytes(20));
+
+        if (file_put_contents($identity_file, urlencode($bytes)) === false) {
+            throw new Exception('Unable to write identity file to ' . $identity_file);
+        }
+
+        return $bytes;
     }
 
     public function sendSync(array $numbers, array $deletedNumbers = null, $syncType = 4, $index = 0, $last = true)
@@ -2492,7 +2496,7 @@ class WhatsProt
             //TODO check what max file size whatsapp server accepts.
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
                 //Create temp file in media folder. Media folder must be writable!
-                $this->mediaFileInfo['filepath'] = tempnam(getcwd() . '/' . static::MEDIA_FOLDER, 'WHA');
+                $this->mediaFileInfo['filepath'] = tempnam(__DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER, 'WHA');
                 $fp = fopen($this->mediaFileInfo['filepath'], 'w');
                 if ($fp) {
                     curl_setopt($curl, CURLOPT_NOBODY, false);
@@ -3434,25 +3438,15 @@ class WhatsProt
     protected function processMediaImage($node)
     {
         $media = $node->getChild("media");
+
         if ($media != null) {
             $filename = $media->getAttribute("file");
             $url = $media->getAttribute("url");
 
             //save thumbnail
-            $data = $media->getData();
-            $fp = @fopen(static::MEDIA_FOLDER . "/thumb_" . $filename, "w");
-            if ($fp) {
-                fwrite($fp, $data);
-                fclose($fp);
-            }
-
+            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
             //download and save original
-            $data = file_get_contents($url);
-            $fp = @fopen(static::MEDIA_FOLDER . "/" . $filename, "w");
-            if ($fp) {
-                fwrite($fp, $data);
-                fclose($fp);
-            }
+            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
         }
     }
 
@@ -3466,18 +3460,13 @@ class WhatsProt
         $pictureNode = $node->getChild("picture");
 
         if ($pictureNode != null) {
-            $type = $pictureNode->getAttribute("type");
-            $data = $pictureNode->getData();
-            if ($type == "preview") {
-                $filename = static::PICTURES_FOLDER . "/preview_" . $node->getAttribute("from") . ".jpg";
+            if ($pictureNode->getAttribute("type") == "preview") {
+                $filename = __DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
             } else {
-                $filename = static::PICTURES_FOLDER . "/" . $node->getAttribute("from") . ".jpg";
+                $filename = __DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
             }
-            $fp = @fopen($filename, "w");
-            if ($fp) {
-                fwrite($fp, $data);
-                fclose($fp);
-            }
+
+            file_put_contents($filename, $pictureNode->getData());
         }
     }
 
@@ -3744,6 +3733,7 @@ class WhatsProt
             ), array($node, $broadcastNode), null);
 
         $this->sendNode($messageNode);
+        $this->waitForServer($msgID);
         //listen for response
         $this->eventManager()->fire("onSendMessage",
             array(

@@ -195,9 +195,7 @@ function updateData($nameFile, $WAver, $classesMD5 = "")
 
     $content = implode("\n", $content);
 
-    $open = fopen($file, 'w');
-    fwrite($open, $content);
-    fclose($open);
+    file_put_contents($file, $content);
 }
 
 /**
