@@ -2194,14 +2194,14 @@ class WhatsProt
                     }
 
                     $phone = array(
-                            'country' => $data[0],
-                            'cc' => $data[1],
-                            'phone' => substr($this->phoneNumber, strlen($data[1]), strlen($this->phoneNumber)),
-                            'mcc' => $mcc,
-                            'ISO3166' => @$data[3],
-                            'ISO639' => @$data[4],
-                            'mnc' => $data[5]
-                        );
+                        'country' => $data[0],
+                        'cc' => $data[1],
+                        'phone' => substr($this->phoneNumber, strlen($data[1]), strlen($this->phoneNumber)),
+                        'mcc' => $mcc,
+                        'ISO3166' => @$data[3],
+                        'ISO639' => @$data[4],
+                        'mnc' => $data[5]
+                    );
 
                     $this->eventManager()->fire("onDissectPhone",
                         array(
@@ -2617,6 +2617,15 @@ class WhatsProt
                 $challengeData = $node->getData();
                 file_put_contents($this->challengeFilename, $challengeData);
                 $this->writer->setKey($this->outputKey);
+
+                $this->eventManager()->fire("onLoginSuccess",
+                    array(
+                        $this->phoneNumber,
+                        $node->getAttribute("kind"),
+                        $node->getAttribute("status"),
+                        $node->getAttribute("creation"),
+                        $node->getAttribute("expiration")
+                    ));
             } elseif ($node->getAttribute("status") == "expired") {
                 $this->eventManager()->fire("onAccountExpired",
                     array(
@@ -3391,6 +3400,15 @@ class WhatsProt
                 {
                     case "dirty":
                         $this->sendClearDirty(array($child->getAttribute("type")));
+                        break;
+                    case "account":
+                        $this->eventManager()->fire("onPaymentRecieved",[
+                            $this->phoneNumber,
+                            $child->getAttribute("kind"),
+                            $child->getAttribute("status"),
+                            $child->getAttribute("creation"),
+                            $child->getAttribute("expiration")
+                        ]);
                         break;
                     case "offline":
 
