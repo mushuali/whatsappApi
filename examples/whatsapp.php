@@ -325,7 +325,7 @@ class Whatsapp
                         $this->nick = $this->config[$this->from]['nick'];
                         $this->password = $this->config[$this->from]['waPassword'];
 
-                        $this->wa = new WhatsProt($this->number, $this->id, $this->nick, false);
+                        $this->wa = new WhatsProt($this->number, $this->nick, false);
                         $this->wa->eventManager()->bind('onGetMessage', array($this, 'processReceivedMessage'));
                         $this->wa->eventManager()->bind('onConnect', array($this, 'connected'));
                         $this->wa->eventManager()->bind('onGetGroups', array($this, 'processGroupArray'));

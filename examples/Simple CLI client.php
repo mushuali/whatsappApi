@@ -18,12 +18,11 @@ echo "====================================\n";
 ////////////////////////////////////////////////////
 $username = "";
 $password = "";
-$identity = "";
 $nickname = "";
 $debug = false;
 /////////////////////////////////////////////////////
 if ($_SERVER['argv'][1] == null) {
-    echo "USO: php ".$_SERVER['argv'][0]." <number> \n\nEj: php cliente.php 34123456789\n\n";
+    echo "USAGE: php ".$_SERVER['argv'][0]." <number> \n\nEj: php client.php 34123456789\n\n";
     exit(1);
 }
 $target = $_SERVER['argv'][1];
@@ -51,7 +50,7 @@ function onPresenceReceived($username, $from, $type)
 }
 
 echo "[] logging in as '$nickname' ($username)\n";
-$w = new WhatsProt($username, $identity, $nickname, false);
+$w = new WhatsProt($username, $nickname, $debug);
 
 $w->eventManager()->bind("onPresence", "onPresenceReceived");
 
@@ -118,4 +117,4 @@ class ProcessNode
         echo "\n- ".$notify.": ".$text."    ".date('H:i')."\n";
 
     }
-}  
+}
