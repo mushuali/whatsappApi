@@ -19,7 +19,6 @@ $nickname = "WhatsAPI Test";
 
 // #### DO NOT ADD YOUR INFO AND THEN COMMIT THIS FILE! ####
 $sender = 	""; // Mobile number with country code (but without + or 00)
-$identity = 	""; // Obtained during registration
 $password =     ""; // Password you received from WhatsApp
 
 if ($argc < 2) {
@@ -39,7 +38,7 @@ for ($i=3; $i<$argc; $i++) {
 }
 
 echo "[] Logging in as '$nickname' ($sender)\n";
-$wa = new WhatsProt($sender, $identity, $nickname, TRUE);
+$wa = new WhatsProt($sender, $nickname, TRUE);
 
 $wa->connect();
 $wa->loginWithPassword($password);
