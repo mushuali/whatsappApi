@@ -16,14 +16,13 @@ echo "====================================\n";
 
 ////////////////CONFIGURATION///////////////////////
 ////////////////////////////////////////////////////
-$username = "";                      
+$username = "";
 $password = "";
-$identity = "";     
-$nickname = ""; 
-$debug = false;                           
+$nickname = "";
+$debug = false;
 /////////////////////////////////////////////////////
 if ($_SERVER['argv'][1] == null) {
-    echo "USO: php ".$_SERVER['argv'][0]." <number> \n\nEj: php cliente.php 34123456789\n\n";
+    echo "USAGE: php ".$_SERVER['argv'][0]." <number> \n\nEj: php client.php 34123456789\n\n";
     exit(1);
 }
 $target = $_SERVER['argv'][1];
@@ -43,15 +42,15 @@ function fgets_u($pStdn)
 
 function onPresenceReceived($username, $from, $type)
 {
-	$dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
-		if($type == "available")
-    		echo "<$dFrom is online>\n\n";
-    	else
-    		echo "<$dFrom is offline>\n\n";
+    $dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
+    if($type == "available")
+        echo "<$dFrom is online>\n\n";
+    else
+        echo "<$dFrom is offline>\n\n";
 }
 
 echo "[] logging in as '$nickname' ($username)\n";
-$w = new WhatsProt($username, $identity, $nickname, false);
+$w = new WhatsProt($username, $nickname, $debug);
 
 $w->eventManager()->bind("onPresence", "onPresenceReceived");
 
@@ -68,34 +67,34 @@ $w->sendPresenceSubscription($target); // Nos suscribimos a la presencia del usu
 $pn = new ProcessNode($w, $target);
 $w->setNewMessageBind($pn);
 
-    while (1) {
+while (1) {
     $w->pollMessage();
     $msgs = $w->getMessages();
     foreach ($msgs as $m) {
         # process inbound messages
         //print($m->NodeString("") . "\n");
     }
-        $line = fgets_u(STDIN);
-        if ($line != "") {
-            if (strrchr($line, " ")) {
-                $command = trim(strstr($line, ' ', TRUE));
-            } else {
-                $command = $line;
-            }
-            switch ($command) {
-                case "/query":
-                    $dst = trim(strstr($line, ' ', FALSE));
-                    echo "[] Interactive conversation with $contact:\n";
-                    break;
-                case "/lastseen":
-                    echo "[] Last seen $target: ";
-                    $w->sendGetRequestLastSeen($target);
-                    break;
-                default:
-                    $w->sendMessage($target , $line);
-                    break;
-            }
+    $line = fgets_u(STDIN);
+    if ($line != "") {
+        if (strrchr($line, " ")) {
+            $command = trim(strstr($line, ' ', TRUE));
+        } else {
+            $command = $line;
         }
+        switch ($command) {
+            case "/query":
+                $dst = trim(strstr($line, ' ', FALSE));
+                echo "[] Interactive conversation with $contact:\n";
+                break;
+            case "/lastseen":
+                echo "[] Last seen $target: ";
+                $w->sendGetRequestLastSeen($target);
+                break;
+            default:
+                $w->sendMessage($target , $line);
+                break;
+        }
+    }
 }
 
 class ProcessNode
@@ -115,7 +114,7 @@ class ProcessNode
         $text = $text->getData();
         $notify = $node->getAttribute("notify");
 
-		echo "\n- ".$notify.": ".$text."    ".date('H:i')."\n";
+        echo "\n- ".$notify.": ".$text."    ".date('H:i')."\n";
 
-	}
-}  
+    }
+}

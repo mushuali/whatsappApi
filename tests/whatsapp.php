@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 require '../src/whatsprot.class.php';
 
@@ -20,7 +19,6 @@ $nickname = "WhatsAPI Test";
 
 // #### DO NOT ADD YOUR INFO AND THEN COMMIT THIS FILE! ####
 $sender = 	""; // Mobile number with country code (but without + or 00)
-$identity = 	""; // Obtained during registration
 $password =     ""; // Password you received from WhatsApp
 
 if ($argc < 2) {
@@ -40,7 +38,7 @@ for ($i=3; $i<$argc; $i++) {
 }
 
 echo "[] Logging in as '$nickname' ($sender)\n";
-$wa = new WhatsProt($sender, $imei, $nickname, TRUE);
+$wa = new WhatsProt($sender, $nickname, TRUE);
 
 $wa->connect();
 $wa->loginWithPassword($password);
@@ -86,7 +84,9 @@ if ($_SERVER['argv'][1] == "-l") {
     while (TRUE) {
         $wa->pollMessage();
         $data = $wa->getMessages();
-        if(!empty($data)) print_r($data);
+        if (!empty($data)) {
+            print_r($data);
+        }
         sleep(1);
     }
     exit(0);
