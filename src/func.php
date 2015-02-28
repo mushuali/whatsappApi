@@ -114,18 +114,19 @@ function createIconGD($file, $size = 100, $raw = true)
 {
     list($width, $height) = getimagesize($file);
     if ($width > $height) {
-        //landscape
-        $nheight = ($height / $width) * $size;
-        $nwidth  = $size;
+        $y = 0;
+        $x = ($width - $height) / 2;
+        $smallestSide = $height;
     } else {
-        $nwidth  = ($width / $height) * $size;
-        $nheight = $size;
+        $x = 0;
+        $y = ($height - $width) / 2;
+        $smallestSide = $width;
     }
 
-    $image_p = imagecreatetruecolor($nwidth, $nheight);
+    $image_p = imagecreatetruecolor($size, $size);
     $image = imagecreatefromstring(file_get_contents($file));
 
-    imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
+    imagecopyresampled($image_p, $image, 0, 0, $x, $y, $size, $size, $smallestSide, $smallestSide);
     ob_start();
     imagejpeg($image_p);
     $i = ob_get_contents();
