@@ -3031,13 +3031,15 @@ class WhatsProt
         if ($node->getTag() == "iq"
             && $node->getAttribute('type') == "result") {
             if ($node->getChild("query") != null) {
-                if ($node->getChild(0)->getAttribute('xmlns') == 'jabber:iq:privacy') {
-                    // ToDo: We need to get explicitly list out the children as arguments
-                    //       here.
+                if ($node->nodeIdContains("getprivacy")) {
+                    $listChild = $node->getChild(0)->getChild(0);
+                    foreach ($listChild->getChildren() as $child) {
+                        $blockedJids[] = $child->getAttribute('value');
+                    }
                     $this->eventManager()->fire("onGetPrivacyBlockedList",
                         array(
                             $this->phoneNumber,
-                            $node->getChild(0)->getChild(0)->getChildren()
+                            $blockedJids
                         ));
                 }
                 $this->eventManager()->fire("onGetRequestLastSeen",
