@@ -29,7 +29,6 @@
         "ext-curl": "*",
         "ext-gd" : "*",
         "ext-sockets" : "*",
-        "ext-ffmpeg" : "*",
         "ext-openssl" : "*",
         "ext-pdo" : "*",
         "ext-sqlite3" : "*"
