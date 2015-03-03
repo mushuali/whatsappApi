@@ -2690,7 +2690,7 @@ class WhatsProt
             if ($node->hasChild('x') && $this->lastId == $node->getAttribute('id')) {
                 $this->sendNextMessage();
             }
-            if ($this->newMsgBind && $node->getChild('body')) {
+            if ($this->newMsgBind  && ($node->getChild('body') || $node->getChild('media'))) {
                 $this->newMsgBind->process($node);
             }
             if ($node->getAttribute("type") == "text" && $node->getChild('body') != null) {
