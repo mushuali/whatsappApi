@@ -4,16 +4,11 @@ require_once '../src/whatsprot.class.php';
 //Change to your time zone
 date_default_timezone_set('Europe/Madrid');
 
-// phone number, deviceIdentity, and name.
-$options = getopt("d::", array("debug::"));
-$debug = (array_key_exists("debug", $options) || array_key_exists("d", $options)) ? true : false;
-
 ########## DO NOT COMMIT THIS FILE WITH YOUR CREDENTIALS ###########
 ///////////////////////CONFIGURATION///////////////////////
 //////////////////////////////////////////////////////////
 $username = "**your phone number**";                      // Telephone number including the country code without '+' or '00'.
 $password = "**server generated whatsapp password**";     // Use registerTool.php or exampleRegister.php to obtain your password
-$identity = "myIdentity";                                 // Name of the file where the identity will be stored. In this exaple, a file called myIdentity.dat will be created
 $nickname = "**your nickname**";                          // This is the username (or nickname) displayed by WhatsApp clients.
 $target = "**contact's phone number**";                   // Destination telephone number including the country code without '+' or '00'.
 $debug = false;                                           // Set this to true, to see debug mode.
@@ -41,34 +36,25 @@ function onGetProfilePicture($from, $target, $type, $data)
     } else {
         $filename = $target . ".jpg";
     }
-    $filename = WhatsProt::PICTURES_FOLDER."/" . $filename;
-    $fp = @fopen($filename, "w");
-    if ($fp) {
-        fwrite($fp, $data);
-        fclose($fp);
-    }
 
-    echo "- Profile picture saved in /".WhatsProt::PICTURES_FOLDER."\n";
+    $filename = WhatsProt::PICTURES_FOLDER. "/" . $filename;
+
+    file_put_contents($filename, $data);
+
+    echo "- Profile picture saved in " . WhatsProt::PICTURES_FOLDER. "/" . $filename . "\n";
 }
 
 function onPresenceReceived($username, $from, $type)
 {
-    $dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
-    if ($type == "available")
-        echo "<$dFrom is online>\n\n";
-    else
-        echo "<$dFrom is offline>\n\n";
+    printf("<%s is %s>\n\n",
+        str_replace(array("@s.whatsapp.net","@g.us"), "", $from),
+        ($type == 'available') ? 'online' : 'offline');
 }
 
 echo "[] Logging in as '$nickname' ($username)\n";
 //Create the whatsapp object and setup a connection.
-$w = new WhatsProt($username, $identity, $nickname, $debug);
+$w = new WhatsProt($username, $nickname, $debug);
 $w->connect();
-
-// Now loginWithPassword function sends Nickname and (Available) Presence
-$w->loginWithPassword($password);
-
-echo "[*] Connected to WhatsApp\n\n";
 
 //Retrieve large profile picture. Output is in /src/php/pictures/ (you need to bind a function
 //to the event onProfilePicture so the script knows what to do.
@@ -79,6 +65,10 @@ $w->sendGetProfilePicture($target, true);
 //so the script knows what to do)
 $w->eventManager()->bind("onPresence", "onPresenceReceived");
 
+// Now loginWithPassword function sends Nickname and (Available) Presence
+$w->loginWithPassword($password);
+
+echo "[*] Connected to WhatsApp\n\n";
 
 //update your profile picture
 $w->sendSetProfilePicture("demo/venom.jpg");

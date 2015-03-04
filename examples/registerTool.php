@@ -11,20 +11,15 @@ echo "####################\n";
 
 echo "\n\nUsername (country code + number without + or 00): ";
 $username = trim(fgets(STDIN));
-$identity = "identity";
-echo "\nNickname: ";
-$nickname = trim(fgets(STDIN));
-echo "\nCarrier: ";
-$carrier = trim(fgets(STDIN));
 
 // Create a instance of WhastPort.
-$w = new WhatsProt($username, $identity, $nickname, $debug);
+$w = new WhatsProt($username, '', $debug);
 
 echo "\n\nType sms or voice: ";
 $option = fgets(STDIN);
 
 try {
-    $w->codeRequest(trim($option), $carrier);
+    $w->codeRequest(trim($option));
 } catch(Exception $e) {
     echo $e->getMessage();
     exit(0);

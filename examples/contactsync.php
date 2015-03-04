@@ -35,7 +35,7 @@ function onSyncResult($result)
     die(); //to break out of the while(true) loop
 }
 
-$wa = new WhatsProt($username, "", "WhatsApp", false);
+$wa = new WhatsProt($username, "WhatsApp", false);
 
 //bind event handler
 $wa->eventManager()->bind('onGetSyncResult', 'onSyncResult');
