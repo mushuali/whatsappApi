@@ -890,15 +890,6 @@ class WhatsProt
         $this->sendNode($node);
     }
 
-    /**
-     * Send a request to return a list of groups user has started in.
-     *
-     * To capture this list you will need to bind the "onGetGroups" event.
-     */
-    public function sendGetGroupsOwning()
-    {
-        $this->sendGetGroupsFiltered("owning");
-    }
 
     /**
      * Send a request to get a list of people you have currently blocked.
