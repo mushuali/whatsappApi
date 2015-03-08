@@ -462,8 +462,6 @@ class WhatsProt
             );
             return true;
         } else {
-            $this->debugPrint("Firing onConnectError\n");
-
             $this->eventManager()->fire("onConnectError",
                 array(
                     $this->phoneNumber,
