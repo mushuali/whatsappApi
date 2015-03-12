@@ -25,8 +25,8 @@ try {
     exit(0);
 }
 
-echo "\n\nEnter the received code, if you receive 123-456, write it like this 123456: ";
-$code = fgets(STDIN);
+echo "\n\nEnter the received code: ";
+$code = str_replace("-", "", fgets(STDIN));
 
 try {
     $result = $w->codeRegister(trim($code));
