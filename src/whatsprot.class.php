@@ -3606,12 +3606,14 @@ class WhatsProt
                 $icon = '';
                 break;
         }
+        //Retrieve Message ID
+        $message_id = $messageNode['message_id'];
 
         $mediaNode = new ProtocolNode("media", $mediaAttribs, null, $icon);
         if (is_array($to)) {
             $this->sendBroadcast($to, $mediaNode, "media");
         } else {
-            $this->sendMessageNode($to, $mediaNode);
+            $this->sendMessageNode($to, $mediaNode, $message_id);
         }
         $this->eventManager()->fire("onMediaMessageSent",
             array(
