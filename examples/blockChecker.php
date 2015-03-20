@@ -8,6 +8,8 @@ function onCredentialsBad($mynumber, $status, $reason)
 {
     if ($reason == 'blocked')
         echo "\n\nYour number is blocked \n";
+    if ($reason == 'incorrect')
+        echo "\n\nWrong identity. \n";
 }
 
 function onCredentialsGood($mynumber, $login, $password, $type, $expiration, $kind, $price, $cost, $currency, $price_expiration)
