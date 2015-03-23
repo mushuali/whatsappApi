@@ -2923,18 +2923,17 @@ class WhatsProt
             && strpos($node->getAttribute('from'), "-") === false) {
             $presence = array();
             if ($node->getAttribute('type') == null) {
-                $this->eventManager()->fire("onPresence",
+                $this->eventManager()->fire("onPresenceAvailable",
                     array(
                         $this->phoneNumber,
                         $node->getAttribute('from'),
-                        $presence['type'] = "available"
                     ));
             } else {
-                $this->eventManager()->fire("onPresence",
+                $this->eventManager()->fire("onPresenceUnavailable",
                     array(
                         $this->phoneNumber,
                         $node->getAttribute('from'),
-                        $presence['type'] = "unavailable"
+                        $node->getAttribute('last')
                     ));
             }
         }
