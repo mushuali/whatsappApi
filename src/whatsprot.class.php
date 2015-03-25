@@ -3085,9 +3085,11 @@ class WhatsProt
                 //There are multiple types of Group reponses. Also a valid group response can have NO children.
                 //Events fired depend on text in the ID field.
                 $groupList = array();
+                $groupNodes = array();
                 if ($node->getChild(0) != null && $node->getChild(0)->getChildren() != null) {
                     foreach ($node->getChild(0)->getChildren() as $child) {
                         $groupList[] = $child->getAttributes();
+                        $groupNodes[] = $child;
                     }
                 }
                 if ($node->nodeIdContains('creategroup')) {
@@ -3112,6 +3114,13 @@ class WhatsProt
                             $this->phoneNumber,
                             $groupList
                         ));
+                    //getGroups returns a array of nodes which are exactly the same as from getGroupV2Info
+                    //so lets call this event, we have all data at hand, no need to call getGroupV2Info for every
+                    //group we are interested
+                    foreach ($groupNodes AS $groupNode) {
+                        $this->handleGroupV2InfoResponse($groupNode, true);
+                    }
+
                 }
                 if ($node->nodeIdContains('getgroupinfo')) {
                     $this->eventManager()->fire("onGetGroupsInfo",
@@ -3131,33 +3140,10 @@ class WhatsProt
                 }
             }
             if ($node->nodeIdContains('get_groupv2_info')) {
-                $groupId = self::parseJID($node->getAttribute('from'));
-
-                $groupList = array();
                 $groupChild = $node->getChild(0);
                 if ($groupChild != null) {
-                    $creator = $groupChild->getAttribute('creator');
-                    $creation = $groupChild->getAttribute('creation');
-                    $subject = $groupChild->getAttribute('subject');
-                    if ($groupChild->getChild(0) != null) {
-                        foreach ($groupChild->getChildren() as $child) {
-                            $participants[] = $child->getAttribute('jid');
-                            if ($child->getAttribute('type') != null) {
-                                $admin = $child->getAttribute('jid');
-                            }
-                        }
-                    }
+                    $this->handleGroupV2InfoResponse($groupChild);
                 }
-
-                $this->eventManager()->fire("onGetGroupV2Info",
-                    array(
-                        $this->phoneNumber,
-                        $creator,
-                        $creation,
-                        $subject,
-                        $participants,
-                        $admin
-                    ));
             }
             if ($node->nodeIdContains("get_lists")) {
                 $broadcastLists = array();
@@ -4056,5 +4042,37 @@ class WhatsProt
         $parts = explode('@', $jid);
         $parts = reset($parts);
         return $parts;
+    }
+
+
+
+    /**
+     * @param ProtocolNode $groupNode
+     */
+    protected function handleGroupV2InfoResponse(ProtocolNode $groupNode, $fromGetGroups = false)
+    {
+        $creator = $groupNode->getAttribute('creator');
+        $creation = $groupNode->getAttribute('creation');
+        $subject = $groupNode->getAttribute('subject');
+        $participants = array();
+        $admins = array();
+        if ($groupNode->getChild(0) != null) {
+            foreach ($groupNode->getChildren() as $child) {
+                $participants[] = $child->getAttribute('jid');
+                if ($child->getAttribute('type') == "admin")
+                    $admins[] = $child->getAttribute('jid');
+            }
+        }
+        $this->eventManager()->fire("onGetGroupV2Info",
+            array(
+                $this->phoneNumber,
+                $creator,
+                $creation,
+                $subject,
+                $participants,
+                $admins,
+                $fromGetGroups
+            )
+        );
     }
 }
