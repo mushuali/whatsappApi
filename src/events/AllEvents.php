@@ -84,6 +84,7 @@ abstract class AllEvents
     public function onGroupsChatCreate($mynumber, $gid) {}
     public function onGroupsChatEnd($mynumber, $gid) {}
     public function onGroupsParticipantsAdd($mynumber, $groupId, $jid) {}
+    public function onGroupsParticipantsPromote($myNumber, $groupJID, $time, $issuerJID, $issuerName, $promotedJIDs = array()) {}
     public function onGroupsParticipantsRemove($mynumber, $groupId, $jid) {}
     public function onLogin($mynumber) {}
     public function onLoginFailed($mynumber, $data) {}
