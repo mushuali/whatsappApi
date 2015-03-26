@@ -3373,7 +3373,7 @@ class WhatsProt
                         foreach ($node->getChild(0)->getChildren() AS $cn) {
                             $promotedJIDs[] = $cn->getAttribute('jid');
                         }
-                        $this->eventManager()->fire("onGroupParticipantsPromote",
+                        $this->eventManager()->fire("onGroupsParticipantsPromote",
                             array(
                                 $this->phoneNumber,
                                 $node->getAttribute('from'),        //Group-JID
