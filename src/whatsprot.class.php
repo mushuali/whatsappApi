@@ -3354,6 +3354,22 @@ class WhatsProt
                                 $node->getChild(0)->getAttribute('subject')
                             ));
                     }
+                    else if ($node->hasChild('promote')) {
+                        $promotedJIDs = array();
+                        foreach ($node->getChild(0)->getChildren() AS $cn) {
+                            $promotedJIDs[] = $cn->getAttribute('jid');
+                        }
+                        $this->eventManager()->fire("onGroupsParticipantsPromote",
+                            array(
+                                $this->phoneNumber,
+                                $node->getAttribute('from'),        //Group-JID
+                                $node->getAttribute('t'),           //Time
+                                $node->getAttribute('participant'), //Issuer-JID
+                                $node->getAttribute('notify'),      //Issuer-Name
+                                $promotedJIDs,
+                            )
+                        );
+                    }
                     break;
                 case "account":
                     if (($node->getChild(0)->getAttribute('author')) == "")
