@@ -2301,7 +2301,7 @@ class WhatsProt
         }
 
         if ($this->loginStatus === static::DISCONNECTED_STATUS) {
-            throw new Exception('Login Failure');
+            throw new LoginFailureException();
         }
 
         $this->eventManager()->fire("onLogin",
