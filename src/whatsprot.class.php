@@ -2617,6 +2617,11 @@ class WhatsProt
             $this->processChallenge($node);
         } elseif ($node->getTag() == "failure") {
             $this->loginStatus = static::DISCONNECTED_STATUS;
+            $this->eventManager()->fire("onLoginFailed",
+                array(
+                    $this->phoneNumber,
+                    $node->getChild(0)->getTag()
+                ));
         } elseif ($node->getTag() == "success") {
             if ($node->getAttribute("status") == "active") {
                 $this->loginStatus = static::CONNECTED_STATUS;
@@ -2642,12 +2647,6 @@ class WhatsProt
                         $node->getAttribute("expiration")
                     ));
             }
-        } elseif ($node->getTag() == "failure") {
-            $this->eventManager()->fire("onLoginFailed",
-                array(
-                    $this->phoneNumber,
-                    $node->getChild(0)->getTag()
-                ));
         } elseif ($node->getTag() == 'ack' && $node->getAttribute("class") == "message") {
             $this->eventManager()->fire("onMessageReceivedServer",
                 array(
