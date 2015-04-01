@@ -60,7 +60,7 @@ abstract class AllEvents
     public function onGetGroupParticipants($mynumber, $groupId, $groupList) {}
     public function onGetGroups($mynumber, $groupList) {}
     public function onGetGroupsInfo($mynumber, $groupList) {}
-    public function onGetGroupV2Info($mynumber, $creator, $creation, $subject, $participants, $admin) {}
+    public function onGetGroupV2Info( $mynumber, $creator, $creation, $subject, $participants, $admins, $fromGetGroup ){}
     public function onGetGroupsSubject($mynumber, $group_jid, $time, $author, $name, $subject) {}
     public function onGetImage($mynumber, $from, $id, $type, $time, $name, $size, $url, $file, $mimeType, $fileHash, $width, $height, $preview, $caption) {}
     public function onGetGroupImage($mynumber, $from_group_jid, $from_user_jid, $id, $type, $time, $name, $size, $url, $file, $mimeType, $fileHash, $width, $height, $preview, $caption) {}
@@ -84,6 +84,7 @@ abstract class AllEvents
     public function onGroupsChatCreate($mynumber, $gid) {}
     public function onGroupsChatEnd($mynumber, $gid) {}
     public function onGroupsParticipantsAdd($mynumber, $groupId, $jid) {}
+    public function onGroupsParticipantsPromote($myNumber, $groupJID, $time, $issuerJID, $issuerName, $promotedJIDs = array()) {}
     public function onGroupsParticipantsRemove($mynumber, $groupId, $jid) {}
     public function onLogin($mynumber) {}
     public function onLoginFailed($mynumber, $data) {}
