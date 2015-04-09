@@ -42,7 +42,6 @@ class WhatsProt
     const TIMEOUT_USEC = 0;
     const WHATSAPP_CHECK_HOST = 'v.whatsapp.net/v2/exist';                                   // The check credentials host.
     const WHATSAPP_GROUP_SERVER = 'g.us';                                                    // The Group server hostname
-    const WHATSAPP_HOST = 'c.whatsapp.net';                                                  // The hostname of the WhatsApp server.
     const WHATSAPP_REGISTER_HOST = 'v.whatsapp.net/v2/register';                             // The register code host.
     const WHATSAPP_REQUEST_HOST = 'v.whatsapp.net/v2/code';                                  // The request code host.
     const WHATSAPP_SERVER = 's.whatsapp.net';                                                // The hostname used to login/send messages.
@@ -50,6 +49,7 @@ class WhatsProt
     const WHATSAPP_DEVICE = 'iPhone';                                                        // The device name.
     const WHATSAPP_VER = '2.11.16';                                                          // The WhatsApp version.
     const WHATSAPP_USER_AGENT = 'WhatsApp/2.12.68 S40Version/14.26 Device/Nokia302';         // User agent used in request/registration code.
+    const WHATSAPP_AUTH_USER_AGENT = 'WhatsApp/2.11.16 iPhone_OS/8.1.3 Device/iPhone_5';
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -443,7 +443,7 @@ class WhatsProt
         /* Create a TCP/IP socket. */
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if ($socket !== false) {
-            $result = socket_connect($socket, static::WHATSAPP_HOST, static::PORT);
+            $result = socket_connect($socket, "e" . rand(1, 16) . ".whatsapp.net", static::PORT);
             if ($result === false) {
                 $socket = false;
             }
@@ -2102,7 +2102,7 @@ class WhatsProt
             $this->reader->setKey($this->inputKey);
             //$this->writer->setKey($this->outputKey);
             $phone = $this->dissectPhone();
-            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . static::WHATSAPP_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . $phone["mnc"];
+            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . static::WHATSAPP_AUTH_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . $phone["mnc"];
             $this->challengeData = null;
             return $this->outputKey->EncodeMessage($array, 0, strlen($array), false);
         }
