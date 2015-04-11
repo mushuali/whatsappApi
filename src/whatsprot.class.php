@@ -179,7 +179,7 @@ class WhatsProt
             'id' => $this->identity,
             'lg' => $langCode,
             'lc' => $countryCode,
-            'network_radio_type' => "1"
+        //  'network_radio_type' => "1"
         );
 
         $response = $this->getResponse($host, $query);
