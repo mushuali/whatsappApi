@@ -1,4 +1,4 @@
-al<?php
+<?php
 require_once 'protocol.class.php';
 require_once 'func.php';
 require_once 'token.php';
