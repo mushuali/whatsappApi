@@ -1,4 +1,4 @@
-<?php
+al<?php
 require_once 'protocol.class.php';
 require_once 'func.php';
 require_once 'token.php';
@@ -2677,7 +2677,8 @@ class WhatsProt
                     $node->getAttribute('from'),
                     $node->getAttribute('id'),
                     $node->getAttribute('type'),
-                    $node->getAttribute('t')
+                    $node->getAttribute('t'),
+                    $node->getAttribute('participant')
                 ));
 
             $ackNode = new ProtocolNode("ack",
@@ -2902,7 +2903,8 @@ class WhatsProt
                         $node->getAttribute('from'),
                         $node->getAttribute('id'),
                         $node->getAttribute('type'),
-                        $node->getAttribute('t')
+                        $node->getAttribute('t'),
+                        $node->getAttribute('participant')
                     ));
             }
         }
