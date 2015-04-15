@@ -3259,6 +3259,11 @@ class WhatsProt
                     $node->getChild(0)->getTag()
                 ));
         }
+        
+        if ($node->getTag() == "stream:error" && $node->getChild(1)->getData() == 'Replaced by new connection')
+        {
+            $this->disconnect();    
+        }
 
         if ($node->getTag() == "notification") {
             $name = $node->getAttribute("notify");
