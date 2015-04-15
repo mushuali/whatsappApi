@@ -3260,11 +3260,6 @@ class WhatsProt
                 ));
         }
         
-        if ($node->getTag() == "stream:error" && $node->getChild(1)->getData() == 'Replaced by new connection')
-        {
-            $this->disconnect();    
-        }
-
         if ($node->getTag() == "notification") {
             $name = $node->getAttribute("notify");
             $type = $node->getAttribute("type");
@@ -3434,6 +3429,12 @@ class WhatsProt
                         throw new Exception("ib handler for " . $child->getTag() . " not implemented");
                 }
             }
+        }
+        
+        // Disconnect socket on stream error.
+        if ($node->getTag() == "stream:error")
+        {
+            $this->disconnect();    
         }
     }
 
