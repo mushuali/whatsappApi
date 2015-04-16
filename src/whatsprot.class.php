@@ -3259,7 +3259,7 @@ class WhatsProt
                     $node->getChild(0)->getTag()
                 ));
         }
-
+        
         if ($node->getTag() == "notification") {
             $name = $node->getAttribute("notify");
             $type = $node->getAttribute("type");
@@ -3429,6 +3429,12 @@ class WhatsProt
                         throw new Exception("ib handler for " . $child->getTag() . " not implemented");
                 }
             }
+        }
+        
+        // Disconnect socket on stream error.
+        if ($node->getTag() == "stream:error")
+        {
+            $this->disconnect();    
         }
     }
 
