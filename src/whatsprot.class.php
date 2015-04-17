@@ -46,10 +46,9 @@ class WhatsProt
     const WHATSAPP_REQUEST_HOST = 'v.whatsapp.net/v2/code';                                  // The request code host.
     const WHATSAPP_SERVER = 's.whatsapp.net';                                                // The hostname used to login/send messages.
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php';        // The upload host.
-    const WHATSAPP_DEVICE = 'iPhone';                                                        // The device name.
-    const WHATSAPP_VER = '2.11.16';                                                          // The WhatsApp version.
+    const WHATSAPP_DEVICE = 'S40';                                                           // The device name.
+    const WHATSAPP_VER = '2.12.68';                                                          // The WhatsApp version.
     const WHATSAPP_USER_AGENT = 'WhatsApp/2.12.68 S40Version/14.26 Device/Nokia302';         // User agent used in request/registration code.
-    const WHATSAPP_AUTH_USER_AGENT = 'WhatsApp/2.11.16 iPhone_OS/8.1.3 Device/iPhone_5';
     const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
@@ -417,27 +416,16 @@ class WhatsProt
      */
     public function connect()
     {
-        //If we have already connected AND the socket has not been closed from the remote side - then
-        //no need to connect again.
-        //WARNING: Lots of bugs in PHP's detection of socket timeout/remote disconnect. Be careful changing this code.
-        //http://ie2.php.net/manual/en/function.socket-read.php#115903
-        //https://bugs.php.net/bug.php?id=47918
-        //http://stackoverflow.com/questions/20334366/php-fsockopen-how-to-know-if-connection-is-alive
         if ($this->isConnected()) {
             return true;
         }
 
-        //$WAver = trim(file_get_contents(static::WHATSAPP_VER_CHECKER));
+        //$WAData = json_decode(file_get_contents(static::WHATSAPP_VER_CHECKER), true);
 
-        //$WAverS = str_replace(".","",$WAver);
-        //$ver = str_replace(".","",static::WHATSAPP_VER);
-
-        //  if($ver<$WAverS)
+        //  if(static::WHATSAPP_VER != $WAver)
         //  {
-        //    $classesMD5 = file_get_contents('https://coderus.openrepos.net/whitesoft/whatsapp_classes');
-        //
-        //    updateData('token.php', $WAver, $classesMD5);
-        //    updateData('whatsprot.class.php', $WAver);
+        //    updateData('token.php', $WAData->e, $WAData->h);
+        //    updateData('whatsprot.class.php', $WAData->e);
         //  }
 
         /* Create a TCP/IP socket. */
@@ -2102,7 +2090,7 @@ class WhatsProt
             $this->reader->setKey($this->inputKey);
             //$this->writer->setKey($this->outputKey);
             $phone = $this->dissectPhone();
-            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . static::WHATSAPP_AUTH_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . $phone["mnc"];
+            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . static::WHATSAPP_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . $phone["mnc"];
             $this->challengeData = null;
             return $this->outputKey->EncodeMessage($array, 0, strlen($array), false);
         }
@@ -3038,7 +3026,7 @@ class WhatsProt
         if ($node->getTag() == "iq"
             && $node->getAttribute('type') == "result") {
             if ($node->getChild("query") != null) {
-                if ($node->nodeIdContains("getprivacy")) {
+                if (($node->getAttribute('xmlns') == 'jabber:iq:privacy') && ($node->getAttribute('type') == 'get')) {
                     $listChild = $node->getChild(0)->getChild(0);
                     foreach ($listChild->getChildren() as $child) {
                         $blockedJids[] = $child->getAttribute('value');
@@ -3083,7 +3071,7 @@ class WhatsProt
             if ($node->getChild("media") != null || $node->getChild("duplicate") != null) {
                 $this->processUploadResponse($node);
             }
-            if ($node->nodeIdContains("group")) {
+            if ($node->getAttribute("xmlns") == 'w:gp2') {
                 //There are multiple types of Group reponses. Also a valid group response can have NO children.
                 //Events fired depend on text in the ID field.
                 $groupList = array();
@@ -3094,7 +3082,7 @@ class WhatsProt
                         $groupNodes[] = $child;
                     }
                 }
-                if ($node->nodeIdContains('creategroup')) {
+                if ($node->getChild(0)->getTag() == 'create') {
                     $this->groupId = $node->getChild(0)->getAttribute('id');
                     $this->eventManager()->fire("onGroupsChatCreate",
                         array(
@@ -3102,7 +3090,7 @@ class WhatsProt
                             $this->groupId
                         ));
                 }
-                if ($node->nodeIdContains('endgroup')) {
+                if ($node->getChild(0)->getTag() == 'leave') {
                     $this->groupId = $node->getChild(0)->getChild(0)->getAttribute('id');
                     $this->eventManager()->fire("onGroupsChatEnd",
                         array(
@@ -3110,7 +3098,7 @@ class WhatsProt
                             $this->groupId
                         ));
                 }
-                if ($node->nodeIdContains('getgroups')) {
+                if (($node->getChild(0)->getTag() == 'owning') || ($node->getChild(0)->getTag() == 'participating')) {
                     $this->eventManager()->fire("onGetGroups",
                         array(
                             $this->phoneNumber,
@@ -3124,30 +3112,14 @@ class WhatsProt
                     }
 
                 }
-                if ($node->nodeIdContains('getgroupinfo')) {
-                    $this->eventManager()->fire("onGetGroupsInfo",
-                        array(
-                            $this->phoneNumber,
-                            $groupList
-                        ));
-                }
-                if ($node->nodeIdContains('getgroupparticipants')) {
-                    $groupId = self::parseJID($node->getAttribute('from'));
-                    $this->eventManager()->fire("onGetGroupParticipants",
-                        array(
-                            $this->phoneNumber,
-                            $groupId,
-                            $groupList
-                        ));
-                }
-            }
-            if ($node->nodeIdContains('get_groupv2_info')) {
+            if ($node->getChild(0)->getTag() == 'query') {
                 $groupChild = $node->getChild(0);
                 if ($groupChild != null) {
                     $this->handleGroupV2InfoResponse($groupChild);
                 }
             }
-            if ($node->nodeIdContains("get_lists")) {
+          }
+            if (($node->getAttribute('xmlns') == 'w:b') && ($node->getChild(0)->getTag() == 'query')) {
                 $broadcastLists = array();
                 if ($node->getChild(0) != null) {
                     $childArray = $node->getChildren();
@@ -3259,7 +3231,7 @@ class WhatsProt
                     $node->getChild(0)->getTag()
                 ));
         }
-        
+
         if ($node->getTag() == "notification") {
             $name = $node->getAttribute("notify");
             $type = $node->getAttribute("type");
@@ -3430,11 +3402,11 @@ class WhatsProt
                 }
             }
         }
-        
+
         // Disconnect socket on stream error.
         if ($node->getTag() == "stream:error")
         {
-            $this->disconnect();    
+            $this->disconnect();
         }
     }
 
