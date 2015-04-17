@@ -107,6 +107,4 @@ abstract class AllEvents
     public function onSendPresence($mynumber, $type, $name ) {}
     public function onSendStatusUpdate($mynumber, $txt ) {}
     public function onStreamError($data) {}
-    public function onUploadFile($mynumber, $filename, $url) {}
-    public function onUploadFileFailed($mynumber, $filename) {}
 }

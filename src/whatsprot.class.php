@@ -45,7 +45,6 @@ class WhatsProt
     const WHATSAPP_REGISTER_HOST = 'v.whatsapp.net/v2/register';                             // The register code host.
     const WHATSAPP_REQUEST_HOST = 'v.whatsapp.net/v2/code';                                  // The request code host.
     const WHATSAPP_SERVER = 's.whatsapp.net';                                                // The hostname used to login/send messages.
-    const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php';        // The upload host.
     const WHATSAPP_DEVICE = 'S40';                                                           // The device name.
     const WHATSAPP_VER = '2.12.68';                                                          // The WhatsApp version.
     const WHATSAPP_USER_AGENT = 'WhatsApp/2.12.68 S40Version/14.26 Device/Nokia302';         // User agent used in request/registration code.
@@ -1992,48 +1991,6 @@ class WhatsProt
     public function setNewMessageBind($bind)
     {
         $this->newMsgBind = $bind;
-    }
-
-    /**
-     * Upload file to WhatsApp servers.
-     *
-     * @param string $file The uri of the file.
-     *
-     * @return string|bool Return the remote url or false on failure.
-     */
-    public function uploadFile($file)
-    {
-        $data['file'] = "@" . $file;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
-        curl_setopt($ch, CURLOPT_URL, static::WHATSAPP_UPLOAD_HOST);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $xml = simplexml_load_string($response);
-        $url = strip_tags($xml->dict->string[3]->asXML());
-
-        if (!empty($url)) {
-            $this->eventManager()->fire("onUploadFile",
-                array(
-                    $this->phoneNumber,
-                    basename($file),
-                    $url
-                ));
-            return $url;
-        }
-
-        $this->eventManager()->fire("onUploadFileFailed",
-            array(
-                $this->phoneNumber,
-                basename($file)
-            ));
-        return false;
     }
 
     /**
