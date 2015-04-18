@@ -78,6 +78,7 @@ class WhatsProt
     protected $socket;                  // A socket to connect to the WhatsApp network.
     protected $writer;                  // An instance of the BinaryTreeNodeWriter class.
     protected $messageStore;
+    protected $nodeId = array();
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
 
     /**
@@ -866,7 +867,7 @@ class WhatsProt
      */
     public function sendGetGroupV2Info($groupID)
     {
-        $msgId = $this->createMsgId();
+        $msgId = $this->nodeId['get_groupv2_info'] = $this->createMsgId();
 
         $queryNode = new ProtocolNode("query",
             array(
@@ -890,7 +891,7 @@ class WhatsProt
      */
     public function sendGetPrivacyBlockedList()
     {
-        $msgId = $this->createMsgId();
+        $msgId = $this->nodeId['privacy'] = $this->createMsgId();
         $child = new ProtocolNode("list",
             array(
                 "name" => "default"
@@ -1119,7 +1120,7 @@ class WhatsProt
      */
     public function sendGetBroadcastLists()
     {
-        $msgId = $this->createMsgId();
+        $msgId = $this->nodeId['get_lists'] = $this->createMsgId();
         $listsNode = new ProtocolNode("lists", null, null, null);
         $node = new ProtocolNode("iq",
             array(
@@ -1300,7 +1301,7 @@ class WhatsProt
             ), null, null);
         }
 
-        $id = $this->createMsgId();
+        $id = $this->nodeId['groupcreate'] = $this->createMsgId();
 
         $createNode = new ProtocolNode("create",
             array(
@@ -1356,7 +1357,7 @@ class WhatsProt
     public function sendGroupsChatEnd($gjid)
     {
         $gjid = $this->getJID($gjid);
-        $msgID = $this->createMsgId();
+        $msgID = $this->nodeId['endgroup'] = $this->createMsgId();
 
         $groupNode = new ProtocolNode('group',
             array(
@@ -2982,7 +2983,7 @@ class WhatsProt
         if ($node->getTag() == "iq"
             && $node->getAttribute('type') == "result") {
             if ($node->getChild("query") != null) {
-                if (($node->getAttribute('xmlns') == 'jabber:iq:privacy') && ($node->getAttribute('type') == 'get')) {
+                if ($this->nodeId['privacy'] == $node->getAttribute('id')) {
                     $listChild = $node->getChild(0)->getChild(0);
                     foreach ($listChild->getChildren() as $child) {
                         $blockedJids[] = $child->getAttribute('value');
@@ -3027,7 +3028,7 @@ class WhatsProt
             if ($node->getChild("media") != null || $node->getChild("duplicate") != null) {
                 $this->processUploadResponse($node);
             }
-            if ($node->getAttribute("xmlns") == 'w:gp2') {
+            if (strpos($node->getAttribute("from"), static::WHATSAPP_GROUP_SERVER) !== false)  {
                 //There are multiple types of Group reponses. Also a valid group response can have NO children.
                 //Events fired depend on text in the ID field.
                 $groupList = array();
@@ -3038,7 +3039,7 @@ class WhatsProt
                         $groupNodes[] = $child;
                     }
                 }
-                if ($node->getChild(0)->getTag() == 'create') {
+                if ($this->nodeId['groupcreate'] == $node->getAttribute('id')) {
                     $this->groupId = $node->getChild(0)->getAttribute('id');
                     $this->eventManager()->fire("onGroupsChatCreate",
                         array(
@@ -3046,7 +3047,7 @@ class WhatsProt
                             $this->groupId
                         ));
                 }
-                if ($node->getChild(0)->getTag() == 'leave') {
+                if ($this->nodeId['endgroup'] == $node->getAttribute('id')) {
                     $this->groupId = $node->getChild(0)->getChild(0)->getAttribute('id');
                     $this->eventManager()->fire("onGroupsChatEnd",
                         array(
@@ -3054,7 +3055,7 @@ class WhatsProt
                             $this->groupId
                         ));
                 }
-                if (($node->getChild(0)->getTag() == 'owning') || ($node->getChild(0)->getTag() == 'participating')) {
+                if ($this->nodeId['getgroups'] == $node->getAttribute('id')) {
                     $this->eventManager()->fire("onGetGroups",
                         array(
                             $this->phoneNumber,
@@ -3068,14 +3069,14 @@ class WhatsProt
                     }
 
                 }
-            if ($node->getChild(0)->getTag() == 'query') {
+            if ($this->nodeId['get_groupv2_info'] == $node->getAttribute('id')) {
                 $groupChild = $node->getChild(0);
                 if ($groupChild != null) {
                     $this->handleGroupV2InfoResponse($groupChild);
                 }
             }
           }
-            if (($node->getAttribute('xmlns') == 'w:b') && ($node->getChild(0)->getTag() == 'query')) {
+            if ($this->nodeId['get_lists'] == $node->getAttribute('id')) {
                 $broadcastLists = array();
                 if ($node->getChild(0) != null) {
                     $childArray = $node->getChildren();
@@ -3732,7 +3733,7 @@ class WhatsProt
      */
     protected function sendGetGroupsFiltered($type)
     {
-        $msgID = $this->createMsgId();
+        $msgID = $this->nodeId['getgroups'] = $this->createMsgId();
         $child = new ProtocolNode($type, null, null, null);
         $node = new ProtocolNode("iq",
             array(
