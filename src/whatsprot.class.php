@@ -807,22 +807,6 @@ class WhatsProt
         $this->sendNode($node);
     }
 
-    public function sendGetClientConfig()
-    {
-        $msgId = $this->createMsgId();
-        $child = new ProtocolNode("config", null, null, null);
-        $node  = new ProtocolNode("iq",
-            array(
-                "id" => $msgId,
-                "xmlns" => "urn:xmpp:whatsapp:push",
-                "type" => "get",
-                "to" => static::WHATSAPP_SERVER
-            ), array($child), null);
-
-        $this->sendNode($node);
-        $this->waitForServer($msgId);
-    }
-
     /**
      * Transfer your number to new one
      *
