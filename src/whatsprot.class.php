@@ -1350,45 +1350,13 @@ class WhatsProt
     }
 
     /**
-     * End or delete a group chat.
-     *
-     * @param string $gjid The group's ID
-     */
-    public function sendGroupsChatEnd($gjid)
-    {
-        $gjid = $this->getJID($gjid);
-        $msgID = $this->nodeId['endgroup'] = $this->createMsgId();
-
-        $groupNode = new ProtocolNode('group',
-            array(
-                "id" => $gjid
-            ), null, null);
-
-        $leaveNode = new ProtocolNode("leave",
-            array(
-                "action" => "delete"
-            ), array($groupNode), null);
-
-        $iqNode = new ProtocolNode("iq",
-            array(
-                "id" => $msgID,
-                "type" => "set",
-                "xmlns" => "w:g2",
-                "to" => static::WHATSAPP_GROUP_SERVER
-            ), array($leaveNode), null);
-
-        $this->sendNode($iqNode);
-        $this->waitForServer($msgID);
-    }
-
-    /**
      * Leave a group chat.
      *
      * @param mixed $gjids Group or group's ID(s)
      */
     public function sendGroupsLeave($gjids)
     {
-        $msgId = $this->createMsgId();
+        $msgId = $this->nodeId['leavegroup'] = $this->createMsgId();
 
         if (!is_array($gjids)) {
             $gjids = array($this->getJID($gjids));
@@ -3047,7 +3015,7 @@ class WhatsProt
                             $this->groupId
                         ));
                 }
-                if ($this->nodeId['endgroup'] == $node->getAttribute('id')) {
+                if ($this->nodeId['leavegroup'] == $node->getAttribute('id')) {
                     $this->groupId = $node->getChild(0)->getChild(0)->getAttribute('id');
                     $this->eventManager()->fire("onGroupsChatEnd",
                         array(
