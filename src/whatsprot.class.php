@@ -1,5 +1,8 @@
 <?php
 require_once 'protocol.class.php';
+require_once 'BinTreeNodeReader.php';
+require_once 'BinTreeNodeWriter.php';
+require_once 'Constants.php';
 require_once 'func.php';
 require_once 'token.php';
 require_once 'rc4.php';
@@ -29,26 +32,6 @@ class SyncResult
 
 class WhatsProt
 {
-    /**
-     * Constant declarations.
-     */
-    const CONNECTED_STATUS = 'connected';                                                    // Describes the connection status with the WhatsApp server.
-    const DISCONNECTED_STATUS = 'disconnected';                                              // Describes the connection status with the WhatsApp server.
-    const MEDIA_FOLDER = 'media';                                                            // The relative folder to store received media files
-    const PICTURES_FOLDER = 'pictures';                                                      // The relative folder to store picture files
-    const DATA_FOLDER = 'wadata';                                                            // The relative folder to store cache files.
-    const PORT = 443;                                                                        // The port of the WhatsApp server.
-    const TIMEOUT_SEC = 2;                                                                   // The timeout for the connection with the WhatsApp servers.
-    const TIMEOUT_USEC = 0;
-    const WHATSAPP_CHECK_HOST = 'v.whatsapp.net/v2/exist';                                   // The check credentials host.
-    const WHATSAPP_GROUP_SERVER = 'g.us';                                                    // The Group server hostname
-    const WHATSAPP_REGISTER_HOST = 'v.whatsapp.net/v2/register';                             // The register code host.
-    const WHATSAPP_REQUEST_HOST = 'v.whatsapp.net/v2/code';                                  // The request code host.
-    const WHATSAPP_SERVER = 's.whatsapp.net';                                                // The hostname used to login/send messages.
-    const WHATSAPP_DEVICE = 'S40';                                                           // The device name.
-    const WHATSAPP_VER = '2.12.68';                                                          // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.12.68 S40Version/14.26 Device/Nokia302';         // User agent used in request/registration code.
-    const WHATSAPP_VER_CHECKER = 'https://coderus.openrepos.net/whitesoft/whatsapp_version'; // Check WhatsApp version
 
     /**
      * Property declarations.
@@ -105,13 +88,13 @@ class WhatsProt
         $this->challengeFilename = sprintf('%s%s%snextChallenge.%s.dat',
             __DIR__,
             DIRECTORY_SEPARATOR,
-            self::DATA_FOLDER . DIRECTORY_SEPARATOR,
+            Constants::DATA_FOLDER . DIRECTORY_SEPARATOR,
             $number);
 
         $this->identity = $this->buildIdentity();
 
         $this->name         = $nickname;
-        $this->loginStatus  = static::DISCONNECTED_STATUS;
+        $this->loginStatus  = Constants::DISCONNECTED_STATUS;
         $this->eventManager = new WhatsApiEventsManager();
     }
 
@@ -171,7 +154,7 @@ class WhatsProt
         }
 
         // Build the url.
-        $host  = 'https://' . static::WHATSAPP_CHECK_HOST;
+        $host  = 'https://' . Constants::WHATSAPP_CHECK_HOST;
         $query = array(
             'cc' => $phone['cc'],
             'in' => $phone['phone'],
@@ -245,7 +228,7 @@ class WhatsProt
         //$langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
         // Build the url.
-        $host = 'https://' . static::WHATSAPP_REGISTER_HOST;
+        $host = 'https://' . Constants::WHATSAPP_REGISTER_HOST;
         $query = array(
             'cc' => $phone['cc'],
             'in' => $phone['phone'],
@@ -327,7 +310,7 @@ class WhatsProt
         $token = generateRequestToken($phone['country'], $phone['phone']);
 
         // Build the url.
-        $host = 'https://' . static::WHATSAPP_REQUEST_HOST;
+        $host = 'https://' . Constants::WHATSAPP_REQUEST_HOST;
         $query = array(
             'in' => $phone['phone'],
             'cc' => $phone['cc'],
@@ -420,9 +403,9 @@ class WhatsProt
             return true;
         }
 
-        //$WAData = json_decode(file_get_contents(static::WHATSAPP_VER_CHECKER), true);
+        //$WAData = json_decode(file_get_contents(Constants::WHATSAPP_VER_CHECKER), true);
 
-        //  if(static::WHATSAPP_VER != $WAver)
+        //  if(Constants::WHATSAPP_VER != $WAver)
         //  {
         //    updateData('token.php', $WAData->e, $WAData->h);
         //    updateData('whatsprot.class.php', $WAData->e);
@@ -431,15 +414,15 @@ class WhatsProt
         /* Create a TCP/IP socket. */
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if ($socket !== false) {
-            $result = socket_connect($socket, "e" . rand(1, 16) . ".whatsapp.net", static::PORT);
+            $result = socket_connect($socket, "e" . rand(1, 16) . ".whatsapp.net", Constants::PORT);
             if ($result === false) {
                 $socket = false;
             }
         }
 
         if ($socket !== false) {
-            socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
-            socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => static::TIMEOUT_SEC, 'usec' => static::TIMEOUT_USEC));
+            socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => Constants::TIMEOUT_SEC, 'usec' => Constants::TIMEOUT_USEC));
+            socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => Constants::TIMEOUT_SEC, 'usec' => Constants::TIMEOUT_USEC));
 
             $this->socket = $socket;
             $this->eventManager()->fire("onConnect",
@@ -479,7 +462,7 @@ class WhatsProt
             @socket_shutdown($this->socket, 2);
             @socket_close($this->socket);
             $this->socket = null;
-            $this->loginStatus  = static::DISCONNECTED_STATUS;
+            $this->loginStatus  = Constants::DISCONNECTED_STATUS;
             $this->eventManager()->fire("onDisconnect",
                 array(
                     $this->phoneNumber,
@@ -568,7 +551,7 @@ class WhatsProt
         $w = array();
         $e = array();
 
-        if (socket_select($r, $w, $e, static::TIMEOUT_SEC, static::TIMEOUT_USEC)) {
+        if (socket_select($r, $w, $e, Constants::TIMEOUT_SEC, Constants::TIMEOUT_USEC)) {
             // Something to read
             if ($stanza = $this->readStanza()) {
                 $this->processInboundData($stanza, $autoReceipt, $type);
@@ -608,7 +591,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "encrypt",
                 "type" => "get",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($keyNode), null);
 
         $this->sendNode($node);
@@ -759,7 +742,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:b",
                 "type" => "set",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($deleteNode), null);
 
         $this->sendNode($node);
@@ -783,7 +766,7 @@ class WhatsProt
             array(
                 "id" => $msgId,
                 "type" => "set",
-                "to" => static::WHATSAPP_SERVER,
+                "to" => Constants::WHATSAPP_SERVER,
                 "xmlns" => "urn:xmpp:whatsapp:dirty"
             ), $catnodes, null);
 
@@ -793,15 +776,15 @@ class WhatsProt
     public function sendClientConfig()
     {
         $attr = array();
-        $attr["platform"] = static::WHATSAPP_DEVICE;
-        $attr["version"] = static::WHATSAPP_VER;
+        $attr["platform"] = Constants::WHATSAPP_DEVICE;
+        $attr["version"] = Constants::WHATSAPP_VER;
         $child = new ProtocolNode("config", $attr, null, "");
         $node = new ProtocolNode("iq",
             array(
                 "id" => $this->createMsgId(),
                 "type" => "set",
                 "xmlns" => "urn:xmpp:whatsapp:push",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -816,7 +799,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:push",
                 "type" => "get",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -918,7 +901,7 @@ class WhatsProt
         $privacyNode = new ProtocolNode("privacy", null, null, null);
         $node = new ProtocolNode("iq",
             array(
-                "to" => static::WHATSAPP_SERVER,
+                "to" => Constants::WHATSAPP_SERVER,
                 "id" => $msgId,
                 "xmlns" => "privacy",
                 "type" => "get"
@@ -948,7 +931,7 @@ class WhatsProt
         $privacyNode = new ProtocolNode("privacy", null, array($categoryNode), null);
         $node = new ProtocolNode("iq",
             array(
-                "to" => static::WHATSAPP_SERVER,
+                "to" => Constants::WHATSAPP_SERVER,
                 "type" => "set",
                 "id" => $msgId,
                 "xmlns" => "privacy"
@@ -1062,7 +1045,7 @@ class WhatsProt
                 "id" => $id,
                 "type" => "get",
                 "xmlns" => "w",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -1090,7 +1073,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($pricingNode), null);
 
         $this->sendNode($node);
@@ -1109,7 +1092,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "set",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($extendingNode), null);
 
         $this->sendNode($node);
@@ -1127,7 +1110,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:b",
                 "type" => "get",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($listsNode), null);
 
         $this->sendNode($node);
@@ -1150,7 +1133,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($normalizeNode), null);
 
         $this->sendNode($node);
@@ -1189,7 +1172,7 @@ class WhatsProt
         $removeNode = new ProtocolNode("remove", null, $childNode, null);
         $node = new ProtocolNode("iq",
             array(
-                "to" => static::WHATSAPP_SERVER,
+                "to" => Constants::WHATSAPP_SERVER,
                 "xmlns" => "urn:xmpp:whatsapp:account",
                 "type" => "get",
                 "id" => $msgId
@@ -1210,7 +1193,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "w:p",
                 "type" => "get",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($pingNode), null);
 
         $this->sendNode($node);
@@ -1242,7 +1225,7 @@ class WhatsProt
                 "id" => $msgId,
                 "xmlns" => "voip",
                 "type" => "get",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($eligibleNode), null);
 
         $this->sendNode($node);
@@ -1266,7 +1249,7 @@ class WhatsProt
 
         $node = new ProtocolNode("iq",
             array(
-                "to" => static::WHATSAPP_SERVER,
+                "to" => Constants::WHATSAPP_SERVER,
                 "type" => "get",
                 "xmlns" => "status",
                 "id" => $this->createMsgId()
@@ -1313,7 +1296,7 @@ class WhatsProt
                 "xmlns" => "w:g2",
                 "id" => $id,
                 "type" => "set",
-                "to" => static::WHATSAPP_GROUP_SERVER
+                "to" => Constants::WHATSAPP_GROUP_SERVER
             ), array($createNode), null);
 
         $this->sendNode($iqNode);
@@ -1378,7 +1361,7 @@ class WhatsProt
         $node = new ProtocolNode("iq",
             array(
                 "id" => $msgId,
-                "to" => static::WHATSAPP_GROUP_SERVER,
+                "to" => Constants::WHATSAPP_GROUP_SERVER,
                 "type" => "set",
                 "xmlns" => "w:g2"
             ), array($leave), null);
@@ -1704,7 +1687,7 @@ class WhatsProt
     {
         $messageNode = new ProtocolNode("iq",
             array(
-                "to" => static::WHATSAPP_SERVER,
+                "to" => Constants::WHATSAPP_SERVER,
                 "id" => $msgid,
                 "type" => "result"
             ), null, "");
@@ -1874,7 +1857,7 @@ class WhatsProt
             array(
                 "id" => $this->createMsgId(),
                 "type" => "set",
-                "to" => static::WHATSAPP_SERVER
+                "to" => Constants::WHATSAPP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -1890,7 +1873,7 @@ class WhatsProt
         $child = new ProtocolNode("status", null, null, $txt);
         $node = new ProtocolNode("iq",
             array(
-                "to" => static::WHATSAPP_SERVER,
+                "to" => Constants::WHATSAPP_SERVER,
                 "type" => "set",
                 "id" => $this->createMsgId(),
                 "xmlns" => "status"
@@ -1986,7 +1969,7 @@ class WhatsProt
         $keys = KeyStream::GenerateKeys(base64_decode($this->password), $this->challengeData);
         $this->inputKey = new KeyStream($keys[2], $keys[3]);
         $this->outputKey = new KeyStream($keys[0], $keys[1]);
-        $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData;// . time() . static::WHATSAPP_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
+        $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData;// . time() . Constants::WHATSAPP_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
         $response = $this->outputKey->EncodeMessage($array, 0, 4, strlen($array) - 4);
         return $response;
     }
@@ -2193,8 +2176,8 @@ class WhatsProt
 
         $this->writer->resetKey();
         $this->reader->resetKey();
-        $resource = static::WHATSAPP_DEVICE . '-' . static::WHATSAPP_VER . '-' . static::PORT;
-        $data = $this->writer->StartStream(static::WHATSAPP_SERVER, $resource);
+        $resource = Constants::WHATSAPP_DEVICE . '-' . Constants::WHATSAPP_VER . '-' . Constants::PORT;
+        $data = $this->writer->StartStream(Constants::WHATSAPP_SERVER, $resource);
         $feat = $this->createFeaturesNode();
         $auth = $this->createAuthNode();
         $this->sendData($data);
@@ -2213,7 +2196,7 @@ class WhatsProt
             $this->pollMessage();
         }
 
-        if ($this->loginStatus === static::DISCONNECTED_STATUS) {
+        if ($this->loginStatus === Constants::DISCONNECTED_STATUS) {
             throw new LoginFailureException();
         }
 
@@ -2234,7 +2217,7 @@ class WhatsProt
     protected function isLoggedIn(){
         //If you aren't connected you can't be logged in! ($this->isConnected())
         //We are connected - but are we logged in? (the rest)
-        return ($this->isConnected() && !empty($this->loginStatus) && $this->loginStatus === static::CONNECTED_STATUS);
+        return ($this->isConnected() && !empty($this->loginStatus) && $this->loginStatus === Constants::CONNECTED_STATUS);
     }
 
     /**
@@ -2247,7 +2230,7 @@ class WhatsProt
      */
     protected function buildIdentity()
     {
-        $identity_file = sprintf('%s%s%sid.%s.dat', __DIR__, DIRECTORY_SEPARATOR, self::DATA_FOLDER . DIRECTORY_SEPARATOR, $this->phoneNumber);
+        $identity_file = sprintf('%s%s%sid.%s.dat', __DIR__, DIRECTORY_SEPARATOR, Constants::DATA_FOLDER . DIRECTORY_SEPARATOR, $this->phoneNumber);
 
         if (is_readable($identity_file)) {
             $data = urldecode(file_get_contents($identity_file));
@@ -2366,10 +2349,10 @@ class WhatsProt
             //check if group message
             if (stristr($number, '-')) {
                 //to group
-                $number .= "@" . static::WHATSAPP_GROUP_SERVER;
+                $number .= "@" . Constants::WHATSAPP_GROUP_SERVER;
             } else {
                 //to normal user
-                $number .= "@" . static::WHATSAPP_SERVER;
+                $number .= "@" . Constants::WHATSAPP_SERVER;
             }
         }
 
@@ -2413,7 +2396,7 @@ class WhatsProt
             //TODO check what max file size whatsapp server accepts.
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
                 //Create temp file in media folder. Media folder must be writable!
-                $this->mediaFileInfo['filepath'] = tempnam(__DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER, 'WHA');
+                $this->mediaFileInfo['filepath'] = tempnam(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER, 'WHA');
                 $fp = fopen($this->mediaFileInfo['filepath'], 'w');
                 if ($fp) {
                     curl_setopt($curl, CURLOPT_NOBODY, false);
@@ -2471,7 +2454,7 @@ class WhatsProt
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, static::WHATSAPP_USER_AGENT);
+        curl_setopt($ch, CURLOPT_USERAGENT, Constants::WHATSAPP_USER_AGENT);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: text/json'));
         // This makes CURL accept any peer!
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -2529,7 +2512,7 @@ class WhatsProt
         if ($node->getTag() == "challenge") {
             $this->processChallenge($node);
         } elseif ($node->getTag() == "failure") {
-            $this->loginStatus = static::DISCONNECTED_STATUS;
+            $this->loginStatus = Constants::DISCONNECTED_STATUS;
             $this->eventManager()->fire("onLoginFailed",
                 array(
                     $this->phoneNumber,
@@ -2537,7 +2520,7 @@ class WhatsProt
                 ));
         } elseif ($node->getTag() == "success") {
             if ($node->getAttribute("status") == "active") {
-                $this->loginStatus = static::CONNECTED_STATUS;
+                $this->loginStatus = Constants::CONNECTED_STATUS;
                 $challengeData = $node->getData();
                 file_put_contents($this->challengeFilename, $challengeData);
                 $this->writer->setKey($this->outputKey);
@@ -2856,20 +2839,20 @@ class WhatsProt
             && strncmp($node->getAttribute('from'), $this->phoneNumber, strlen($this->phoneNumber)) != 0
             && strpos($node->getAttribute('from'), "-") !== false
             && $node->getAttribute('type') != null) {
-            $groupId = self::parseJID($node->getAttribute('from'));
+            $groupId = Constants::parseJID($node->getAttribute('from'));
             if ($node->getAttribute('add') != null) {
                 $this->eventManager()->fire("onGroupsParticipantsAdd",
                     array(
                         $this->phoneNumber,
                         $groupId,
-                        self::parseJID($node->getAttribute('add'))
+                        Constants::parseJID($node->getAttribute('add'))
                     ));
             } elseif ($node->getAttribute('remove') != null) {
                 $this->eventManager()->fire("onGroupsParticipantsRemove",
                     array(
                         $this->phoneNumber,
                         $groupId,
-                        self::parseJID($node->getAttribute('remove'))
+                        Constants::parseJID($node->getAttribute('remove'))
                     ));
             }
         }
@@ -2996,7 +2979,7 @@ class WhatsProt
             if ($node->getChild("media") != null || $node->getChild("duplicate") != null) {
                 $this->processUploadResponse($node);
             }
-            if (strpos($node->getAttribute("from"), static::WHATSAPP_GROUP_SERVER) !== false)  {
+            if (strpos($node->getAttribute("from"), Constants::WHATSAPP_GROUP_SERVER) !== false)  {
                 //There are multiple types of Group reponses. Also a valid group response can have NO children.
                 //Events fired depend on text in the ID field.
                 $groupList = array();
@@ -3135,7 +3118,7 @@ class WhatsProt
                     "id" => $msgId,
                     "xmlns" => "w:m",
                     "type" => "set",
-                    "to" => static::WHATSAPP_SERVER
+                    "to" => Constants::WHATSAPP_SERVER
                 ), array($ackNode), null);
 
             $this->sendNode($iqNode);
@@ -3375,9 +3358,9 @@ class WhatsProt
             $url = $media->getAttribute("url");
 
             //save thumbnail
-            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
+            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
             //download and save original
-            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
+            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
         }
     }
 
@@ -3392,9 +3375,9 @@ class WhatsProt
 
         if ($pictureNode != null) {
             if ($pictureNode->getAttribute("type") == "preview") {
-                $filename = __DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
+                $filename = __DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
             } else {
-                $filename = __DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . self::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
+                $filename = __DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
             }
 
             file_put_contents($filename, $pictureNode->getData());
@@ -3708,7 +3691,7 @@ class WhatsProt
                 "id" => $msgID,
                 "type" => "get",
                 "xmlns" => "w:g2",
-                "to" => static::WHATSAPP_GROUP_SERVER
+                "to" => Constants::WHATSAPP_GROUP_SERVER
             ), array($child), null);
 
         $this->sendNode($node);
@@ -3850,7 +3833,7 @@ class WhatsProt
 
         $node = new ProtocolNode("iq", array(
             'id'    => $id,
-            'to'    => static::WHATSAPP_SERVER,
+            'to'    => Constants::WHATSAPP_SERVER,
             'type'  => 'set',
             'xmlns' => 'w:m'
         ), array($mediaNode), null);
