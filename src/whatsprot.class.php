@@ -2936,7 +2936,7 @@ class WhatsProt
         if ($node->getTag() == "iq"
             && $node->getAttribute('type') == "result") {
             if ($node->getChild("query") != null) {
-                if ($this->nodeId['privacy'] == $node->getAttribute('id')) {
+                if (isset($this->nodeId['privacy']) && ($this->nodeId['privacy'] == $node->getAttribute('id'))) {
                     $listChild = $node->getChild(0)->getChild(0);
                     foreach ($listChild->getChildren() as $child) {
                         $blockedJids[] = $child->getAttribute('value');
