@@ -62,6 +62,7 @@ class WhatsProt
     protected $writer;                  // An instance of the BinaryTreeNodeWriter class.
     protected $messageStore;
     protected $nodeId = array();
+    protected $loginTime;
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
 
     /**
@@ -2043,7 +2044,7 @@ class WhatsProt
         $msgid = $this->messageCounter;
         $this->messageCounter++;
 
-        return $msgid;
+        return $this->loginTime . "-" . $msgid;
     }
 
     /**
@@ -2205,6 +2206,7 @@ class WhatsProt
                 $this->phoneNumber
             ));
         $this->sendAvailableForChat();
+        $this->loginTime = time();
 
         return true;
     }
