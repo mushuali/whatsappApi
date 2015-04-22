@@ -3027,7 +3027,7 @@ class WhatsProt
                 }
             }
           }
-            if ($this->nodeId['get_lists'] == $node->getAttribute('id')) {
+            if (isset($this->nodeId['get_lists']) && ($this->nodeId['get_lists'] == $node->getAttribute('id'))) {
                 $broadcastLists = array();
                 if ($node->getChild(0) != null) {
                     $childArray = $node->getChildren();
