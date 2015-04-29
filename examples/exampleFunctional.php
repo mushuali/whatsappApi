@@ -37,11 +37,11 @@ function onGetProfilePicture($from, $target, $type, $data)
         $filename = $target . ".jpg";
     }
 
-    $filename = WhatsProt::PICTURES_FOLDER. "/" . $filename;
+    $filename = Constants::PICTURES_FOLDER. "/" . $filename;
 
     file_put_contents($filename, $data);
 
-    echo "- Profile picture saved in " . WhatsProt::PICTURES_FOLDER. "/" . $filename . "\n";
+    echo "- Profile picture saved in " . Constants::PICTURES_FOLDER. "/" . $filename . "\n";
 }
 
 function onPresenceReceived($username, $from, $type)
