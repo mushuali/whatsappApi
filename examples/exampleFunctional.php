@@ -44,11 +44,16 @@ function onGetProfilePicture($from, $target, $type, $data)
     echo "- Profile picture saved in " . Constants::PICTURES_FOLDER. "/" . $filename . "\n";
 }
 
-function onPresenceReceived($username, $from, $type)
+function onPresenceAvailable($username, $from)
 {
-    printf("<%s is %s>\n\n",
-        str_replace(array("@s.whatsapp.net","@g.us"), "", $from),
-        ($type == 'available') ? 'online' : 'offline');
+    $dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
+    echo "<$dFrom is online>\n\n";
+}
+
+function onPresenceUnavailable($username, $from, $last)
+{
+    $dFrom = str_replace(array("@s.whatsapp.net","@g.us"), "", $from);
+    echo "<$dFrom is offline>\n\n";
 }
 
 echo "[] Logging in as '$nickname' ($username)\n";
@@ -66,7 +71,8 @@ $w->sendGetProfilePicture($target, true);
 
 //Print when the user goes online/offline (you need to bind a function to the event onPressence
 //so the script knows what to do)
-$w->eventManager()->bind("onPresence", "onPresenceReceived");
+$w->eventManager()->bind("onPresenceAvailable", "onPresenceAvailable");
+$w->eventManager()->bind("onPresenceUnavailable", "onPresenceUnavailable");
 
 echo "[*] Connected to WhatsApp\n\n";
 
