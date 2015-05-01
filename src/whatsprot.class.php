@@ -2992,7 +2992,7 @@ class WhatsProt
                         $groupNodes[] = $child;
                     }
                 }
-                if ($this->nodeId['groupcreate'] == $node->getAttribute('id')) {
+                if (isset($this->nodeId['groupcreate']) && ($this->nodeId['groupcreate'] == $node->getAttribute('id'))) {
                     $this->groupId = $node->getChild(0)->getAttribute('id');
                     $this->eventManager()->fire("onGroupsChatCreate",
                         array(
@@ -3000,7 +3000,7 @@ class WhatsProt
                             $this->groupId
                         ));
                 }
-                if ($this->nodeId['leavegroup'] == $node->getAttribute('id')) {
+                if (isset($this->nodeId['leavegroup']) && ($this->nodeId['leavegroup'] == $node->getAttribute('id'))) {
                     $this->groupId = $node->getChild(0)->getChild(0)->getAttribute('id');
                     $this->eventManager()->fire("onGroupsChatEnd",
                         array(
@@ -3008,7 +3008,7 @@ class WhatsProt
                             $this->groupId
                         ));
                 }
-                if ($this->nodeId['getgroups'] == $node->getAttribute('id')) {
+                if (isset($this->nodeId['getgroups']) && ($this->nodeId['getgroups'] == $node->getAttribute('id'))) {
                     $this->eventManager()->fire("onGetGroups",
                         array(
                             $this->phoneNumber,
@@ -3022,7 +3022,7 @@ class WhatsProt
                     }
 
                 }
-            if ($this->nodeId['get_groupv2_info'] == $node->getAttribute('id')) {
+            if (isset($this->nodeId['get_groupv2_info']) && ($this->nodeId['get_groupv2_info'] == $node->getAttribute('id'))) {
                 $groupChild = $node->getChild(0);
                 if ($groupChild != null) {
                     $this->handleGroupV2InfoResponse($groupChild);
