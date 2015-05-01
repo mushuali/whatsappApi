@@ -689,7 +689,6 @@ class WhatsProt
      */
     public function sendBroadcastMessage($targets, $message)
     {
-        $message = $this->parseMessageForEmojis($message);
         $bodyNode = new ProtocolNode("body", null, null, $message);
         // Return message ID. Make pull request for this.
         return $this->sendBroadcast($targets, $bodyNode, "text");
@@ -1485,7 +1484,6 @@ class WhatsProt
      */
     public function sendMessage($to, $txt, $id = null)
     {
-        $txt = $this->parseMessageForEmojis($txt);
         $bodyNode = new ProtocolNode("body", null, null, $txt);
         $id = $this->sendMessageNode($to, $bodyNode, $id);
         $this->waitForServer($id);
@@ -1561,7 +1559,6 @@ class WhatsProt
      */
     public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
-        $caption = $this->parseMessageForEmojis($caption);
         if ($fsize == 0 || $fhash == "") {
             $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
             $size = 5 * 1024 * 1024; // Easy way to set maximum file size for this media type.
@@ -1641,8 +1638,6 @@ class WhatsProt
      */
     public function sendMessageVideo($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $caption = "")
     {
-        $caption = $this->parseMessageForEmojis($caption);
-
         if ($fsize == 0 || $fhash == "") {
             $allowedExtensions = array('3gp', 'mp4', 'mov', 'avi');
             $size = 20 * 1024 * 1024; // Easy way to set maximum file size for this media type.
@@ -3873,60 +3868,6 @@ class WhatsProt
 
         $this->sendNode($node);
         $this->waitForServer($nodeID);
-    }
-    /**
-     * Parse the message text for emojis
-     *
-     * This will look for special strings in the message text
-     * that need to be replaced with a unicode character to show
-     * the corresponding emoji.
-     *
-     * Emojis should be entered in the message text either as the
-     * correct unicode character directly, or if this isn't possible,
-     * by putting a placeholder of ##unicodeNumber## in the message text.
-     * Include the surrounding ##
-     * eg:
-     * ##1f604## this will show the smiling face
-     * ##1f1ec_1f1e7## this will show the UK flag.
-     *
-     * Notice that if 2 unicode characters are required they should be joined
-     * with an underscore.
-     *
-     *
-     * @param string $txt The message to be parsed for emoji code.
-     *
-     * @return string
-     */
-    private function parseMessageForEmojis($txt)
-    {
-        $matches = null;
-        preg_match_all('/##(.*?)##/', $txt, $matches, PREG_SET_ORDER);
-        if (is_array($matches)) {
-            foreach ($matches as $emoji) {
-                $txt = str_ireplace($emoji[0], $this->unichr((string) $emoji[1]), $txt);
-            }
-        }
-
-        return $txt;
-    }
-
-    /**
-     * Creates the correct unicode character from the unicode code point
-     *
-     * @param  integer $int
-     *
-     * @return string
-     */
-    private function unichr($int)
-    {
-        $string = null;
-        $multiChars = explode('_', $int);
-
-        foreach ($multiChars as $char) {
-            $string .= mb_convert_encoding('&#' . intval($char, 16) . ';', 'UTF-8', 'HTML-ENTITIES');
-        }
-
-        return $string;
     }
 
     /**
