@@ -3314,6 +3314,9 @@ class WhatsProt
                             ));
                     }
                     break;
+                  case "web":
+                      //TODO
+                    break;
                 default:
                     throw new Exception("Method $type not implemented");
             }
