@@ -3562,7 +3562,6 @@ class WhatsProt
         $filepath = $this->mediaQueue[$id]['filePath'];
         $to = $this->mediaQueue[$id]['to'];
 
-        $icon = "";
         switch ($filetype) {
             case "image":
                 $caption = $this->mediaQueue[$id]['caption'];
