@@ -719,7 +719,7 @@ class Whatsapp
     /**
      * Show Web app Login page
      *
-     * @return void
+     * @return string
      */
     public function showWebLoginForm($error = null)
     {
@@ -818,7 +818,7 @@ class Whatsapp
     /**
      * Show main Web App.
      *
-     * @return void
+     * @return string
      */
     private function showWebForm()
     {
