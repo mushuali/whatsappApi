@@ -1206,7 +1206,7 @@ class WhatsProt
     }
 
     /**
-     * Get VOIP information of a number or numbers.
+     * Get VoIP information of a number or numbers.
      *
      * @param mixed $jids
      */
@@ -3988,7 +3988,7 @@ class WhatsProt
 
     /**
      * @param ProtocolNode $groupNode
-     * @param string       $fromGetGroups
+     * @param mixed        $fromGetGroups
      */
     protected function handleGroupV2InfoResponse(ProtocolNode $groupNode, $fromGetGroups = false)
     {
