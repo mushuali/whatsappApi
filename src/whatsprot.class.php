@@ -2408,70 +2408,45 @@ class WhatsProt
      *
      * @return bool  false if file information can not be obtained.
      */
-    protected function getMediaFile($filepath, $maxsizebytes = 1048576)
+    protected function getMediaFile($filepath, $maxsizebytes = 5242880)
     {
         if (filter_var($filepath, FILTER_VALIDATE_URL) !== false) {
             $this->mediaFileInfo = array();
             $this->mediaFileInfo['url'] = $filepath;
 
-            //File is a URL. Create a curl connection but DON'T download the body content
-            //because we want to see if file is too big.
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, "$filepath");
-            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11");
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HEADER, false);
-            curl_setopt($curl, CURLOPT_NOBODY, true);
+            $image      = file_get_contents($filepath);
+            $filesize   = strlen($image);
 
-            if (curl_exec($curl) === false) {
-                return false;
-            }
+            $file_info = new finfo(FILEINFO_MIME_TYPE);
+            $mime_type = $file_info->buffer($image);
 
-            //While we're here, get mime type and filesize and extension
-            $info = curl_getinfo($curl);
-            $this->mediaFileInfo['filesize'] = $info['download_content_length'];
-            $this->mediaFileInfo['filemimetype'] = $info['content_type'];
-            $this->mediaFileInfo['fileextension'] = pathinfo(parse_url($this->mediaFileInfo['url'], PHP_URL_PATH), PATHINFO_EXTENSION);
+            $this->mediaFileInfo['filemimetype']  = $mime_type;
 
-            //Only download file if it's not too big
-            //TODO check what max file size whatsapp server accepts.
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
-                //Create temp file in media folder. Media folder must be writable!
                 $this->mediaFileInfo['filepath'] = tempnam(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER, 'WHA');
-                $fp = fopen($this->mediaFileInfo['filepath'], 'w');
-                if ($fp) {
-                    curl_setopt($curl, CURLOPT_NOBODY, false);
-                    curl_setopt($curl, CURLOPT_BUFFERSIZE, 1024);
-                    curl_setopt($curl, CURLOPT_FILE, $fp);
-                    curl_exec($curl);
-                    fclose($fp);
-                } else {
-                    unlink($this->mediaFileInfo['filepath']);
-                    curl_close($curl);
-                    return false;
-                }
-                //Success
-                curl_close($curl);
+                file_put_contents($this->mediaFileInfo['filepath'], $image);
+                $size       = getimagesize($this->mediaFileInfo['filepath']);
+                $extension  = ltrim (image_type_to_extension($size[2]), '.');
+
+                $this->mediaFileInfo['fileextension'] = $extension;
+                $this->mediaFileInfo['filesize']      = $filesize;
+                unlink($this->mediaFileInfo['filepath']);
                 return true;
             } else {
-                //File too big. Don't Download.
-                curl_close($curl);
                 return false;
             }
         } else if (file_exists($filepath)) {
             //Local file
             $this->mediaFileInfo['filesize'] = filesize($filepath);
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
-                $this->mediaFileInfo['filepath'] = $filepath;
+                $this->mediaFileInfo['filepath']      = $filepath;
                 $this->mediaFileInfo['fileextension'] = pathinfo($filepath, PATHINFO_EXTENSION);
-                $this->mediaFileInfo['filemimetype'] = get_mime($filepath);
+                $this->mediaFileInfo['filemimetype']  = get_mime($filepath);
                 return true;
             } else {
-                //File too big
                 return false;
             }
         }
-        //Couldn't tell what file was, local or URL.
         return false;
     }
 
