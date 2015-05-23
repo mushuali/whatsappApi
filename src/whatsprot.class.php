@@ -1262,7 +1262,7 @@ class WhatsProt
                 "to" => Constants::WHATSAPP_SERVER,
                 "type" => "get",
                 "xmlns" => "status",
-                "id" => $iqId;
+                "id" => $iqId
             ), array(
                 new ProtocolNode("status", null, $children, null)
             ), null);
