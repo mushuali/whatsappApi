@@ -2639,6 +2639,9 @@ class WhatsProt
                             $node->getAttribute("notify"),
                             $node->getChild("body")->getData()
                         ));
+                    if ($this->messageStore !== null) {
+                        $this->messageStore->saveMessage($author,$node->getAttribute('from'), $node->getChild("body")->getData(), $node->getAttribute('id'), $node->getAttribute('t'));
+                    }
                 }
 
             }
