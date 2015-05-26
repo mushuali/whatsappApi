@@ -904,7 +904,7 @@ class WhatsProt
      */
     public function sendGetPrivacySettings()
     {
-        $msgId = $this->createIqId();
+        $msgId = $this->nodeId['privacy_settings'] = $this->createIqId();
         $privacyNode = new ProtocolNode("privacy", null, null, null);
         $node = new ProtocolNode("iq",
             array(
@@ -958,7 +958,7 @@ class WhatsProt
      */
     public function sendGetProfilePicture($number, $large = false)
     {
-        $msgId = $this->createIqId();
+        $msgId = $this->nodeId['getprofilepic'] = $this->createIqId();
 
         $hash = array();
         $hash["type"] = "image";
@@ -1025,7 +1025,7 @@ class WhatsProt
      */
     public function sendGetRequestLastSeen($to)
     {
-        $msgId = $this->createIqId();
+        $msgId = $this->nodeId['getlastseen'] = $this->createIqId();
 
         $queryNode = new ProtocolNode("query", null, null, null);
 
@@ -1255,7 +1255,7 @@ class WhatsProt
             $children[] = new ProtocolNode("user", array("jid" => $this->getJID($jid)), null, null);
         }
 
-        $iqId = $this->createIqId();
+        $iqId = $this->nodeId['getstatuses'] = $this->createIqId();
 
         $node = new ProtocolNode("iq",
             array(
@@ -3108,12 +3108,20 @@ class WhatsProt
             }
         }
         if ($node->getTag() == "iq" && $node->getAttribute('type') == "error") {
+            $errorType=null;
+            foreach ($this->nodeId AS $type => $nodeID) {
+                if ($nodeID == $node->getAttribute('id')) {
+                    $errorType = $type;
+                    break;
+                }
+            }
             $this->eventManager()->fire("onGetError",
                 array(
                     $this->phoneNumber,
                     $node->getAttribute('from'),
                     $node->getAttribute('id'),
-                    $node->getChild(0)
+                    $node->getChild(0),
+                    $errorType
                 ));
         }
 
