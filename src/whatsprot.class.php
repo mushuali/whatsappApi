@@ -2418,20 +2418,14 @@ class WhatsProt
             $this->mediaFileInfo = array();
             $this->mediaFileInfo['url'] = $filepath;
 
-            $image      = file_get_contents($filepath);
-            $this->mediaFileInfo['filesize'] = strlen($image);
-
-            $file_info = new finfo(FILEINFO_MIME_TYPE);
-            $mime_type = $file_info->buffer($image);
-
-            $this->mediaFileInfo['filemimetype']  = $mime_type;
+            $media = file_get_contents($filepath);
+            $this->mediaFileInfo['filesize'] = strlen($media);
 
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
                 $this->mediaFileInfo['filepath'] = tempnam(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER, 'WHA');
-                file_put_contents($this->mediaFileInfo['filepath'], $image);
-                $size       = getimagesize($this->mediaFileInfo['filepath']);
-                $extension  = ltrim (image_type_to_extension($size[2]), '.');
-                $this->mediaFileInfo['fileextension'] = $extension;
+                file_put_contents($this->mediaFileInfo['filepath'], $media);
+                $this->mediaFileInfo['filemimetype']  = get_mime($this->mediaFileInfo['filepath']);
+                $this->mediaFileInfo['fileextension'] = getExtensionFromMime($this->mediaFileInfo['filemimetype']);
                 return true;
             } else {
                 return false;
