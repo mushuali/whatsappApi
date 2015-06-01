@@ -6,6 +6,8 @@ Interface to WhatsApp Messenger
 
 For new WhatsApp updates check **[WhatsApp incoming updates log](https://github.com/mgp25/Chat-API/wiki/WhatsApp-incoming-updates)**
 
+**Do you like this project? Support it by donating BTC** to 1HcEX9foem5atreEg1gbQ6xVeosN5WEcjs ![btc](http://www.montrealbitcoin.com/img/favicon.ico)
+
 ----------
 
 ### Special thanks
