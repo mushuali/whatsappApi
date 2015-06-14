@@ -1877,15 +1877,17 @@ class WhatsProt
     public function sendStatusUpdate($txt)
     {
         $child = new ProtocolNode("status", null, null, $txt);
+        $nodeID = $this->createIqId();
         $node = new ProtocolNode("iq",
             array(
                 "to" => Constants::WHATSAPP_SERVER,
                 "type" => "set",
-                "id" => $this->createIqId(),
+                "id" => $nodeID,
                 "xmlns" => "status"
             ), array($child), null);
 
         $this->sendNode($node);
+        $this->waitForServer($nodeID);
         $this->eventManager()->fire("onSendStatusUpdate",
             array(
                 $this->phoneNumber,
