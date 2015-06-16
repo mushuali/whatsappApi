@@ -2,9 +2,9 @@
 
 Interface to WhatsApp Messenger
 
-**Read the [wiki](https://github.com/mgp25/Chat-API/wiki)** and previous issues before opening a new one! Maybe your issue is already answered.
+**Read the [wiki](https://github.com/WHAnonymous/Chat-API/wiki)** and previous issues before opening a new one! Maybe your issue is already answered.
 
-For new WhatsApp updates check **[WhatsApp incoming updates log](https://github.com/mgp25/Chat-API/wiki/WhatsApp-incoming-updates)**
+For new WhatsApp updates check **[WhatsApp incoming updates log](https://github.com/WHAnonymous/Chat-API/wiki/WhatsApp-incoming-updates)**
 
 **Do you like this project? Support it by donating BTC** to 1HcEX9foem5atreEg1gbQ6xVeosN5WEcjs ![btc](http://www.montrealbitcoin.com/img/favicon.ico)
 
