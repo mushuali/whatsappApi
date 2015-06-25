@@ -1,4 +1,4 @@
-# Chat API
+# Chat API [![Latest Stable Version](https://poser.pugx.org/whatsapp/chat-api/v/stable)](https://packagist.org/packages/whatsapp/chat-api) [![Total Downloads](https://poser.pugx.org/whatsapp/chat-api/downloads)](https://packagist.org/packages/whatsapp/chat-api) [![License](https://poser.pugx.org/whatsapp/chat-api/license)](https://packagist.org/packages/whatsapp/chat-api)
 
 Interface to WhatsApp Messenger
 
@@ -9,6 +9,11 @@ For new WhatsApp updates check **[WhatsApp incoming updates log](https://github.
 **Do you like this project? Support it by donating BTC** to 1HcEX9foem5atreEg1gbQ6xVeosN5WEcjs ![btc](http://www.montrealbitcoin.com/img/favicon.ico)
 
 ----------
+### Installation
+
+```sh
+composer require whatsapp/chat-api
+```
 
 ### Special thanks
 
