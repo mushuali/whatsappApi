@@ -2709,7 +2709,14 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('vcodec'),
                                 $node->getChild("media")->getAttribute('acodec'),
                                 $node->getChild("media")->getData(),
-                                $node->getChild("media")->getAttribute('caption')
+                                $node->getChild("media")->getAttribute('caption'),
+                                $node->getChild("media")->getAttribute('width'),
+                                $node->getChild("media")->getAttribute('height'),
+                                $node->getChild("media")->getAttribute('fps'),
+                                $node->getChild("media")->getAttribute('vbitrate'),
+                                $node->getChild("media")->getAttribute('asampfreq'),
+                                $node->getChild("media")->getAttribute('asampfmt'),
+                                $node->getChild("media")->getAttribute('abitrate')                                
                             ));
                     } else {
                         $this->eventManager()->fire("onGetGroupVideo",
@@ -2730,7 +2737,14 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('vcodec'),
                                 $node->getChild("media")->getAttribute('acodec'),
                                 $node->getChild("media")->getData(),
-                                $node->getChild("media")->getAttribute('caption')
+                                $node->getChild("media")->getAttribute('caption'),
+                                $node->getChild("media")->getAttribute('width'),
+                                $node->getChild("media")->getAttribute('height'),
+                                $node->getChild("media")->getAttribute('fps'),
+                                $node->getChild("media")->getAttribute('vbitrate'),
+                                $node->getChild("media")->getAttribute('asampfreq'),
+                                $node->getChild("media")->getAttribute('asampfmt'),
+                                $node->getChild("media")->getAttribute('abitrate')	
                             ));
                     }
                 } elseif ($node->getChild("media")->getAttribute('type') == 'audio') {
