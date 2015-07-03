@@ -2716,7 +2716,7 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('vbitrate'),
                                 $node->getChild("media")->getAttribute('asampfreq'),
                                 $node->getChild("media")->getAttribute('asampfmt'),
-                                $node->getChild("media")->getAttribute('abitrate')                                
+                                $node->getChild("media")->getAttribute('abitrate')
                             ));
                     } else {
                         $this->eventManager()->fire("onGetGroupVideo",
@@ -2744,7 +2744,7 @@ class WhatsProt
                                 $node->getChild("media")->getAttribute('vbitrate'),
                                 $node->getChild("media")->getAttribute('asampfreq'),
                                 $node->getChild("media")->getAttribute('asampfmt'),
-                                $node->getChild("media")->getAttribute('abitrate')	
+                                $node->getChild("media")->getAttribute('abitrate')
                             ));
                     }
                 } elseif ($node->getChild("media")->getAttribute('type') == 'audio') {
@@ -3303,6 +3303,18 @@ class WhatsProt
                                 $node->getAttribute('participant'), //Issuer-JID
                                 $node->getAttribute('notify'),      //Issuer-Name
                                 $promotedJIDs,
+                            )
+                        );
+                    }
+                    else if ($node->hasChild('modify')) {
+                        $this->eventManager()->fire("onGroupsParticipantChangedNumber",
+                            array(
+                                $this->phoneNumber,
+                                $node->getAttribute('from'),
+                                $node->getAttribute('t'),
+                                $node->getAttribute('participant'),
+                                $node->getAttribute('notify'),
+                                $node->getChild(0)->getChild(0)->getAttribute('jid')
                             )
                         );
                     }
