@@ -1497,7 +1497,6 @@ class WhatsProt
     {
         $bodyNode = new ProtocolNode("body", null, null, $txt);
         $id = $this->sendMessageNode($to, $bodyNode, $id);
-        $this->waitForServer($id);
 
         if ($this->messageStore !== null) {
             $this->messageStore->saveMessage($this->phoneNumber, $to, $txt, $id, time());
