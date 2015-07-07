@@ -1,10 +1,12 @@
 {
     "name": "whatsapp/chat-api",
+    "version": "2.5",
     "description": "The PHP WhatsApp library",
     "license": "MIT",
     "keywords": [
         "WhatsApp",
-        "WhatsAPI"
+        "WhatsAPI",
+        "Chat-API"
     ],
     "authors": [
         {
