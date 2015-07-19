@@ -64,6 +64,7 @@ class WhatsProt
     protected $messageStore;
     protected $nodeId = array();
     protected $loginTime;
+    protected $timeout;
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
 
     /**
@@ -462,6 +463,15 @@ class WhatsProt
     }
 
     /**
+     * Reconnect
+     */
+    public function reconnect()
+    {
+      $this->connect();
+      $this->loginWithPassword($this->password);
+    }
+
+    /**
      * Disconnect from the WhatsApp network.
      */
     public function disconnect()
@@ -558,13 +568,30 @@ class WhatsProt
         $r = array($this->socket);
         $w = array();
         $e = array();
+        $s = socket_select($r, $w, $e, Constants::TIMEOUT_SEC, Constants::TIMEOUT_USEC);
 
-        if (socket_select($r, $w, $e, Constants::TIMEOUT_SEC, Constants::TIMEOUT_USEC)) {
+        if ($s) {
             // Something to read
             if ($stanza = $this->readStanza()) {
                 $this->processInboundData($stanza, $autoReceipt, $type);
                 return true;
             }
+        }
+
+        if ($s == 0)
+        {
+            if (!isset($this->timeout))
+              $this->timeout = time();
+
+            if ((time() - $this->timeout) > 300)
+            {
+              $this->timeout = null;
+              $this->disconnect();
+              throw new ConnectionException('Connectivity error');
+            }
+        }
+        else {
+          $this->timeout = null;
         }
 
         return false;
