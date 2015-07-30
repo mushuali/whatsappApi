@@ -18,6 +18,7 @@ $w = new WhatsProt($username, '', $debug);
 echo "\n\nYour accounts password: ";
 $pw = trim(fgets(STDIN));
 
+$w->connect();
 try
 {
   $w->loginWithPassword($pw);
