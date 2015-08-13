@@ -51,6 +51,4 @@ if (!$identityExists)
     echo $e->getMessage() . "\n";
     exit(0);
   }
-  echo "\nYour username is: ".$result->login."\n";
-  echo "Your password is: ".$result->pw."\n";
 }
