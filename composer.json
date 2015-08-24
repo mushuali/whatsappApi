@@ -29,9 +29,10 @@
         "php": ">=5.3",
         "ext-curl": "*",
         "ext-gd" : "*",
-        "ext-sockets" : "*",
+        "ext-mcrypt": "*",
         "ext-openssl" : "*",
         "ext-pdo" : "*",
+        "ext-sockets" : "*",
         "ext-sqlite3" : "*"
     }
 }
