@@ -65,6 +65,7 @@ class WhatsProt
     protected $nodeId = array();
     protected $messageId;
     protected $timeout;
+    protected $voice;
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
 
     /**
@@ -1560,10 +1561,13 @@ class WhatsProt
      * @param bool   $storeURLmedia Keep copy of file
      * @param int    $fsize
      * @param string $fhash         *
+     * @param bool   $voice
      * @return string|null          Message ID if successfully, null if not.
      */
-    public function sendMessageAudio($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "")
+    public function sendMessageAudio($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = "", $voice = false)
     {
+        $this->voice = $voice;
+
         if ($fsize == 0 || $fhash == "") {
             $allowedExtensions = array('3gp', 'caf', 'wav', 'mp3', 'wma', 'ogg', 'aif', 'aac', 'm4a');
             $size = 10 * 1024 * 1024; // Easy way to set maximum file size for this media type.
@@ -3606,6 +3610,11 @@ class WhatsProt
         $mediaAttribs["size"] = $filesize;
         if ($this->mediaQueue[$id]['caption'] != '') {
             $mediaAttribs["caption"] = $this->mediaQueue[$id]['caption'];
+        }
+        if ($this->voice == true)
+        {
+          $mediaAttribs["origin"] = 'live';
+          $this->voice = false;
         }
 
         $filepath = $this->mediaQueue[$id]['filePath'];
