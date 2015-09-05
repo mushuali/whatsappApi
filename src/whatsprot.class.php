@@ -1415,19 +1415,16 @@ class WhatsProt
      * Add participant(s) to a group.
      *
      * @param string $groupId      The group ID.
-     * @param mixed  $participants An array with the participants numbers to add
+     * @param string  $participants An array with the participants numbers to add
      */
-    public function sendGroupsParticipantsAdd($groupId, $participants)
+    public function sendGroupsParticipantsAdd($groupId, $participant)
     {
         $msgId = $this->createMsgId();
-        if (!is_array($participants)) {
-            $participants = array($participants);
-        }
-        $this->sendGroupsChangeParticipants($groupId, $participants, 'add', $msgId);
+        $this->sendGroupsChangeParticipants($groupId, $participant, 'add', $msgId);
     }
 
     /**
-     * Remove participant(s) from a group.
+     * Remove participant from a group.
      *
      * @param string $groupId      The group ID.
      * @param string $participant  The number of the participant you want to remove
@@ -1435,37 +1432,31 @@ class WhatsProt
     public function sendGroupsParticipantsRemove($groupId, $participant)
     {
         $msgId = $this->createMsgId();
-        $this->sendGroupsChangeParticipants($groupId, (array) $participant, 'remove', $msgId);
+        $this->sendGroupsChangeParticipants($groupId, $participant, 'remove', $msgId);
     }
 
     /**
-     * Promote participant(s) of a group; Make a participant an admin of a group.
+     * Promote participant of a group; Make a participant an admin of a group.
      *
      * @param string $gId          The group ID.
-     * @param mixed  $participants An array with the participants numbers to promote
+     * @param string $participant  The number of the participant you want to promote
      */
-    public function sendPromoteParticipants($gId, $participants)
+    public function sendPromoteParticipants($gId, $participant)
     {
         $msgId = $this->createMsgId();
-        if (!is_array($participants)) {
-            $participants = array($participants);
-        }
-        $this->sendGroupsChangeParticipants($gId, $participants, "promote", $msgId);
+        $this->sendGroupsChangeParticipants($gId, $participant, "promote", $msgId);
     }
 
     /**
-     * Demote participant(s) of a group; remove participant of being admin of a group.
+     * Demote participant of a group; remove participant of being admin of a group.
      *
      * @param string $gId          The group ID.
-     * @param array  $participants An array with the participants numbers to demote
+     * @param string $participant  The number of the participant you want to demote
      */
-    public function sendDemoteParticipants($gId, $participants)
+    public function sendDemoteParticipants($gId, $participant)
     {
         $msgId = $this->createMsgId();
-        if (!is_array($participants)) {
-            $participants = array($participants);
-        }
-        $this->sendGroupsChangeParticipants($gId, $participants, "demote", $msgId);
+        $this->sendGroupsChangeParticipants($gId, $participant, "demote", $msgId);
     }
 
     /**
@@ -3838,19 +3829,17 @@ class WhatsProt
      * Change participants of a group.
      *
      * @param string $groupId      The group ID.
-     * @param array  $participants An array with the participants.
-     * @param string $tag          The tag action. 'add' or 'remove'
+     * @param string $participant  The participant.
+     * @param string $tag          The tag action. 'add', 'remove', 'promote' or 'demote'
      * @param        $id
      */
-    protected function sendGroupsChangeParticipants($groupId, $participants, $tag, $id)
+    protected function sendGroupsChangeParticipants($groupId, $participant, $tag, $id)
     {
-        $_participants = array();
-        foreach ($participants as $participant) {
-            $_participants[] = new ProtocolNode("participant", array("jid" => $this->getJID($participant)), null, "");
-        }
+
+        $participants = new ProtocolNode("participant", array("jid" => $this->getJID($participant)), null, "");
 
         $childHash = array();
-        $child = new ProtocolNode($tag, $childHash, $_participants, "");
+        $child = new ProtocolNode($tag, $childHash, $participants, "");
 
         $node = new ProtocolNode("iq",
             array(
