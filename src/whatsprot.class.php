@@ -152,10 +152,6 @@ class WhatsProt
         $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
         $langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
-        if ($phone['cc'] == '77' || $phone['cc'] == '79') {
-            $phone['cc'] = '7';
-        }
-
         // Build the url.
         $host  = 'https://' . Constants::WHATSAPP_CHECK_HOST;
         $query = array(
