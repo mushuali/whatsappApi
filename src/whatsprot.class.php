@@ -152,6 +152,10 @@ class WhatsProt
         $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
         $langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
+        if ($phone['cc'] == '77' || $phone['cc'] == '79') {
+            $phone['cc'] = '7';
+        }
+
         // Build the url.
         $host  = 'https://' . Constants::WHATSAPP_CHECK_HOST;
         $query = array(
@@ -2874,20 +2878,20 @@ class WhatsProt
             && strncmp($node->getAttribute('from'), $this->phoneNumber, strlen($this->phoneNumber)) != 0
             && strpos($node->getAttribute('from'), "-") !== false
             && $node->getAttribute('type') != null) {
-            $groupId = Constants::parseJID($node->getAttribute('from'));
+            $groupId = $this->parseJID($node->getAttribute('from'));
             if ($node->getAttribute('add') != null) {
                 $this->eventManager()->fire("onGroupsParticipantsAdd",
                     array(
                         $this->phoneNumber,
                         $groupId,
-                        Constants::parseJID($node->getAttribute('add'))
+                        $this->parseJID($node->getAttribute('add'))
                     ));
             } elseif ($node->getAttribute('remove') != null) {
                 $this->eventManager()->fire("onGroupsParticipantsRemove",
                     array(
                         $this->phoneNumber,
                         $groupId,
-                        Constants::parseJID($node->getAttribute('remove'))
+                        $this->parseJID($node->getAttribute('remove'))
                     ));
             }
         }
@@ -4016,7 +4020,7 @@ class WhatsProt
      *
      * @return string
      */
-    public static function parseJID($jid)
+    private function parseJID($jid)
     {
         $parts = explode('@', $jid);
         $parts = reset($parts);
