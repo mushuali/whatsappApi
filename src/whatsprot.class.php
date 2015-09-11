@@ -1044,29 +1044,6 @@ class WhatsProt
     }
 
     /**
-     * Request to retrieve the last online time of specific user.
-     *
-     * @param string $to Number or JID of user
-     */
-    public function sendGetRequestLastSeen($to)
-    {
-        $msgId = $this->nodeId['getlastseen'] = $this->createIqId();
-
-        $queryNode = new ProtocolNode("query", null, null, null);
-
-        $messageNode = new ProtocolNode("iq",
-            array(
-                "to" => $this->getJID($to),
-                "type" => "get",
-                "id" => $msgId,
-                "xmlns" => "jabber:iq:last"
-            ), array($queryNode), "");
-
-        $this->sendNode($messageNode);
-        $this->waitForServer($msgId);
-    }
-
-    /**
      * Send a request to get the current server properties.
      */
     public function sendGetServerProperties()
