@@ -3812,7 +3812,7 @@ class WhatsProt
         $participants = new ProtocolNode("participant", array("jid" => $this->getJID($participant)), null, "");
 
         $childHash = array();
-        $child = new ProtocolNode($tag, $childHash, $participants, "");
+        $child = new ProtocolNode($tag, $childHash, array($participants), "");
 
         $node = new ProtocolNode("iq",
             array(
