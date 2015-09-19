@@ -78,7 +78,7 @@ class ProtocolNode
         return $this->children;
     }
 
-    public function __construct($tag, $attributeHash, array $children, $data)
+    public function __construct($tag, $attributeHash, $children, $data)
     {
         $this->tag           = $tag;
         $this->attributeHash = $attributeHash;
