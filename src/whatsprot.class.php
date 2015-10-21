@@ -11,7 +11,6 @@ require_once 'rc4.php';
 require_once 'mediauploader.php';
 require_once 'keystream.class.php';
 require_once 'tokenmap.class.php';
-require_once 'pb_wa_messages.php';
 require_once 'events/WhatsApiEventsManager.php';
 require_once 'SqliteMessageStore.php';
 require_once 'SqliteAxolotlStore.php';
@@ -20,6 +19,7 @@ require_once 'handlers/MessageHandler.php';
 require_once 'handlers/IqHandler.php';
 if (extension_loaded('curve25519') && extension_loaded('protobuf'))
 {
+  require_once 'pb_wa_messages.php';
   require_once 'libaxolotl-php/util/KeyHelper.php';
   require_once 'libaxolotl-php/ecc/Curve.php';
   require_once 'libaxolotl-php/state/PreKeyRecord.php';
