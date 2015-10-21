@@ -1,9 +1,12 @@
 <?php
 require_once 'Handler.php';
-require_once __DIR__."/../libaxolotl-php/protocol/SenderKeyDistributionMessage.php";
-require_once __DIR__."/../libaxolotl-php/groups/GroupSessionBuilder.php";
+if (extension_loaded('curve25519') && extension_loaded('protobuf'))
+{
+  require_once __DIR__."/../libaxolotl-php/protocol/SenderKeyDistributionMessage.php";
+  require_once __DIR__."/../libaxolotl-php/groups/GroupSessionBuilder.php";
+  require_once __DIR__."/../pb_wa_messages.php";
+}
 require_once __DIR__."/../protocol.class.php";
-require_once __DIR__."/../pb_wa_messages.php";
 require_once __DIR__."/../Constants.php";
 require_once __DIR__."/../func.php";
 

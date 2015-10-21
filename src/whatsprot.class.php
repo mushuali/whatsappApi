@@ -18,14 +18,17 @@ require_once 'SqliteAxolotlStore.php';
 require_once 'handlers/NotificationHandler.php';
 require_once 'handlers/MessageHandler.php';
 require_once 'handlers/IqHandler.php';
-require_once 'libaxolotl-php/util/KeyHelper.php';
-require_once 'libaxolotl-php/ecc/Curve.php';
-require_once 'libaxolotl-php/state/PreKeyRecord.php';
-require_once 'libaxolotl-php/state/PreKeyBundle.php';
-require_once 'libaxolotl-php/SessionBuilder.php';
-require_once 'libaxolotl-php/SessionCipher.php';
-require_once 'libaxolotl-php/groups/GroupCipher.php';
-require_once 'libaxolotl-php/groups/GroupSessionBuilder.php';
+if (extension_loaded('curve25519') && extension_loaded('protobuf'))
+{
+  require_once 'libaxolotl-php/util/KeyHelper.php';
+  require_once 'libaxolotl-php/ecc/Curve.php';
+  require_once 'libaxolotl-php/state/PreKeyRecord.php';
+  require_once 'libaxolotl-php/state/PreKeyBundle.php';
+  require_once 'libaxolotl-php/SessionBuilder.php';
+  require_once 'libaxolotl-php/SessionCipher.php';
+  require_once 'libaxolotl-php/groups/GroupCipher.php';
+  require_once 'libaxolotl-php/groups/GroupSessionBuilder.php';
+}
 
 
 class WhatsProt
