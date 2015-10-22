@@ -60,7 +60,6 @@ class WhatsProt
     protected $serverReceivedId;        // Confirm that the *server* has received your command.
     protected $socket;                  // A socket to connect to the WhatsApp network.
     protected $messageStore;
-    protected $axolotlStore;
     protected $nodeId = array();
     protected $messageId;
     protected $voice;
@@ -72,6 +71,7 @@ class WhatsProt
     protected $replaceKey;
     protected $retryCounter = 1;
     protected $readReceipts = true;
+    public    $axolotlStore;
     public    $writer;                  // An instance of the BinaryTreeNodeWriter class.
     public    $reader;                  // An instance of the BinaryTreeNodeReader class.
     public    $logger;
