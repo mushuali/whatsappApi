@@ -79,13 +79,16 @@ class NotificationHandler implements Handler
             }
             break;
         case "encrypt":
-            $value = $this->node->getChild(0)->getAttribute('value');
-            if (is_numeric($value)) {
-              $this->parent->axolotlStore->removeAllPrekeys();
-              $this->parent->sendSetPreKeys();
-            }
-            else {
-                echo "Corrupt Stream: value " . $value . "is not numeric";
+            if (extension_loaded('curve25519') && extension_loaded('protobuf'))
+            {
+                $value = $this->node->getChild(0)->getAttribute('value');
+                if (is_numeric($value)) {
+                    $this->parent->axolotlStore->removeAllPrekeys();
+                    $this->parent->sendSetPreKeys();
+                }
+                else {
+                    echo "Corrupt Stream: value " . $value . "is not numeric";
+                }
             }
             break;
         case "w:gp2":
