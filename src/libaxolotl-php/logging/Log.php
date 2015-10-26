@@ -53,7 +53,7 @@ class Log extends AxolotlLogger {
         else return "";
     }
     //old function name log
-    public function writeLog ($priority, $tag, $msg) // [int priority, String tag, String msg]
+    public static function writeLog ($priority, $tag, $msg) // [int priority, String tag, String msg]
     {
         $logger = AxolotlLoggerProvider::getProvider();
         if (($logger != null))
