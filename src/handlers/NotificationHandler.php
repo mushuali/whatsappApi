@@ -84,7 +84,7 @@ class NotificationHandler implements Handler
                 $value = $this->node->getChild(0)->getAttribute('value');
                 if (is_numeric($value)) {
                     $this->parent->axolotlStore->removeAllPrekeys();
-                    $this->parent->sendSetPreKeys();
+                    $this->parent->sendSetPreKeys(true);
                 }
                 else {
                     echo "Corrupt Stream: value " . $value . "is not numeric";

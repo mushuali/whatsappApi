@@ -307,7 +307,7 @@ class axolotlSqliteStore implements axolotlInterface
 
     public function storeLocalData($registrationId, $identityKeyPair)
     {
-      $sql = 'INSERT INTO identities(recipient_id, registration_id, public_key, private_key)
+      $sql = 'INSERT OR REPLACE INTO identities(recipient_id, registration_id, public_key, private_key)
               VALUES (:recipient_id, :registration_id, :public_key, :private_key)';
       $query = $this->db->prepare($sql);
 

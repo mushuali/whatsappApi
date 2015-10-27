@@ -304,7 +304,7 @@ class WhatsProt
         $this->sendNode($messageNode);
     }
 
-    public function sendSetPreKeys()
+    public function sendSetPreKeys($new = false)
     {
       $axolotl = new KeyHelper();
 
@@ -323,12 +323,15 @@ class WhatsProt
         $prekeys[] = new ProtocolNode('key', null, array($id, $value), null); // 200 PreKeys
 
       }
-      $registrationId = $axolotl->generateRegistrationId();
+      if ($new)
+        $registrationId = $this->axolotlStore->getLocalRegistrationId();
+      else
+        $registrationId = $axolotl->generateRegistrationId();
       $registration = new ProtocolNode('registration', null, null, adjustId($registrationId));
       $identity = new ProtocolNode('identity', null, null, substr($publicKey, 1));
       $type = new ProtocolNode('type', null, null, chr(Curve::DJB_TYPE));
 
-      $this->axolotlStore->storeLocalData($registrationId,$identityKeyPair);
+      $this->axolotlStore->storeLocalData($registrationId, $identityKeyPair);
 
       $list = new ProtocolNode('list', null, $prekeys, null);
 
