@@ -76,7 +76,7 @@ class WhatsProt
     public $reader;                  // An instance of the BinaryTreeNodeReader class.
     public $logger;
     public $log;
-    public $dataFolder;
+    public $dataFolder;              //
 
     /**
      * Default class constructor.
@@ -87,6 +87,10 @@ class WhatsProt
      *   The user name.
      * @param $debug
      *   Debug on or off, false by default.
+     * @param $log
+     *  Enable log, false by default.
+     * @param $datafolder
+     *  The folder for whatsapp data like MEDIA, PICTURES etc.. By default that is wadata in src folder
      */
     public function __construct($number, $nickname, $debug = false, $log = false, $datafolder = null) {
         $this->writer = new BinTreeNodeWriter();
