@@ -1,4 +1,4 @@
-    <?php
+<?php
 require_once(__DIR__."/../util/ByteUtil.php");
 class DerivedRootSecrets {
     const SIZE = 64;    // int
