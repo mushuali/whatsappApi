@@ -71,11 +71,12 @@ class WhatsProt
     protected $replaceKey;
     protected $retryCounter = 1;
     protected $readReceipts = true;
-    public    $axolotlStore;
-    public    $writer;                  // An instance of the BinaryTreeNodeWriter class.
-    public    $reader;                  // An instance of the BinaryTreeNodeReader class.
-    public    $logger;
-    public    $log;
+    public $axolotlStore;
+    public $writer;                  // An instance of the BinaryTreeNodeWriter class.
+    public $reader;                  // An instance of the BinaryTreeNodeReader class.
+    public $logger;
+    public $log;
+    public $dataFolder;              //
 
     /**
      * Default class constructor.
@@ -86,28 +87,41 @@ class WhatsProt
      *   The user name.
      * @param $debug
      *   Debug on or off, false by default.
+     * @param $log
+     *  Enable log, false by default.
+     * @param $datafolder
+     *  The folder for whatsapp data like MEDIA, PICTURES etc.. By default that is wadata in src folder
      */
-    public function __construct($number, $nickname, $debug = false, $log = false)
-    {
+    public function __construct($number, $nickname, $debug = false, $log = false, $datafolder = null) {
         $this->writer = new BinTreeNodeWriter();
         $this->reader = new BinTreeNodeReader();
         $this->debug = $debug;
         $this->phoneNumber = $number;
 
+
+        if ($datafolder !== null && file_exists($datafolder)) {
+            if (substr(trim($datafolder), -1) == DIRECTORY_SEPARATOR)
+                $this->dataFolder = $datafolder;
+            else
+                $this->dataFolder = $datafolder . DIRECTORY_SEPARATOR;
+
+            if (!file_exists($this->dataFolder . Constants::MEDIA_FOLDER))
+                mkdir($this->dataFolder . Constants::MEDIA_FOLDER);
+
+            if (!file_exists($this->dataFolder . Constants::PICTURES_FOLDER))
+                mkdir($this->dataFolder . Constants::PICTURES_FOLDER);
+        } else
+            $this->dataFolder = __DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR;
+
+
+
         //wadata/nextChallenge.12125557788.dat
-        $this->challengeFilename = sprintf('%s%s%snextChallenge.%s.dat',
-            __DIR__,
-            DIRECTORY_SEPARATOR,
-            Constants::DATA_FOLDER . DIRECTORY_SEPARATOR,
-            $number);
+        $this->challengeFilename = sprintf('%snextChallenge.%s.dat', $this->dataFolder, $number);
 
         $this->log = $log;
-        if ($log)
-        {
-          $this->logger = new Logger(__DIR__ .
-          DIRECTORY_SEPARATOR .
-          Constants::DATA_FOLDER . DIRECTORY_SEPARATOR .
-          'logs'. DIRECTORY_SEPARATOR . $number . '.log');
+        if ($log) {
+            $this->logger = new Logger($this->dataFolder .
+                    'logs' . DIRECTORY_SEPARATOR . $number . '.log');
         }
 
         $this->setAxolotlStore(new axolotlSqliteStore($number));
@@ -1943,7 +1957,7 @@ class WhatsProt
             $this->mediaFileInfo['filesize'] = strlen($media);
 
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
-                $this->mediaFileInfo['filepath'] = tempnam(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER, 'WHA');
+                $this->mediaFileInfo['filepath'] = tempnam($this->dataFolder . Constants::MEDIA_FOLDER, 'WHA');
                 file_put_contents($this->mediaFileInfo['filepath'], $media);
                 $this->mediaFileInfo['filemimetype']  = get_mime($this->mediaFileInfo['filepath']);
                 $this->mediaFileInfo['fileextension'] = getExtensionFromMime($this->mediaFileInfo['filemimetype']);
@@ -2309,9 +2323,9 @@ class WhatsProt
             $url = $media->getAttribute("url");
 
             //save thumbnail
-            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
+            file_put_contents($this->dataFolder . Constants::MEDIA_FOLDER . DIRECTORY_SEPARATOR . 'thumb_' . $filename, $media->getData());
             //download and save original
-            file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
+            file_put_contents($this->dataFolder . Constants::MEDIA_FOLDER . DIRECTORY_SEPARATOR . $filename, file_get_contents($url));
         }
     }
 
@@ -2326,9 +2340,9 @@ class WhatsProt
 
         if ($pictureNode != null) {
             if ($pictureNode->getAttribute("type") == "preview") {
-                $filename = __DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
+                $filename = $this->dataFolder . Constants::PICTURES_FOLDER . DIRECTORY_SEPARATOR . 'preview_' . $node->getAttribute('from') . 'jpg';
             } else {
-                $filename = __DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
+                $filename = $this->dataFolder . Constants::PICTURES_FOLDER . DIRECTORY_SEPARATOR . $node->getAttribute('from') . '.jpg';
             }
 
             file_put_contents($filename, $pictureNode->getData());
