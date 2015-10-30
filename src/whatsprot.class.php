@@ -1278,7 +1278,7 @@ class WhatsProt
       $id = $this->sendMessageNode($to, $msgNode, null);
 
       if ($this->messageStore !== null) {
-          $this->messageStore->saveMessage($this->phoneNumber, $to, $txt, $id, time());
+          $this->messageStore->saveMessage($this->phoneNumber, $to, $plaintext, $id, time());
       }
 
       return $id;
