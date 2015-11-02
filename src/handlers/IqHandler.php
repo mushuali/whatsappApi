@@ -136,7 +136,7 @@ class IqHandler implements Handler
                 ));
         }
         if (isset($this->parent->getNodeId()['leavegroup']) && ($this->parent->getNodeId()['leavegroup'] == $this->node->getAttribute('id'))) {
-            $$this->parent->setGroupId($this->node->getChild(0)->getChild(0)->getAttribute('id'));
+            $this->parent->setGroupId($this->node->getChild(0)->getChild(0)->getAttribute('id'));
             $this->parent->eventManager()->fire("onGroupsChatEnd",
                 array(
                     $this->phoneNumber,
