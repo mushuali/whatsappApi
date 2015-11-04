@@ -120,6 +120,7 @@ class Registration
         throw new Exception('The provided phone number is not valid.');
     }
 
+    $code = str_replace('-', '', $code);
     //$countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
     //$langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
