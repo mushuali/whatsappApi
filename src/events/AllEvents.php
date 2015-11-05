@@ -4,7 +4,7 @@ abstract class AllEvents
     protected $eventsToListenFor = array();
     protected $whatsProt;
 
-    public function __construct(WhatsProt $whatsProt)
+    public function __construct($whatsProt)
     {
         $this->whatsProt = $whatsProt;
         return $this;

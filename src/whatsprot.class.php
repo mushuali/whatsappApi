@@ -41,7 +41,7 @@ class WhatsProt
     protected $challengeFilename;       // Path to nextChallenge.dat.
     protected $challengeData;           //
     protected $debug;                   // Determines whether debug mode is on or off.
-    protected $event;                   // An instance of the WhatsApiEvent Manager.
+    protected $eventManager;                   // An instance of the WhatsApiEvent Manager.
     protected $groupList = array();     // An array with all the groups a user belongs in.
     protected $outputKey;               // Instances of the KeyStream class.
     protected $groupId = false;         // Id of the group created.
