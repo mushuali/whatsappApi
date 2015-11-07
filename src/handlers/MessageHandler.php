@@ -344,7 +344,7 @@ class MessageHandler implements Handler
            }
 
           $plaintext = $this->decryptMessage($from, $encMsg, $encType, $node->getAttribute('id'), $node->getAttribute('t'));
-          if(!$plaintext) {
+          if($plaintext === false) {
             $this->parent->sendRetry($from, $node->getAttribute('id'), $node->getAttribute('t'));
             $this->parent->logFile('info', 'Couldn\'t decrypt message with {id} id from {from}. Retrying...', array('id' => $node->getAttribute('id'), 'from' => ExtractNumber($from)));
             return $node; // could not decrypt
