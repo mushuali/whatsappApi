@@ -39,13 +39,6 @@ class IqHandler implements Handler
                 ));
             return;
         }
-        $this->parent->eventManager()->fire("onGetRequestLastSeen",
-            array(
-                $this->phoneNumber,
-                $this->node->getAttribute('from'),
-                $this->node->getAttribute('id'),
-                $this->node->getChild(0)->getAttribute('seconds')
-            ));
     }
 
     if ($this->node->getAttribute('type') == "get"
