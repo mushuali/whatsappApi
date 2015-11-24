@@ -345,7 +345,7 @@ function encodeInt7bit($value)
     $out .= chr(($v | 0x80) % 256);
     $v >>= 7;
   }
-  $out .= chr(v % 256);
+  $out .= chr($v % 256);
 
   return $out;
 }
