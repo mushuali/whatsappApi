@@ -9,7 +9,7 @@ class Login
   protected $outputKey;
   protected $parent;
 
-  public function Login($parent, $password)
+  public function __construct($parent, $password)
   {
     $this->parent = $parent;
     $this->password = $password;
