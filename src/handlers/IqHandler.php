@@ -17,7 +17,7 @@ class IqHandler implements Handler
   protected $parent;
   protected $phoneNumber;
 
-  public function IqHandler($parent, $node)
+  public function __construct($parent, $node)
   {
     $this->node         = $node;
     $this->parent       = $parent;
