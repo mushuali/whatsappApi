@@ -17,7 +17,7 @@ class MessageHandler implements Handler
   protected $parent;
   protected $phoneNumber;
 
-  public function MessageHandler($parent, $node)
+  public function __construct($parent, $node)
   {
     $this->node         = $node;
     $this->parent       = $parent;
