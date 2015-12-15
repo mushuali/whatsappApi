@@ -434,8 +434,8 @@ class MessageHandler implements Handler
            $version  = $child->getAttribute("v");
            if ($version == "2")
            {
-             if (!in_array($author, $this->v2Jids))
-               $this->v2Jids[] = $author;
+             if (!in_array($author, $this->parent->v2Jids))
+               $this->parent->setv2Jids($author);
            }
 
            $plaintext =  $this->decryptMessage([$group_number,$author], $child->getData(), $child->getAttribute("type"), $node->getAttribute('id'), $node->getAttribute('t'));
@@ -511,7 +511,7 @@ class MessageHandler implements Handler
       }
     }
     else if($type == "skmsg"){
-      if(in_array($from[1], $this->v2Jids)) $version = "2";
+      if(in_array($from[1], $this->parent->v2Jids)) $version = "2";
       try{
         $groupCipher = $this->parent->getGroupCipher(ExtractNumber($from[0]).":".$from[1]);
         $plaintext =  $groupCipher->decrypt($ciphertext);
