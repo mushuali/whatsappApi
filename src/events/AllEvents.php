@@ -91,6 +91,8 @@ abstract class AllEvents
     public function onMediaUploadFailed($mynumber, $id, $node, $messageNode, $statusMessage) {}
     public function onMessageComposing($mynumber, $from, $id, $type, $time) {}
     public function onMessagePaused($mynumber, $from, $id, $type, $time) {}
+    public function onGroupMessageComposing($mynumber, $from_group_jid, $from_user_jid, $id, $type, $time) {}
+    public function onGroupMessagePaused($mynumber, $from_group_jid, $from_user_jid, $id, $type, $time) {}
     public function onMessageReceivedClient($mynumber, $from, $id, $type, $time, $participant) {}
     public function onMessageReceivedServer($mynumber, $from, $id, $type, $time) {}
     public function onNumberWasAdded($mynumber, $jid) {}
