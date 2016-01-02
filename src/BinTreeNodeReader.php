@@ -415,7 +415,7 @@ class BinTreeNodeReader
             $b1 = ord(substr($this->input, $offset, 1));
             $b2 = ord(substr($this->input, $offset+1, 1));
             $b3 = ord(substr($this->input, $offset+2, 1));
-            $ret = $b3 + (((0xF & $b2) << 8) + ($b1 << 16));
+            $ret = ($b1 << 16) | ($b2 << 8) | $b3;
         }
         return $ret;
     }
@@ -434,12 +434,12 @@ class BinTreeNodeReader
             $b3 = ord(substr($this->input, $offset+2, 1));
             $b4 = ord(substr($this->input, $offset+3, 1));
             // $n = 0x7F & $b1; dont know what is this for
-            $ret = $b3 | ($b2 << 24 | $b2 << 16 | $b4 << 8);
+            $ret = ($b1 << 24) | ($b2 << 16) | ($b3 << 8) | $b4;
         }
         return $ret;
     }
     protected function  readInt31() {
-        $ret = $this->peekInt20();
+        $ret = $this->peekInt31();
         if (strlen($this->input) >= 4) {
             $this->input = substr($this->input, 4);
         }
