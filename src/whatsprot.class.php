@@ -105,15 +105,18 @@ class WhatsProt
                 $this->dataFolder = $datafolder;
             else
                 $this->dataFolder = $datafolder . DIRECTORY_SEPARATOR;
-
-            if (!file_exists($this->dataFolder . Constants::MEDIA_FOLDER))
-                mkdir($this->dataFolder . Constants::MEDIA_FOLDER);
-
-            if (!file_exists($this->dataFolder . Constants::PICTURES_FOLDER))
-                mkdir($this->dataFolder . Constants::PICTURES_FOLDER);
         } else
             $this->dataFolder = __DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR;
 
+
+        if (!file_exists($this->dataFolder . Constants::MEDIA_FOLDER))
+            mkdir($this->dataFolder . Constants::MEDIA_FOLDER, 0777, true);
+
+        if (!file_exists($this->dataFolder . Constants::PICTURES_FOLDER))
+            mkdir($this->dataFolder . Constants::PICTURES_FOLDER, 0777, true);
+
+        if (!file_exists($this->dataFolder . 'logs'))
+            mkdir($this->dataFolder . 'logs', 0777, true);
 
 
         //wadata/nextChallenge.12125557788.dat
@@ -125,7 +128,7 @@ class WhatsProt
                     'logs' . DIRECTORY_SEPARATOR . $number . '.log');
         }
 
-        $this->setAxolotlStore(new axolotlSqliteStore($number));
+        $this->setAxolotlStore(new axolotlSqliteStore($number, $this->dataFolder));
 
         $this->name         = $nickname;
         $this->loginStatus  = Constants::DISCONNECTED_STATUS;

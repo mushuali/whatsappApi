@@ -49,9 +49,13 @@ class axolotlSqliteStore implements axolotlInterface
 
     private $db;
     private $filename;
-    public function __construct($number)
+    public function __construct($number, $customPath = null)
     {
-      $this->fileName = __DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . 'axolotl-'.$number.'.db';
+        if ($customPath)
+            $this->fileName = $customPath. 'axolotl-'.$number.'.db';
+        else
+            $this->fileName = __DIR__ . DIRECTORY_SEPARATOR . self::DATA_FOLDER . DIRECTORY_SEPARATOR . 'axolotl-'.$number.'.db';
+
       $this->create();
     }
     protected function create(){
