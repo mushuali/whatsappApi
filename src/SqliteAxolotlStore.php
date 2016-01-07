@@ -326,7 +326,24 @@ class axolotlSqliteStore implements axolotlInterface
           )
       );
     }
+    public function clearRecipient($recipientId){
+      $sql = "DELETE FROM identities where recipient_id = :recipient_id";
+      $query = $this->db->prepare($sql);
 
+      $query->execute(
+        array(
+              ':recipient_id' => $recipientId
+          )
+      );
+      $sql = "DELETE FROM sessions where recipient_id = :recipient_id";
+      $query = $this->db->prepare($sql);
+
+      $query->execute(
+        array(
+              ':recipient_id' => $recipientId
+          )
+      );
+    }
     public function isTrustedIdentity($recipientId, $identityKey)
     {
       $sql = "SELECT public_key from identities WHERE recipient_id = :recipient_id";

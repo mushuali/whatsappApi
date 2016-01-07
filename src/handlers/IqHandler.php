@@ -236,6 +236,12 @@ class IqHandler implements Handler
                 break;
             }
         }
+        $nodeIds = $this->parent->getNodeId();
+        if(isset($nodeIds['sendcipherKeys']) && (isset($nodeIds['sendcipherKeys'])  ==  $this->node->getAttribute('id'))  && $this->node->getChild("error")->getAttribute('code') == "406")
+        {
+          $this->parent->sendSetPreKeys();
+        }
+
         $this->parent->eventManager()->fire("onGetError",
             array(
                 $this->phoneNumber,
@@ -271,6 +277,7 @@ class IqHandler implements Handler
             }
             unset($this->parent->getPendingNodes()[ExtractNumber($jid)]);
         }
+        $this->parent->sendPendingMessages($jid);
 
       }
     }

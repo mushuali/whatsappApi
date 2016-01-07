@@ -5,6 +5,7 @@ if (extension_loaded('curve25519') && extension_loaded('protobuf'))
   require_once __DIR__."/../libaxolotl-php/protocol/SenderKeyDistributionMessage.php";
   require_once __DIR__."/../libaxolotl-php/groups/GroupSessionBuilder.php";
   require_once __DIR__."/../pb_wa_messages.php";
+  require_once __DIR__."/../libaxolotl-php/UntrustedIdentityException.php";
 }
 require_once __DIR__."/../protocol.class.php";
 require_once __DIR__."/../Constants.php";
@@ -510,6 +511,9 @@ class MessageHandler implements Handler
         return $plaintext;
       } catch (Exception $e)
       {
+        if($e instanceof UntrustedIdentityException){
+          $this->parent->getAxolotlStore()->clearRecipient(ExtractNumber($from));
+        }
         $this->parent->debugPrint($e->getMessage()." - ".$e->getFile()." - ".$e->getLine());
        // if ($e->getMessage() != "Null values!"){
           $this->parent->debugPrint("Message $id could not be decrypted, sending retry.\n\n");

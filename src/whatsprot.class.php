@@ -66,6 +66,7 @@ class WhatsProt
     protected $timeout = 0;
     protected $sessionCiphers = array();
     public $v2Jids = array();
+    public $v1Only = array();
     protected $groupCiphers = array();
     protected $pending_nodes = array();
     protected $replaceKey;
@@ -118,7 +119,7 @@ class WhatsProt
 
         //wadata/nextChallenge.12125557788.dat
         $this->challengeFilename = sprintf('%snextChallenge.%s.dat', $this->dataFolder, $number);
-
+        $this->messageStore = new SqliteMessageStore($number);
         $this->log = $log;
         if ($log) {
             $this->logger = new Logger($this->dataFolder .
@@ -298,6 +299,7 @@ class WhatsProt
         $s = socket_select($r, $w, $e, Constants::TIMEOUT_SEC, Constants::TIMEOUT_USEC);
 
         if ($s) {
+
             // Something to read
             if ($stanza = $this->readStanza()) {
                 $this->processInboundData($stanza);
@@ -360,7 +362,7 @@ class WhatsProt
 
       $secretKey = new ProtocolNode('skey', null, array($sid, $value, $signature), null);
 
-      $iqId = $this->createIqId();
+      $iqId = $this->nodeId['sendcipherKeys'] = $this->createIqId();
       $iqNode = new ProtocolNode('iq',
         array(
           "id" => $iqId,
@@ -436,7 +438,7 @@ class WhatsProt
       $retryNode = new ProtocolNode("retry",
         array(
           "v" => "1",
-          "count" => $this->retryCounters[$id],
+          "count" => "1", //$this->retryCounters[$id]
           "id" => $id,
           "t" => $t
         ), null, null);
@@ -1252,7 +1254,7 @@ class WhatsProt
 
             $sessionCipher = $this->getSessionCipher($to_num);
 
-            if (in_array($to_num, $this->v2Jids))
+            if (in_array($to_num, $this->v2Jids) && !isset($this->v1Only[$to_num]))
             {
               $version = "2";
               $plaintext = padMessage($plaintext);
@@ -2073,6 +2075,7 @@ class WhatsProt
      */
     protected function processInboundDataNode(ProtocolNode $node) {
         $this->timeout  = time();
+        //echo niceVarDump($node);
         $this->debugPrint($node->nodeString("rx  ") . "\n");
         $this->serverReceivedId = $node->getAttribute('id');
 
@@ -2140,6 +2143,12 @@ class WhatsProt
             }
             if ($node->hasChild("retry")) {
                 $this->sendGetCipherKeysFromUser(ExtractNumber($node->getAttribute('from')), true);
+                $this->messageStore->setPending($node->getAttribute("id"),$node->getAttribute('from'));
+            }
+            if($node->hasChild("error") && $node->getChild("error")->getAttribute("type") == "enc-v1"){
+                $this->v1Only[ExtractNumber($node->getAttribute("from"))] = true;
+                $this->messageStore->setPending($node->getAttribute("id"),$node->getAttribute('from'));
+                $this->sendPendingMessages($node->getAttribute("from"));
             }
 
             $this->eventManager()->fire("onMessageReceivedClient",
@@ -2959,7 +2968,16 @@ class WhatsProt
         $parts = reset($parts);
         return $parts;
     }
+    public function sendPendingMessages($jid){
+        if($this->messageStore != null && $this->isLoggedIn()){
 
+            $messages = $this->messageStore->getPending($jid);
+            foreach($messages as $message){
+
+                $this->sendMessage($message['to'],$message['message']);
+            }
+        }
+    }
     public function getSessionCipher($number)
     {
       if(isset($this->sessionCiphers[$number]))
