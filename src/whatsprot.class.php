@@ -3103,4 +3103,25 @@ class WhatsProt
     {
         array_push($this->messageQueue, $node);
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getLastId()
+    {
+        return $this->lastId;
+    }
+
+    /**
+     * @param mixed $lastId
+     *
+     * @return WhatsProt
+     */
+    public function setLastId($lastId)
+    {
+        $this->lastId = $lastId;
+        return $this;
+    }
+
 }
