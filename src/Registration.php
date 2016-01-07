@@ -132,8 +132,8 @@ class Registration
     }
 
     $code = str_replace('-', '', $code);
-    //$countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
-    //$langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
+    $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
+    $langCode    = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
     // Build the url.
     $host = 'https://' . Constants::WHATSAPP_REGISTER_HOST;
@@ -143,7 +143,6 @@ class Registration
       'lg' => $langCode,
       'lc' => $countryCode,
       'id' => $this->identity,
-      'token' => $token,
       'mistyped' => '6',
       'network_radio_type' => '1',
       'simnum'  => '1',
@@ -152,11 +151,10 @@ class Registration
       'hasinrc' => '1',
       'rcmatch' => '1',
       'pid' => mt_rand(100, 9999),
-      //'rchash' => hash('sha256', openssl_random_pseudo_bytes(20)),
-      //'anhash' => md5(openssl_random_pseudo_bytes(20)),
+      'rchash' => hash('sha256', openssl_random_pseudo_bytes(20)),
+      'anhash' => md5(openssl_random_pseudo_bytes(20)),
       'extexist' => '1',
       'extstate' => '1',
-      'method' => $method,
       'code' => $code,
     );
 
