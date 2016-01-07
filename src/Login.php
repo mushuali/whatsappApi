@@ -8,7 +8,7 @@ class Login
   protected $outputKey;
   protected $parent;
 
-  public function __construct($parent, $password)
+  public function __construct(WhatsProt $parent, $password)
   {
     $this->parent = $parent;
     $this->password = $password;
@@ -59,7 +59,7 @@ class Login
       $this->parent->setMessageId(substr(bin2hex(mcrypt_create_iv(64, MCRYPT_DEV_URANDOM)), 0, 22)); // 11 char hex
 
       if (extension_loaded('curve25519') || extension_loaded('protobuf')) {
-        if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . "axolotl-" . $this->phoneNumber . ".db"))
+        if (file_exists($this->parent->dataFolder . "axolotl-" . $this->phoneNumber . ".db"))
         {
           if (empty($this->parent->getAxolotlStore()->loadPreKeys()))
           {
