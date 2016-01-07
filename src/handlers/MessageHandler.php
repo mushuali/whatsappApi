@@ -28,7 +28,7 @@ class MessageHandler implements Handler
     {
         $this->parent->pushMessageToQueue($this->node);
 
-        if ($this->node->hasChild('x') && $this->parent->lastId == $this->node->getAttribute('id')) {
+        if ($this->node->hasChild('x') && $this->parent->getLastId() == $this->node->getAttribute('id')) {
             $this->parent->sendNextMessage();
         }
         if ($this->parent->getNewMsgBind()  && ($this->node->getChild('body') || $this->node->getChild('media'))) {
