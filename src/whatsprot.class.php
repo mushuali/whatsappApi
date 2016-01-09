@@ -1324,15 +1324,14 @@ class WhatsProt
     {
         $this->voice = $voice;
 
-        if ($fsize == 0 || $fhash == '') {
-            $allowedExtensions = ['3gp', 'caf', 'wav', 'mp3', 'wma', 'ogg', 'aif', 'aac', 'm4a'];
-            $size = 10 * 1024 * 1024; // Easy way to set maximum file size for this media type.
-            // Return message ID. Make pull request for this.
-            return $this->sendCheckAndSendMedia($filepath, $size, $to, 'audio', $allowedExtensions, $storeURLmedia);
-        } else {
-            // Return message ID. Make pull request for this.
+        if ($fsize != 0 && $fhash != '') {
             return $this->sendRequestFileUpload($fhash, 'audio', $fsize, $filepath, $to);
         }
+
+        $allowedExtensions = ['3gp', 'caf', 'wav', 'mp3', 'wma', 'ogg', 'aif', 'aac', 'm4a'];
+        $size = 10 * 1024 * 1024; // Easy way to set maximum file size for this media type.
+        // Return message ID. Make pull request for this.
+        return $this->sendCheckAndSendMedia($filepath, $size, $to, 'audio', $allowedExtensions, $storeURLmedia);
     }
 
     /**
@@ -1359,15 +1358,14 @@ class WhatsProt
      */
     public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = '', $caption = '')
     {
-        if ($fsize == 0 || $fhash == '') {
-            $allowedExtensions = ['jpg', 'jpeg', 'gif', 'png'];
-            $size = 5 * 1024 * 1024; // Easy way to set maximum file size for this media type.
-            // Return message ID. Make pull request for this.
-            return $this->sendCheckAndSendMedia($filepath, $size, $to, 'image', $allowedExtensions, $storeURLmedia, $caption);
-        } else {
-            // Return message ID. Make pull request for this.
-            return $this->sendRequestFileUpload($fhash, 'image', $fsize, $filepath, $to, $caption);
+        if ($fsize != 0 && $fhash != '') {
+          return $this->sendRequestFileUpload($fhash, 'image', $fsize, $filepath, $to, $caption);
         }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+        $size = 5 * 1024 * 1024; // Easy way to set maximum file size for this media type.
+        // Return message ID. Make pull request for this.
+        return $this->sendCheckAndSendMedia($filepath, $size, $to, 'image', $allowedExtensions, $storeURLmedia, $caption);
     }
 
     /**
@@ -1440,15 +1438,14 @@ class WhatsProt
      */
     public function sendMessageVideo($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = '', $caption = '')
     {
-        if ($fsize == 0 || $fhash == '') {
-            $allowedExtensions = ['3gp', 'mp4', 'mov', 'avi'];
-            $size = 20 * 1024 * 1024; // Easy way to set maximum file size for this media type.
-            // Return message ID. Make pull request for this.
-            return $this->sendCheckAndSendMedia($filepath, $size, $to, 'video', $allowedExtensions, $storeURLmedia, $caption);
-        } else {
-            // Return message ID. Make pull request for this.
+        if ($fsize != 0 && $fhash != '') {
             return $this->sendRequestFileUpload($fhash, 'video', $fsize, $filepath, $to, $caption);
         }
+
+        $allowedExtensions = ['3gp', 'mp4', 'mov', 'avi'];
+        $size = 20 * 1024 * 1024; // Easy way to set maximum file size for this media type.
+        // Return message ID. Make pull request for this.
+        return $this->sendCheckAndSendMedia($filepath, $size, $to, 'video', $allowedExtensions, $storeURLmedia, $caption);
     }
 
     /**
@@ -2447,16 +2444,14 @@ class WhatsProt
      */
     protected function processTempMediaFile($storeURLmedia)
     {
-        if (isset($this->mediaFileInfo['url'])) {
-            if ($storeURLmedia) {
-                if (is_file($this->mediaFileInfo['filepath'])) {
-                    rename($this->mediaFileInfo['filepath'], $this->mediaFileInfo['filepath'].'.'.$this->mediaFileInfo['fileextension']);
-                }
-            } else {
-                if (is_file($this->mediaFileInfo['filepath'])) {
-                    unlink($this->mediaFileInfo['filepath']);
-                }
-            }
+        if (!isset($this->mediaFileInfo['url'])) {
+            return false;
+        }
+
+        if ($storeURLmedia && is_file($this->mediaFileInfo['filepath'])) {
+            rename($this->mediaFileInfo['filepath'], $this->mediaFileInfo['filepath'].'.'.$this->mediaFileInfo['fileextension']);
+        } elseif (is_file($this->mediaFileInfo['filepath'])) {
+            unlink($this->mediaFileInfo['filepath']);
         }
     }
 
@@ -3001,13 +2996,11 @@ class WhatsProt
 
     public function getSessionCipher($number)
     {
-        if (isset($this->sessionCiphers[$number])) {
-            return $this->sessionCiphers[$number];
-        } else {
-            $this->sessionCiphers[$number] = new SessionCipher($this->axolotlStore, $this->axolotlStore, $this->axolotlStore, $this->axolotlStore, $number, 1);
-
-            return $this->sessionCiphers[$number];
+        if (!isset($this->sessionCiphers[$number])) {
+          $this->sessionCiphers[$number] = new SessionCipher($this->axolotlStore, $this->axolotlStore, $this->axolotlStore, $this->axolotlStore, $number, 1);
         }
+
+        return $this->sessionCiphers[$number];
     }
 
     public function getGroupCipher($groupId)
@@ -3103,7 +3096,6 @@ class WhatsProt
     {
         array_push($this->messageQueue, $node);
     }
-
 
     /**
      * @return mixed
