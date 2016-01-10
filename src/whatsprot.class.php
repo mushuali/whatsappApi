@@ -2873,7 +2873,9 @@ class WhatsProt
     public function sendMessageRead($to, $id)
     {
         $listNode = null;
+        $idNode = $id;
         if (is_array($id) && count($id > 1)) {
+            $idNode = array_shift($id);
             foreach($id as $itemId) {
                 $items[] = new ProtocolNode('item',
                 [
@@ -2881,14 +2883,13 @@ class WhatsProt
                 ], null, null);
             }
             $listNode = new ProtocolNode('list', null, $items, null);
-            $id = $itemId[0];
         }
 
         $messageNode = new ProtocolNode('receipt',
         [
           'type' => 'read',
           'to'   => $to,
-          'id'   => $id,
+          'id'   => $idNode,
         ], $listNode, null);
 
         $this->sendNode($messageNode);
