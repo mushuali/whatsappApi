@@ -2888,9 +2888,10 @@ class WhatsProt
         $messageNode = new ProtocolNode('receipt',
         [
           'type' => 'read',
-          'to'   => $to,
-          'id'   => $idNode,
-        ], $listNode, null);
+          't'    => time(),
+          'to'   => $this->getJID($to),
+          'id'   => $idNode
+        ], [$listNode], null);
 
         $this->sendNode($messageNode);
     }
