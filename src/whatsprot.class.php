@@ -673,6 +673,26 @@ class WhatsProt
         $this->sendNode($node);
     }
 
+    public function sendSetGCM($gcm = null)
+    {
+        if (is_null($gcm)) {
+          $gcm = getRandomGCM();
+        }
+        $attr = [];
+        $attr['platform'] = 'gcm';
+        $attr['id'] = $gcm;
+        $child = new ProtocolNode('config', $attr, null, '');
+        $node = new ProtocolNode('iq',
+            [
+                'id'    => $this->createIqId(),
+                'type'  => 'set',
+                'xmlns' => 'urn:xmpp:whatsapp:push',
+                'to'    => Constants::WHATSAPP_SERVER,
+            ], [$child], null);
+
+        $this->sendNode($node);
+    }
+
     public function sendGetClientConfig()
     {
         $msgId = $this->createIqId();

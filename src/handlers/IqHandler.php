@@ -238,6 +238,8 @@ class IqHandler implements Handler
             $nodeIds = $this->parent->getNodeId();
             if (isset($nodeIds['sendcipherKeys']) && (isset($nodeIds['sendcipherKeys'])  ==  $this->node->getAttribute('id'))  && $this->node->getChild('error')->getAttribute('code') == '406') {
                 $this->parent->sendSetPreKeys();
+            } elseif ($this->node->getAttribute('id') == '2'){
+                $this->parent->sendSetGCM();
             }
 
             $this->parent->eventManager()->fire('onGetError',
