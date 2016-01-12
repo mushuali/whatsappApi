@@ -470,6 +470,7 @@ class WhatsProt
                 'type' => 'retry',
                 't'    => $t,
             ], [$retryNode, $registrationNode], null);
+	    if(!isset($this->retryCounters[$id])) $this->retryCounters[$id] = 0;
             $this->retryCounters[$id]++;
         }
         $this->sendNode($node);
