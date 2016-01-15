@@ -273,7 +273,7 @@ class IqHandler implements Handler
                         $msgHandler = new MessageHandler($this->parent, $pendingNode);
                         $msgHandler->Process();
                     }
-                    unset($this->parent->getPendingNodes()[ExtractNumber($jid)]);
+                    $this->parent->unsetPendingNode($jid);
                 }
                 $this->parent->sendPendingMessages($jid);
             }
