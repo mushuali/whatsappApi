@@ -98,7 +98,7 @@ class BinTreeNodeReader
             $token = $this->readInt8();
             TokenMap::GetToken($token, $subdict, $ret);
             if (!$ret) {
-                throw new Exception("BinTreeNodeReader->getToken: Invalid token $token");
+                throw new Exception("BinTreeNodeReader->getToken: Invalid token/length in getToken $token");
             }
         }
 
@@ -122,7 +122,7 @@ class BinTreeNodeReader
     {
         $ret = '';
         if ($token == -1) {
-            throw new Exception("BinTreeNodeReader->readString: Invalid token $token");
+            throw new Exception("BinTreeNodeReader->readString: Invalid -1 token in readString $token");
         }
 
         if (($token > 2) && ($token < 236)) {
@@ -350,14 +350,12 @@ class BinTreeNodeReader
             return 0;
         }
         if ($token == 0xf8) {
-            $len = $this->readInt8();
-
-            return $len;
+            return $this->readInt8();
         } elseif ($token == 0xf9) {
             return $this->readInt16();
         }
 
-        throw new Exception("BinTreeNodeReader->readListSize: Invalid token $token");
+        throw new Exception("BinTreeNodeReader->readListSize: invalid list size in readListSize: token $token");
     }
 
     protected function peekInt24($offset = 0)
