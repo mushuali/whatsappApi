@@ -274,10 +274,12 @@ class BinTreeNodeReader
         return $attributes;
     }
 
+	/*
     protected function inflateBuffer($stanzaSize = 0)
     {
         $this->input = gzuncompress($this->input); // maybe gzinflate or gzdecode .
     }
+	*/
 
     protected function nextTreeInternal()
     {
