@@ -370,6 +370,7 @@ class BinTreeNodeReader
         return $ret;
     }
 
+    /*
     public function readHeader($offset = 0)
     {
         $ret = 0;
@@ -382,6 +383,7 @@ class BinTreeNodeReader
 
         return $ret;
     }
+    */
 
     protected function readInt24()
     {
