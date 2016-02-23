@@ -96,11 +96,11 @@ class ProtocolNode
     {
         if ($this->children) {
             if (is_int($tag)) {
-                if (isset($this->childen[$tag])) {
+                if (isset($this->children[$tag])) {
                     array_slice($this->children, $tag, 1);
                 }
             } else {
-                foreach ($this->childen as $i => $child) {
+                foreach ($this->children as $i => $child) {
                     $index = -1;
                     if (strcmp($child->tag, $tag) == 0) {
                         $index = $i;
