@@ -664,7 +664,7 @@ function onGetAudio($mynumber, $from, $id, $type, $time, $name, $size, $url, $fi
     echo " < Received audio from $nickname >\n";
 }
 
-class ProcessNode
+class ProcessNode implements NewMsgBindInterface
 {
     protected $wp = false;
     protected $target = false;
@@ -675,7 +675,7 @@ class ProcessNode
         $this->target = $target;
     }
 
-    public function process($node)
+    public function process(\ProtocolNode $node)
     {
         if ($node->getAttribute('type') == 'text') {
             $text = $node->getChild('body');

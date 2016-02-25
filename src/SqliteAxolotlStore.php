@@ -40,6 +40,8 @@ interface axolotlInterface
 
     public function saveIdentity($recipientId, $identityKey);
 
+    public function clearRecipient($recipientId);
+
     //session
 
     public function storeSession($recipientId, $deviceId, $sessionRecord);

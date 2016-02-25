@@ -71,7 +71,7 @@ class WhatsProt
     public $retryCounters = [];
     protected $readReceipts = true;
     public $retryNodes = [];
-    public $axolotlStore;
+    protected $axolotlStore;
     public $writer;                  // An instance of the BinaryTreeNodeWriter class.
     public $reader;                  // An instance of the BinaryTreeNodeReader class.
     public $logger;
@@ -3034,6 +3034,10 @@ class WhatsProt
         }
     }
 
+    /**
+     * @param $number
+     * @return \SessionCipher
+     */
     public function getSessionCipher($number)
     {
         if (!isset($this->sessionCiphers[$number])) {
@@ -3043,6 +3047,10 @@ class WhatsProt
         return $this->sessionCiphers[$number];
     }
 
+    /**
+     * @param $groupId
+     * @return \GroupCipher
+     */
     public function getGroupCipher($groupId)
     {
         if (!isset($this->groupCiphers[$groupId])) {
@@ -3132,6 +3140,9 @@ class WhatsProt
         return $this->messageStore;
     }
 
+    /**
+     * @return \axolotlInterface
+     */
     public function getAxolotlStore()
     {
         return $this->axolotlStore;
