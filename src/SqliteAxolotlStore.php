@@ -388,7 +388,7 @@ class axolotlSqliteStore implements axolotlInterface
 
     public function isTrustedIdentity($recipientId, $identityKey)
     {
-      /*
+        /*
         $sql = 'SELECT public_key from identities WHERE recipient_id = :recipient_id';
         $query = $this->db->prepare($sql);
 

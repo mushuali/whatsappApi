@@ -231,7 +231,7 @@ do {
       case '/credits':
         echo "\nSpecials thanks to 0xtryCatch :D\n";
         break;
-      case '/secret';
+      case '/secret':
         echo "If you are a spammer or bulk sender, this is your lucky day! Follow the link:\n";
         echo "http://bit.ly/1dOj8e0\n\n";
         echo ":)\n\n";
@@ -422,8 +422,6 @@ function fgets_u($pStdn)
     } elseif ($num_changed_streams > 0) {
         return trim(fgets($pStdn, 1024));
     }
-
-    return;
 }
 
 function addContact($number, $name)

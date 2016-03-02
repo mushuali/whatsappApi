@@ -37,8 +37,6 @@ function fgets_u($pStdn)
     } elseif ($num_changed_streams > 0) {
         return trim(fgets($pStdn, 1024));
     }
-
-    return;
 }
 
 function onPresenceAvailable($username, $from)

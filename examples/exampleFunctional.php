@@ -28,8 +28,6 @@ function fgets_u($pStdn)
     } elseif ($num_changed_streams > 0) {
         return trim(fgets($pStdn, 1024));
     }
-
-    return;
 }
 
 //This function only needed to show how eventmanager works.
