@@ -55,6 +55,19 @@ class MessageHandler implements Handler
               $file_data = file_get_contents($this->node->getChild('media')->getAttribute('url'));
             }
 
+            if($this->node->getChild('enc')->getAttribute("mediatype") == "url"){
+                $this->parent->eventManager()->fire('onGetMessage',
+                    [
+                        $this->phoneNumber,
+                        $this->node->getAttribute('from'),
+                        $this->node->getAttribute('id'),
+                        $this->node->getAttribute('type'),
+                        $this->node->getAttribute('t'),
+                        $this->node->getAttribute('notify'),
+                        $this->node->getChild('body')->getData(),
+                    ]);
+            }
+
             if ($this->node->getChild('media') != null) {
                 if ($this->node->getChild('media')->getAttribute('type') == 'image') {
                     if ($this->node->getAttribute('participant') == null) {
@@ -471,6 +484,38 @@ class MessageHandler implements Handler
                     ], null, $location->getThumbnail());
                   $node->addChild($child);
                 break;
+                case 'url':
+                   $mediaUrl = new MediaUrl();
+                   $mediaUrl->parseFromString($plaintext);
+                   $node->addChild(new ProtocolNode('body', null, null, $mediaUrl->getMessage()));
+                break;
+                case 'document':
+                   $document = new DocumentMessage();
+                   $a = ord($plaintext[0]);
+                   //prepad?
+                   if(substr($plaintext,0,$a) == str_repeat($plaintext[0], $a)) $plaintext = substr($plaintext,$a);
+                   $document->parseFromString($plaintext);
+
+                   $keys = (new HKDFv3())->deriveSecrets($document->getRefKey(), hex2bin('576861747341707020446f63756d656e74204b657973'), 112);
+                   $iv = substr($keys, 0, 16);
+                   $keys = substr($keys, 16);
+                   $parts = str_split($keys, 32);
+                   $key = $parts[0];
+                   $macKey = $parts[1];
+                   $refKey = $parts[2];
+                   //should be changed to nice curl, no extra headers :D
+                   $file_enc = file_get_contents($document->getUrl());
+                   //requires mac check , last 10 chars
+                   $mac = substr($file_enc, -10);
+                   $cipherDocument = substr($file_enc, 0, strlen($file_enc) - 10);
+                   $uncrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $cipherDocument, MCRYPT_MODE_CBC, $iv);
+                   $decrypted_document = pkcs5_unpad($uncrypted);
+                   file_put_contents("/tmp/".$document->getFilename(), $decrypted_document);
+                   if(strlen($document->getThumbnail() > 0)){
+                     //is posible to not have thumbnail
+                     file_put_contents("/tmp/".$document->getName(), $document->getThumbnail());
+                   }
+                 break;
               }
             break;
 

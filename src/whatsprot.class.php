@@ -1378,9 +1378,9 @@ class WhatsProt
      *
      * @return string|null Message ID if successfully, null if not.
      */
-    public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = '', $caption = '')
+    public function sendMessageImage($to, $filepath, $storeURLmedia = false, $fsize = 0, $fhash = '', $caption = '', $encrypted = false)
     {
-        if ($fsize != 0 && $fhash != '') {
+        if ($fsize != 0 && $fhash != '' && !$encrypted) {
           return $this->sendRequestFileUpload($fhash, 'image', $fsize, $filepath, $to, $caption);
         }
 
