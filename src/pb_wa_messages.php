@@ -172,11 +172,12 @@ class MediaUrl extends \ProtobufMessage
             'type'     => 7,
         ],
         self::TITLE => [
-            "name"     => "title",
-            "required" => false,
-            "type"     => 7
-        ]
+            'name'     => 'title',
+            'required' => false,
+            'type'     => 7,
+        ],
     ];
+
     public function __construct()
     {
         $this->reset();
@@ -206,6 +207,7 @@ class MediaUrl extends \ProtobufMessage
     {
         return self::$fields;
     }
+
     public function getMessage()
     {
         return $this->values[self::MESSAGE];
@@ -215,6 +217,7 @@ class MediaUrl extends \ProtobufMessage
     {
         return $this->values[self::URL];
     }
+
     public function getUnknown1()
     {
         return $this->values[self::UNK_1];
@@ -224,10 +227,12 @@ class MediaUrl extends \ProtobufMessage
     {
         return $this->values[self::UNK_2];
     }
+
     public function getDescription()
     {
         return $this->values[self::DESCRIPTION];
     }
+
     public function getTitle()
     {
         return $this->values[self::TITLE];
@@ -240,8 +245,9 @@ class MediaUrl extends \ProtobufMessage
 
     public function setUrl($value)
     {
-         $this->values[self::URL] = $value;
+        $this->values[self::URL] = $value;
     }
+
     public function setUnknown1($value)
     {
         $this->values[self::UNK_1] = $value;
@@ -249,17 +255,18 @@ class MediaUrl extends \ProtobufMessage
 
     public function setUnknown2($value)
     {
-         $this->values[self::UNK_2] = $value;
-    }
-    public function setDescription($value)
-    {
-         $this->values[self::DESCRIPTION] = $value;
-    }
-    public function setTitle($value)
-    {
-         $this->values[self::TITLE] = $value;
+        $this->values[self::UNK_2] = $value;
     }
 
+    public function setDescription($value)
+    {
+        $this->values[self::DESCRIPTION] = $value;
+    }
+
+    public function setTitle($value)
+    {
+        $this->values[self::TITLE] = $value;
+    }
 }
 class ImageMessage extends \ProtobufMessage
 {
@@ -517,7 +524,7 @@ class ImageMessage extends \ProtobufMessage
     }
 }
 
-class Location  extends \ProtobufMessage
+class Location extends \ProtobufMessage
 {
     const LATITUDE = 1;
     const LONGITUDE = 2;
@@ -525,45 +532,45 @@ class Location  extends \ProtobufMessage
     const DESCRIPTION = 4;
     const URL = 5;
     const THUMBNAIL = 6;
-	/* @var array Field descriptors */
-	protected static $fields = [
-	  self::LATITUDE => [
-	      'name'     => 'Latitude',
-	      'required' => false,
-	      'type'     => 1,
-	  ],
-	  self::LONGITUDE => [
-	      'name'     => 'Longitude',
-	      'required' => false,
-	      'type'     => 1,
-	  ],
-	  self::NAME => [
-	      'name'     => 'Name',
-	      'required' => false,
-	      'type'     => 7,
-	  ],
-	  self::DESCRIPTION => [
-	      'name'     => 'Description',
-	      'required' => false,
-	      'type'     => 7,
-	  ],
-	  self::URL => [
-	      'name'     => 'Url',
-	      'required' => false,
-	      'type'     => 7,
-	  ],
-	  self::THUMBNAIL => [
-	      'name'     => 'Thumbnail',
-	      'required' => false,
-	      'type'     => 7,
-	  ]
+    /* @var array Field descriptors */
+    protected static $fields = [
+      self::LATITUDE => [
+          'name'     => 'Latitude',
+          'required' => false,
+          'type'     => 1,
+      ],
+      self::LONGITUDE => [
+          'name'     => 'Longitude',
+          'required' => false,
+          'type'     => 1,
+      ],
+      self::NAME => [
+          'name'     => 'Name',
+          'required' => false,
+          'type'     => 7,
+      ],
+      self::DESCRIPTION => [
+          'name'     => 'Description',
+          'required' => false,
+          'type'     => 7,
+      ],
+      self::URL => [
+          'name'     => 'Url',
+          'required' => false,
+          'type'     => 7,
+      ],
+      self::THUMBNAIL => [
+          'name'     => 'Thumbnail',
+          'required' => false,
+          'type'     => 7,
+      ],
 
-	];
+    ];
 
-	public function __construct()
-	{
-	    $this->reset();
-	}
+    public function __construct()
+    {
+        $this->reset();
+    }
 
   /**
    * Clears message values and sets default ones.
@@ -580,11 +587,12 @@ class Location  extends \ProtobufMessage
       $this->values[self::THUMBNAIL] = null;
   }
 
-public function parseFromString($data)
-{
-    parent::parseFromString($data);
-    $this->setThumbnail(stristr($data, hex2bin('ffd8ffe0')));
-}
+    public function parseFromString($data)
+    {
+        parent::parseFromString($data);
+        $this->setThumbnail(stristr($data, hex2bin('ffd8ffe0')));
+    }
+
   /**
    * Returns field descriptors.
    *
@@ -604,26 +612,40 @@ public function parseFromString($data)
     {
         return $this->values[self::LONGITUDE];
     }
-    public function getThumbnail(){
-    	return $this->values[self::THUMBNAIL];
+
+    public function getThumbnail()
+    {
+        return $this->values[self::THUMBNAIL];
     }
-    public function getName(){
-    	return $this->values[self::NAME];
+
+    public function getName()
+    {
+        return $this->values[self::NAME];
     }
-    public function getDescription(){
-    	return $this->values[self::DESCRIPTION];
+
+    public function getDescription()
+    {
+        return $this->values[self::DESCRIPTION];
     }
-    public function getUrl(){
-    	return $this->values[self::URL];
+
+    public function getUrl()
+    {
+        return $this->values[self::URL];
     }
-    public function setName($value){
-    	$this->values[self::NAME] = $value;
+
+    public function setName($value)
+    {
+        $this->values[self::NAME] = $value;
     }
-    public function setDescription($value){
-    	$this->values[self::DESCRIPTION] = $value;;
+
+    public function setDescription($value)
+    {
+        $this->values[self::DESCRIPTION] = $value;
     }
-    public function setUrl($value){
-    	$this->values[self::URL] = $value;
+
+    public function setUrl($value)
+    {
+        $this->values[self::URL] = $value;
     }
 
     public function setLatitude($value)
@@ -635,9 +657,12 @@ public function parseFromString($data)
     {
         $this->values[self::LONGITUDE] = $value;
     }
-    public function setThumbnail($value){
-    	$this->values[self::THUMBNAIL] = $value;
+
+    public function setThumbnail($value)
+    {
+        $this->values[self::THUMBNAIL] = $value;
     }
+
     protected function WriteUInt32($val)
     {
         $result = '';
@@ -656,6 +681,7 @@ public function parseFromString($data)
 
         return $result;
     }
+
     public function serializeToString()
     {
         $thumb = $this->getThumbnail();
@@ -673,15 +699,15 @@ public function parseFromString($data)
 /* May start with 01 thats bad */
 class DocumentMessage extends \ProtobufMessage
 {
-  const URL = 1;
-  const MIMETYPE = 2;
-  const NAME = 3;
-  const SHA256 = 4;
-  const LENGTH = 5;
-  const UNK_2 = 6;
-  const REFKEY = 7;
-  const FILENAME = 8;
-  const THUMBNAIL = 9;
+    const URL = 1;
+    const MIMETYPE = 2;
+    const NAME = 3;
+    const SHA256 = 4;
+    const LENGTH = 5;
+    const UNK_2 = 6;
+    const REFKEY = 7;
+    const FILENAME = 8;
+    const THUMBNAIL = 9;
     /* @var array Field descriptors */
   protected static $fields = [
       self::URL => [
@@ -728,7 +754,7 @@ class DocumentMessage extends \ProtobufMessage
           'name'     => 'thumbnail',
           'required' => false,
           'type'     => 7,
-      ]
+      ],
   ];
 
     public function __construct()
@@ -773,9 +799,12 @@ class DocumentMessage extends \ProtobufMessage
     {
         return $this->values[self::MIMETYPE];
     }
-    public function getLength(){
+
+    public function getLength()
+    {
         return $this->values[self::LENGTH];
     }
+
     public function getName()
     {
         return $this->values[self::NAME];
@@ -790,13 +819,17 @@ class DocumentMessage extends \ProtobufMessage
     {
         return $this->values[self::REFKEY];
     }
-    public function getFilename(){
+
+    public function getFilename()
+    {
         return $this->values[self::FILENAME];
     }
+
     public function getThumbnail()
     {
         return $this->values[self::THUMBNAIL];
     }
+
     public function setUrl($newValue)
     {
         $this->values[self::URL] = $newValue;
