@@ -102,7 +102,7 @@ while (1) {
     }
 }
 
-class ProcessNode
+class ProcessNode implements NewMsgBindInterface
 {
     protected $wp = false;
     protected $target = false;
@@ -113,7 +113,7 @@ class ProcessNode
         $this->target = $target;
     }
 
-    public function process($node)
+    public function process(\ProtocolNode $node)
     {
         $text = $node->getChild('body');
         $text = $text->getData();

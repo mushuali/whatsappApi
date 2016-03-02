@@ -102,7 +102,8 @@ $w->sendMessage($target, 'Sent from WhatsApi at '.date('H:i'));
 while ($w->pollMessage());
 
 /*
- * You can create a ProcessNode class (or whatever name you want) that has a process($node) function
+ * You can create a ProcessNode class (or whatever name you want) implementing NewMsgBindInterface
+ * that has a process(ProtocolNode $node) function.
  * and pass it through setNewMessageBind, that way everytime the class receives a text message it will run
  * the process function to it.
  */
@@ -145,7 +146,7 @@ while (1) {
 /**
  * Demo class to show how you can process inbound messages.
  */
-class ProcessNode
+class ProcessNode implements NewMsgBindInterface
 {
     protected $wp = false;
     protected $target = false;
@@ -159,7 +160,7 @@ class ProcessNode
     /**
      * @param ProtocolNode $node
      */
-    public function process($node)
+    public function process(\ProtocolNode $node)
     {
         // Example of process function, you have to guess a number (psss it's 5)
         // If you guess it right you get a gift

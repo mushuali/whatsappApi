@@ -17,7 +17,7 @@ class MessageHandler implements Handler
     protected $parent;
     protected $phoneNumber;
 
-    public function __construct($parent, $node)
+    public function __construct(\WhatsProt $parent, \ProtocolNode $node)
     {
         $this->node = $node;
         $this->parent = $parent;
@@ -41,6 +41,7 @@ class MessageHandler implements Handler
           $file_data = "";
 	  if ($this->node->getChild('enc') != null && $this->node->getAttribute('participant') == null) { // for now only private messages
 
+                $dec_node = null;
                 if (extension_loaded('curve25519') && extension_loaded('protobuf')) {
                     $dec_node = $this->processEncryptedNode($this->node);
                 }
@@ -366,10 +367,14 @@ class MessageHandler implements Handler
         }
     }
 
+    /**
+     * @param ProtocolNode $node
+     * @return null|ProtocolNode
+     */
     protected function processEncryptedNode(ProtocolNode $node)
     {
         if ($this->parent->getAxolotlStore() == null) {
-            return;
+            return null;
         }
     //is a chat encrypted message
     $from = $node->getAttribute('from');
@@ -524,7 +529,7 @@ class MessageHandler implements Handler
                              $senderKeyGroupMessage = $senderKeyGroupMessage->getSenderKey();
                          }
                          $senderKey = new SenderKeyDistributionMessage(null, null, null, null, $senderKeyGroupMessage->getSenderKey());
-                         $groupSessionBuilder = new GroupSessionBuilder($this->parent->axolotlStore);
+                         $groupSessionBuilder = new GroupSessionBuilder($this->parent->getAxolotlStore());
                          $groupSessionBuilder->processSender($group_number.':'.$author, $senderKey);
                          if (isset($message)) {
                              $this->parent->sendReceipt($node, 'receipt', $this->parent->getJID($this->phoneNumber));
@@ -561,6 +566,7 @@ class MessageHandler implements Handler
              }
          }
      }
+        return $node;
     }
 
     public function decryptMessage($from, $ciphertext, $type, $id, $t, $retry_from = null, $skip_unpad = false)
@@ -650,5 +656,6 @@ class MessageHandler implements Handler
             return false;
         }
     }
+        return false;
     }
 }
