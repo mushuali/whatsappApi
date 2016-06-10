@@ -596,8 +596,8 @@ class axolotlSqliteStore implements axolotlInterface
 
     public function clear()
     {
-        if (file_exists($this->filename)) {
-            unlink($this->filename);
+        if (file_exists($this->fileName)) {
+            unlink($this->fileName);
         }
         $this->create();
     }
