@@ -79,9 +79,9 @@ class axolotlSqliteStore implements axolotlInterface
     public function __construct($number, $customPath = null)
     {
         if ($customPath) {
-            $this->fileName = $customPath.'axolotl-'.$number.'.db';
+            $this->filename = $customPath.'axolotl-'.$number.'.db';
         } else {
-            $this->fileName = __DIR__.DIRECTORY_SEPARATOR.self::DATA_FOLDER.DIRECTORY_SEPARATOR.'axolotl-'.$number.'.db';
+            $this->filename = __DIR__.DIRECTORY_SEPARATOR.self::DATA_FOLDER.DIRECTORY_SEPARATOR.'axolotl-'.$number.'.db';
         }
 
         $this->create();
@@ -89,9 +89,9 @@ class axolotlSqliteStore implements axolotlInterface
 
     protected function create()
     {
-        $createTable = !file_exists($this->fileName);
+        $createTable = !file_exists($this->filename);
 
-        $this->db = new \PDO('sqlite:'.$this->fileName, null, null, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $this->db = new \PDO('sqlite:'.$this->filename, null, null, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         if ($createTable) {
             //create necesary tables before starting
         $this->db->exec('CREATE TABLE IF NOT EXISTS identities
@@ -596,8 +596,8 @@ class axolotlSqliteStore implements axolotlInterface
 
     public function clear()
     {
-        if (file_exists($this->fileName)) {
-            unlink($this->fileName);
+        if (file_exists($this->filename)) {
+            unlink($this->filename);
         }
         $this->create();
     }
