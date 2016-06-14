@@ -141,6 +141,21 @@ class NotificationHandler implements Handler
                         $promotedJIDs,
                     ]
                 );
+            } elseif ($this->node->hasChild('demote')) {
+                $demotedJIDs = [];
+                foreach ($this->node->getChild(0)->getChildren() as $cn) {
+                    $demotedJIDs[] = $cn->getAttribute('jid');
+                }
+                $this->parent->eventManager()->fire('onGroupsParticipantsDemote',
+                    [
+                        $this->phoneNumber,
+                        $this->node->getAttribute('from'),        //Group-JID
+                        $this->node->getAttribute('t'),           //Time
+                        $this->node->getAttribute('participant'), //Issuer-JID
+                        $this->node->getAttribute('notify'),      //Issuer-Name
+                        $demotedJIDs,
+                    ]
+                );
             } elseif ($this->node->hasChild('modify')) {
                 $this->parent->eventManager()->fire('onGroupsParticipantChangedNumber',
                     [
