@@ -262,9 +262,15 @@ class IqHandler implements Handler
                 $signedPreKeyId = deAdjustId($user->getChild('skey')->getChild('id')->getData());
                 $signedPreKeyPub = new DjbECPublicKey($user->getChild('skey')->getChild('value')->getData());
                 $signedPreKeySig = $user->getChild('skey')->getChild('signature')->getData();
-                $preKeyId = deAdjustId($user->getChild('key')->getChild('id')->getData());
-                $preKeyPublic = new DjbECPublicKey($user->getChild('key')->getChild('value')->getData());
-
+                
+                $preKeyId = null;
+                $preKeyPublic = null;
+                if(!is_null($user->getChild('key'))){
+                    //SupportsV3 only
+                    $preKeyId = deAdjustId($user->getChild('key')->getChild('id')->getData());
+                    $preKeyPublic = new DjbECPublicKey($user->getChild('key')->getChild('value')->getData());
+                }
+                
                 $preKeyBundle = new PreKeyBundle($registrationId, 1, $preKeyId, $preKeyPublic, $signedPreKeyId, $signedPreKeyPub, $signedPreKeySig, $identityKey);
                 $sessionBuilder = new SessionBuilder($this->parent->getAxolotlStore(), $this->parent->getAxolotlStore(), $this->parent->getAxolotlStore(), $this->parent->getAxolotlStore(), ExtractNumber($jid), 1);
 
