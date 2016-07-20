@@ -31,7 +31,7 @@
  *
  * Enjoy.
  */
-//This is a aimple password to view this script. It is NOT the whatsapp password.
+//This is a simple password to view this script. It is NOT the whatsapp password.
 $config['webpassword'] = 'MakeUpPassword';
 
 //Config Template
