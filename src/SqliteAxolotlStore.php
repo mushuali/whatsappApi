@@ -509,11 +509,9 @@ class axolotlSqliteStore implements axolotlInterface
     {
         $sql = 'DELETE FROM sessions WHERE recipient_id = :recipient_id AND device_id = :device_id';
         $query = $this->db->prepare($sql);
-        $query->execute(
-          [
-                  ':recipient_id' => $recipientId,
-                  ':device_id'    => $deviceId,
-              ]
+        $query->bindParam(':recipient_id', $recipientId, PDO::PARAM_INT);
+        $query->bindParam(':device_id', $deviceId, PDO::PARAM_INT);
+        $query->execute();
       );
     }
 
