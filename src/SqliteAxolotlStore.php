@@ -512,7 +512,6 @@ class axolotlSqliteStore implements axolotlInterface
         $query->bindParam(':recipient_id', $recipientId, PDO::PARAM_INT);
         $query->bindParam(':device_id', $deviceId, PDO::PARAM_INT);
         $query->execute();
-      );
     }
 
     public function deleteAllSessions($recipientId)
