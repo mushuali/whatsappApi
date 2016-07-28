@@ -59,7 +59,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     /**
      * The current behaviour, now creating the identity file when
      * only the path was provided (as the code flow suggests).
-     * 
+     *
      * @covers Registration::__construct
      * @covers Registration::buildIdentity
      */
