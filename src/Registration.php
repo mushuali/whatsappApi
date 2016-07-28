@@ -482,6 +482,14 @@ class Registration
           $identity_file = sprintf('%s%s%sid.%s.dat', __DIR__, DIRECTORY_SEPARATOR, Constants::DATA_FOLDER.DIRECTORY_SEPARATOR, $this->phoneNumber);
       }
 
+      // Check if the provided is not a file but a directory
+      if (is_dir($identity_file)) {
+          $identity_file = sprintf('%s/id.%s.dat',
+              rtrim($identity_file, "/"),
+              $this->phoneNumber
+          );
+      }
+
       if (is_readable($identity_file)) {
           $data = urldecode(file_get_contents($identity_file));
           $length = strlen($data);
