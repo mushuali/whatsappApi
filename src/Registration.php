@@ -10,7 +10,7 @@ class Registration
     protected $eventManager;
     protected $phoneNumber;
     protected $identity;      //The Device Identity token. Obtained during registration with this API
-  protected $debug;
+    protected $debug;
 
     public function __construct($number, $debug = false, $customPath = false)
     {
@@ -51,8 +51,8 @@ class Registration
       $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
       $langCode = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
-    // Build the url.
-    $host = 'https://'.Constants::WHATSAPP_CHECK_HOST;
+      // Build the url.
+      $host = 'https://'.Constants::WHATSAPP_CHECK_HOST;
       $query = [
       'cc'                 => $phone['cc'],
       'in'                 => $phone['phone'],
@@ -71,10 +71,14 @@ class Registration
       //'anhash' => md5(openssl_random_pseudo_bytes(20)),
       'extexist' => '1',
       'extstate' => '1',
-    ];
+      ];
+
+      $this->debugPrint($query);
 
       $response = $this->getResponse($host, $query);
 
+      $this->debugPrint($response);
+      
       if ($response->status != 'ok') {
           $this->eventManager()->fire('onCredentialsBad',
             [
@@ -82,9 +86,6 @@ class Registration
                 $response->status,
                 $response->reason,
             ]);
-
-          $this->debugPrint($query);
-          $this->debugPrint($response);
 
           throw new Exception('There was a problem trying to request the code.');
       } else {
@@ -137,8 +138,8 @@ class Registration
       $countryCode = ($phone['ISO3166'] != '') ? $phone['ISO3166'] : 'US';
       $langCode = ($phone['ISO639'] != '') ? $phone['ISO639'] : 'en';
 
-    // Build the url.
-    $host = 'https://'.Constants::WHATSAPP_REGISTER_HOST;
+      // Build the url.
+      $host = 'https://'.Constants::WHATSAPP_REGISTER_HOST;
       $query = [
       'cc'                 => $phone['cc'],
       'in'                 => $phone['phone'],
@@ -158,10 +159,14 @@ class Registration
       'extexist'           => '1',
       'extstate'           => '1',
       'code'               => $code,
-    ];
+      ];
+
+      $this->debugPrint($query);
 
       $response = $this->getResponse($host, $query);
 
+      $this->debugPrint($response);
+      
       if ($response->status != 'ok') {
           $this->eventManager()->fire('onCodeRegisterFailed',
             [
@@ -170,9 +175,6 @@ class Registration
                 $response->reason,
                 isset($response->retry_after) ? $response->retry_after : null,
             ]);
-
-          $this->debugPrint($query);
-          $this->debugPrint($response);
 
           if ($response->reason == 'old_version') {
               $this->update();
@@ -230,11 +232,11 @@ class Registration
           $mnc = $phone['mnc'];
       }
 
-    // Build the token.
-    $token = generateRequestToken($phone['country'], $phone['phone'], $platform);
+      // Build the token.
+      $token = generateRequestToken($phone['country'], $phone['phone'], $platform);
 
-    // Build the url.
-    $host = 'https://'.Constants::WHATSAPP_REQUEST_HOST;
+      // Build the url.
+      $host = 'https://'.Constants::WHATSAPP_REQUEST_HOST;
       $query = [
         'cc'                 => $phone['cc'],
         'in'                 => $phone['phone'],
@@ -260,7 +262,7 @@ class Registration
         'sim_mnc'            => $mnc,
         'method'             => $method,
         //'reason' => "self-send-jailbroken",
-    ];
+      ];
 
       $this->debugPrint($query);
 
